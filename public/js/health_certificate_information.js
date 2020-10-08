@@ -1,0 +1,1 @@
+function alterFormState(t){$('input[name="edit_mode"]').is(":checked")?$(".dynamic_input").attr("readonly",!1):$(".dynamic_input").attr("readonly",!0),t&&$("#update_button").transition("fade")}alterFormState(),$(".ui.checkbox").checkbox(),$(".field").popup(!1),$('input[name="edit_mode"]').change(function(){alterFormState(!0)});
