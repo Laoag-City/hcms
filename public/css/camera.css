@@ -1,1 +1,265 @@
-*{font-family:sans-serif}body{margin:0}table{width:100%;border:1pt solid #000;border-collapse:collapse}th{font-size:7pt}td{font-size:6pt;padding:1.125pt 0 1.125pt 0!important}td,th{border:1pt solid #000;width:33.3333%}#h4_front{font-weight:900;padding:2.25pt;letter-spacing:.8pt;background-color:#000;color:#fff}#h4_back{margin-top:0;margin-bottom:4.5pt;padding-top:1.125pt;padding-bottom:1.125pt;width:99pt;border:1.125pt solid #000;letter-spacing:1.125pt;box-shadow:-4.45pt 4.45pt 2.25pt 0 #000}.health_certificate{width:252pt;height:324pt;border:.5625pt solid #000;margin:auto}.standard_font{font-size:8pt}.smaller_font{font-size:7pt}.pull_left{float:left}.pull_right{float:right}.text-center{text-align:center}.text_right{text-align:right}.text-justify{text-align:justify}.no_margin{margin:0}.block_center{margin-right:auto;margin-left:auto}.label{display:inline}.field{border-bottom:.5625pt solid #000;display:inline-block;text-align:center}.table_wrapper{margin-top:9pt}.dates{width:90pt}.empty_cell{height:6pt}.hidden{display:none}.certificate_view_wrapper{display:inline-block}.camera_certificate_header{margin-bottom:5px}#outer_border{margin:18pt;border:2.25pt solid #000;width:213.75pt;height:285.75pt}#inner_border{margin:2.25pt;border:1.125pt solid #000;height:279pt}#contents{margin:6.75pt;overflow:hidden}#header_1{overflow:auto}#header_1>p{margin:0}#logo{height:49.5pt;width:49.5pt}#header_2{margin-right:10pt;margin-left:10pt}#reg_number{width:100pt}#name{width:174pt}#age{width:18pt}#sex{width:12pt}#work_type{width:98pt}#establishment{width:149pt}#camera{width:192pt;height:192pt;border:1px solid grey;margin-right:auto;margin-left:auto;margin-bottom:20px}#picture{width:96px;height:96px;border:.5625pt solid #000;margin-bottom:4.5pt}#signature_si_in_charge{width:110pt}@media print{.no-print{display:none!important}}
+*
+{
+	font-family: sans-serif;
+}
+
+body
+{
+	margin: 0pt 0pt 0pt 0pt;
+}
+
+table
+{
+	width: 100%; 
+	border: 1pt solid black; 
+	border-collapse: collapse;
+}
+
+th
+{
+	font-size: 7pt;
+}
+
+td
+{
+	font-size: 6pt;
+	padding: 1.125pt 0pt 1.125pt 0pt !important;
+}
+
+td, th
+{
+	border: 1pt solid black;
+	width: 33.3333%;
+}
+
+#h4_front
+{
+	font-weight: 900;
+	padding: 2.25pt;
+	letter-spacing: .8pt;
+	background-color: black;
+	color: white;
+}
+
+#h4_back
+{
+	margin-top: 0;
+	margin-bottom: 4.5pt;
+	padding-top: 1.125pt;
+	padding-bottom: 1.125pt;
+	width: 99pt;
+	border: 1.125pt solid black;
+	letter-spacing: 1.125pt;
+	box-shadow: -4.45pt 4.45pt 2.25pt 0pt black;
+}
+
+.health_certificate
+{
+	width: 252pt;
+	height: 324pt;
+	border: 0.5625pt solid black;
+}
+
+.standard_font
+{
+	font-size: 8pt;
+}
+
+.smaller_font
+{
+	font-size: 7pt;
+}
+
+.pull_left
+{
+	float: left;
+}
+
+.pull_right
+{
+	float: right;
+}
+
+.text-center
+{
+	text-align: center;
+}
+
+.text_right
+{
+	text-align: right;
+}
+
+.text-justify
+{
+	text-align: justify;
+}
+
+.no_margin
+{
+	margin: 0pt 0pt 0pt 0pt;
+}
+
+.block_center
+{
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.label
+{
+	display: inline;
+}
+
+.field
+{
+	border-bottom: 0.5625pt solid black;
+	display: inline-block; 
+	text-align: center;
+}
+
+.table_wrapper
+{
+	margin-top: 9pt;
+}
+
+.dates
+{
+	width: 90pt;
+}
+
+.empty_cell
+{
+	height: 6pt;
+}
+
+.hidden
+{
+	display: none;
+}
+
+.certificate_view_wrapper
+{
+	display: inline-block;
+}
+
+.camera_certificate_header
+{
+	margin-bottom: 5px;
+}
+
+#outer_border
+{
+	margin: 18pt;
+	border: 2.25pt solid black;
+	width: 213.75pt;
+	height: 285.75pt;
+	
+}
+
+#inner_border
+{
+	margin: 2.25pt;
+	border: 1.125pt solid black;
+	height: 279pt;
+}
+
+#contents
+{
+	margin: 6.75pt;
+	overflow: hidden;
+}
+
+#header_1
+{
+	overflow: auto;
+}
+
+#header_1>p
+{
+	margin: 0pt;
+}
+
+#logo
+{
+	height: 49.5pt;
+	width: 49.5pt;
+}
+
+#header_2
+{
+	margin-right: 10pt;
+	margin-left: 10pt;
+}
+
+#reg_number
+{
+	width: 100pt;
+}
+
+#name
+{
+	width: 174pt; 
+}
+
+#age
+{
+	width: 18pt;
+}
+
+#sex
+{
+	width: 12pt;
+}
+
+#work_type
+{
+	width: 98pt;
+}
+
+#establishment
+{
+	width: 149pt;
+}
+
+#camera
+{
+	width: 192pt;
+	height: 192pt;
+	border: 1px solid grey;
+	margin-right: auto;
+	margin-left: auto;
+	margin-bottom: 20px;
+}
+
+#picture
+{
+	width: 96px;
+	height: 96px;
+	border: 0.5625pt solid black;
+	margin-bottom: 4.5pt;
+}
+
+#signature_si_in_charge
+{
+	width: 110pt;
+}
+
+@media print
+{    
+    .no-print
+    {
+        display: none !important;
+    }
+
+    #certificates-wrapper
+    {
+    	text-align: justify;
+    }
+
+    .health_certificate
+    {
+    	margin-top: 3px;
+    	margin-left: 3px;
+    }
+}

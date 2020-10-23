@@ -16,7 +16,7 @@
 <body>
 	@php
 		$picture = $health_certificate->applicant->picture;
-		$url = url("storage/{$health_certificate->applicant->picture}");
+		$url = url("applicant/{$health_certificate->applicant->applicant_id}/picture");
 	@endphp
 
 	<div class="no-print">
@@ -35,7 +35,7 @@
 		<div id="camera"></div>
 	</div>
 
-	<div class="text-center">
+	<div id="certificates-wrapper" class="text-center">
 		<div style="display: inline-block;">
 			<div style="float: left;">
 				<h3 class="text-center no-print camera_certificate_header">Front Preview</h3>
@@ -80,8 +80,6 @@
 
 								<div style="margin-top: 9pt;">
 									<img {{ $picture == null ?: "src=$url"}} id="picture" class="pull_left">
-										
-									</img>
 
 									<div class="pull_right" style="margin-top: 4.5pt;">
 										<div id="signature_si_in_charge" class="standard_font field" style="border-bottom: 0.7625pt solid black;"></div>

@@ -1,1 +1,3 @@
-$("#about").click(function(){$("#about_modal").modal("show")});
+$('#about').click(function(){
+	$('#about_modal').modal('show');
+});

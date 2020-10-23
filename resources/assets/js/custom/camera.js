@@ -64,4 +64,5 @@ Webcam.on( 'live', function(){
 
 Webcam.on( 'error', function(err){
 	window.alert('There is an error in your camera. Please plug it and enable access to your web browser.');
+	console.log(err);
 });

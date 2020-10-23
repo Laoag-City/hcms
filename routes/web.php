@@ -25,6 +25,8 @@ Route::group(['middleware' => 'auth'], function(){
 	Route::get('health_certificate/{health_certificate}/preview', 'HealthCertificateController@printPreview');
 	//ajax for saving the image
 	Route::post('health_certificate/{health_certificate}/picture', 'HealthCertificateController@savePicture');
+	//shows applicant's id picture
+	Route::get('applicant/{applicant}/picture', 'ApplicantController@showPicture');
 	//views and edits a health certificate
 	Route::match(['get', 'put'], 'health_certificate/{health_certificate}', 'HealthCertificateController@viewEditCertificate');
 
@@ -37,9 +39,11 @@ Route::group(['middleware' => 'auth'], function(){
 	Route::get('search', 'ApplicantController@searchApplicants');
 
 	//user administration
-	Route::group(['middleware' => 'can:crud-user'], function(){
+	Route::group(['middleware' => 'can:is-admin'], function(){
 		Route::match(['get', 'post'], 'users', 'UserController@getOrCreateUser');
 		Route::match(['get', 'put', 'delete'], 'users/{user}', 'UserController@editOrDeleteUser');
+
+		Route::match(['get', 'put'], 'health_certificate/data', 'HealthCertificateController@showEditCertificateData');
 	});
 
 	//logs out the user

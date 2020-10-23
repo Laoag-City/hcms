@@ -316,7 +316,9 @@ var Webcam = {
 					self.dispatch('live');
 					self.flip();
 				};
-				video.src = window.URL.createObjectURL( stream ) || stream;
+				//MANUAL UPDATE OF CODE BELOW BECAUSE THIS PACKAGE IS NO LONGER BEING MAINTAINED SO I NEED TO EDIT THE SOURCE CODE
+				//video.src = window.URL.createObjectURL( stream ) || stream;
+				video.srcObject = stream;
 			})
 			.catch( function(err) {
 				// JH 2016-07-31 Instead of dispatching error, now falling back to Flash if userMedia fails (thx @john2014)

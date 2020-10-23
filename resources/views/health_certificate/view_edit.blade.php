@@ -18,7 +18,7 @@
 
 					<div class="row">
 						<div class="three wide column" style="text-align: center;">
-							<img height="129" width="129" src="{{ $applicant->picture != null ? url("/storage/$applicant->picture") : url("/noPicAvailable.png") }}">
+							<img height="129" width="129" src="{{ $applicant->picture != null ? url("applicant/{$applicant->applicant_id}/picture") : url("/noPicAvailable.png") }}">
 						</div>
 					</div>
 

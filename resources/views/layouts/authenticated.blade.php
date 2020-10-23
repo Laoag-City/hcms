@@ -39,7 +39,7 @@
 					</div>
 				</form>
 
-				@can('crud-user')
+				@can('is-admin')
 					<a class="item" href="{{ url('users') }}">
 						<i class="big icons" data-tooltip="User Administration" data-position="bottom center">
 							<i class="spy icon"></i>
@@ -65,7 +65,7 @@
 	</div>
 
 	<div id="footer" class="ui borderless mini menu">
-		<div class="item">Copyright 2017. All rights reserved.</div>
+		<div class="item">Copyright {{ date('Y', strtotime('now')) }}. All rights reserved.</div>
 
 		<div class="right menu">
 			<a id="about" class="item">About</a>
@@ -100,7 +100,7 @@
 			<br><br>
 			<a href="#"><i class="big red mail icon"></i> russellbello24@gmail.com</a>
 			<br><br>
-			<a href="#"><i class="big black address book outline icon"></i> 09070760896</a>
+			<a href="#"><i class="big black address book outline icon"></i> 09386573424</a>
 		</div>
 		<div class="actions">
 			<div class="ui grey deny button">

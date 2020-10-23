@@ -23,6 +23,11 @@ class ApplicantController extends Controller
     	]);
 	}
 
+    public function showPicture(Applicant $applicant)
+    {
+        return response()->file(storage_path("app/public/{$applicant->picture}"), ['Cache-Control' => 'No-Store']);
+    }
+
 	public function viewEditApplicant(Applicant $applicant)
 	{
 		if($this->request->isMethod('get'))

@@ -58,7 +58,6 @@ td, th
 	width: 252pt;
 	height: 324pt;
 	border: 0.5625pt solid black;
-	margin: auto;
 }
 
 .standard_font
@@ -251,5 +250,16 @@ td, th
     .no-print
     {
         display: none !important;
+    }
+
+    #certificates-wrapper
+    {
+    	text-align: justify;
+    }
+
+    .health_certificate
+    {
+    	margin-top: 3px;
+    	margin-left: 3px;
     }
 }

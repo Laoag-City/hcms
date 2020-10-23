@@ -334,6 +334,25 @@ class HealthCertificateController extends Controller
         abort(403);
     }
 
+    public function showEditCertificateData()
+    {
+        if($this->request->isMethod('get'))
+        {
+            $certificate_variables = file(base_path('certificate_variables.txt'), FILE_IGNORE_NEW_LINES);
+
+            return view('', [
+                'title' => 'View/Edit Health Certificate',
+                'signatory' => $certificate_variables[0],
+                'certificates_output_folder' => $certificate_variables[2]
+            ]);
+        }
+
+        elseif($this->request->isMethod('put'))
+        {
+
+        }
+    }
+
     private function create_edit_logic($is_create, $health_certificate = null)
     {
         $unique_rule = Rule::unique('health_certificates');
