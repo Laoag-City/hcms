@@ -43,7 +43,7 @@ Route::group(['middleware' => 'auth'], function(){
 		Route::match(['get', 'post'], 'users', 'UserController@getOrCreateUser');
 		Route::match(['get', 'put', 'delete'], 'users/{user}', 'UserController@editOrDeleteUser');
 
-		Route::match(['get', 'put'], 'health_certificate/data', 'HealthCertificateController@showEditCertificateData');
+		Route::match(['get', 'put'], 'health_certificate_values', 'HealthCertificateController@showEditCertificateValues');
 	});
 
 	//logs out the user

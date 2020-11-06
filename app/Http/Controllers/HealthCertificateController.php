@@ -334,22 +334,40 @@ class HealthCertificateController extends Controller
         abort(403);
     }
 
-    public function showEditCertificateData()
+    public function showEditCertificateValues()
     {
+        $config_file_path = base_path('certificate_variables.txt');
+        $certificate_variables = file($config_file_path, FILE_IGNORE_NEW_LINES);
+
         if($this->request->isMethod('get'))
         {
-            $certificate_variables = file(base_path('certificate_variables.txt'), FILE_IGNORE_NEW_LINES);
-
-            return view('', [
+            return view('health_certificate.health_certificate_values', [
                 'title' => 'View/Edit Health Certificate',
-                'signatory' => $certificate_variables[0],
-                'certificates_output_folder' => $certificate_variables[2]
+                'city_health_officer' => $certificate_variables[0],
+                'health_certificates_output_folder' => $certificate_variables[3]
             ]);
         }
 
         elseif($this->request->isMethod('put'))
         {
+            $validator = Validator::make($this->request->all(), [
+                'city_health_officer' => 'required|regex:/^[\pL\s.,-]+$/u',
+                'health_certificates_output_folder' => 'required|regex:/^[a-zA-Z]\:[\/,\\\\].{1,}/'
+            ]);
 
+            $validator->after(function($validator){
+                if(Storage::exists($this->request->output_folder))
+                    $validator->errors()->add('output_folder', 'The output folder path does not exist in the server.');
+            });
+
+            $validator->validate();
+
+            $certificate_variables[0] = $this->request->city_health_officer;
+            $certificate_variables[3] = $this->request->health_certificates_output_folder;
+
+            file_put_contents($config_file_path, implode("\n", $certificate_variables));
+
+            //transfer the files from old folder to new folder and show success message
         }
     }
 
