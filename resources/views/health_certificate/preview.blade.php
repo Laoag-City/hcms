@@ -2,7 +2,6 @@
 <html>
 <head>
 	<meta name="author" content="Russell James F. Bello">
-    <meta name="author" content="Mark Anthony Nicholas">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">

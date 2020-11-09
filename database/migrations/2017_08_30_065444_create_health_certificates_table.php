@@ -21,6 +21,7 @@ class CreateHealthCertificatesTable extends Migration
             $table->string('establishment', 50);
             $table->timestamp('issuance_date');
             $table->timestamp('expiration_date');
+            $table->string('picture')->nullable();
             $table->timestamps();
 
             $table->foreign('applicant_id')

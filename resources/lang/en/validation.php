@@ -13,6 +13,7 @@ return [
     |
     */
     "alpha_spaces"         => "The :attribute may only contain letters and spaces.",
+    "alpha_num_spaces"         => "The :attribute may only contain letters, numbers and spaces.",
 
     'accepted'             => 'The :attribute must be accepted.',
     'active_url'           => 'The :attribute is not a valid URL.',

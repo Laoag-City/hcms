@@ -20,7 +20,7 @@ Route::group(['middleware' => 'auth'], function(){
 	Route::get('applicant_search', 'ApplicantController@searchApplicantsForHealthCertificate');
 
 	//shows health certificate list
-	Route::get('health_certificate', 'HealthCertificateController@getHealthCertificates');
+	//Route::get('health_certificate', 'HealthCertificateController@getHealthCertificates');
 	//shows the preview of the health certificate and the take picture feature
 	Route::get('health_certificate/{health_certificate}/preview', 'HealthCertificateController@printPreview');
 	//ajax for saving the image
@@ -43,7 +43,7 @@ Route::group(['middleware' => 'auth'], function(){
 		Route::match(['get', 'post'], 'users', 'UserController@getOrCreateUser');
 		Route::match(['get', 'put', 'delete'], 'users/{user}', 'UserController@editOrDeleteUser');
 
-		Route::match(['get', 'put'], 'health_certificate_values', 'HealthCertificateController@showEditCertificateValues');
+		//Route::match(['get', 'put'], 'health_certificate_values', 'HealthCertificateController@showEditCertificateValues');
 	});
 
 	//logs out the user

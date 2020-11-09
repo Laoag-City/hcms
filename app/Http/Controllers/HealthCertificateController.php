@@ -12,6 +12,8 @@ use App\XRaySputum;
 use App\StoolAndOther;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
+use App\Custom\CertificateFilepathGenerator;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class HealthCertificateController extends Controller
 {
@@ -334,17 +336,19 @@ class HealthCertificateController extends Controller
         abort(403);
     }
 
+    /*COMMENTED OUT. Maybe this function will be useful in the future so i'll let it be
     public function showEditCertificateValues()
     {
         $config_file_path = base_path('certificate_variables.txt');
         $certificate_variables = file($config_file_path, FILE_IGNORE_NEW_LINES);
+        $current_output_folder = $certificate_variables[3];
 
         if($this->request->isMethod('get'))
         {
             return view('health_certificate.health_certificate_values', [
                 'title' => 'View/Edit Health Certificate',
                 'city_health_officer' => $certificate_variables[0],
-                'health_certificates_output_folder' => $certificate_variables[3]
+                'health_certificates_output_folder' => $current_output_folder
             ]);
         }
 
@@ -369,12 +373,12 @@ class HealthCertificateController extends Controller
 
             //transfer the files from old folder to new folder and show success message
         }
-    }
+    }*/
 
     private function create_edit_logic($is_create, $health_certificate = null)
     {
         $unique_rule = Rule::unique('health_certificates');
-
+        //set rules depending on $is_create
         if($is_create)
         {
             $required_message = 'The :attribute field is required.';
@@ -437,44 +441,44 @@ class HealthCertificateController extends Controller
 
             'immunization_date_1' => 'nullable|bail|required_with:immunization_kind_1,immunization_date_of_expiration_1|date|before_or_equal:today',
 
-            'immunization_kind_1' => 'nullable|bail|required_with:immunization_date_1,immunization_date_of_expiration_1|alpha_spaces|max:15',
+            'immunization_kind_1' => 'nullable|bail|required_with:immunization_date_1,immunization_date_of_expiration_1|alpha_num_spaces|max:15',
 
             'immunization_date_of_expiration_1' => 'nullable|bail|required_with:immunization_date_1,immunization_kind_1|date|after_or_equal:today',
 
 
             'immunization_date_2' => 'nullable|bail|required_with:immunization_kind_2,immunization_date_of_expiration_2|date|before_or_equal:today',
 
-            'immunization_kind_2' => 'nullable|bail|required_with:immunization_date_2,immunization_date_of_expiration_2|alpha_spaces|max:15',
+            'immunization_kind_2' => 'nullable|bail|required_with:immunization_date_2,immunization_date_of_expiration_2|alpha_num_spaces|max:15',
 
             'immunization_date_of_expiration_2' => 'nullable|bail|required_with:immunization_date_2,immunization_kind_2|date|after_or_equal:today',
 
 
             'x-ray_sputum_exam_date_1' => 'nullable|bail|required_with:x-ray_sputum_exam_kind_1,x-ray_sputum_exam_result_1|date|before_or_equal:today',
 
-            'x-ray_sputum_exam_kind_1' => 'nullable|bail|required_with:x-ray_sputum_exam_date_1,x-ray_sputum_exam_result_1|alpha_spaces|max:15',
+            'x-ray_sputum_exam_kind_1' => 'nullable|bail|required_with:x-ray_sputum_exam_date_1,x-ray_sputum_exam_result_1|alpha_num_spaces|max:15',
 
-            'x-ray_sputum_exam_result_1' => 'nullable|bail|required_with:x-ray_sputum_exam_date_1,x-ray_sputum_exam_kind_1|alpha_spaces|max:15',
+            'x-ray_sputum_exam_result_1' => 'nullable|bail|required_with:x-ray_sputum_exam_date_1,x-ray_sputum_exam_kind_1|alpha_num_spaces|max:15',
 
 
             'x-ray_sputum_exam_date_2' => 'nullable|bail|required_with:x-ray_sputum_exam_kind_2,x-ray_sputum_exam_result_2|date|before_or_equal:today',
 
-            'x-ray_sputum_exam_kind_2' => 'nullable|bail|required_with:x-ray_sputum_exam_date_2,x-ray_sputum_exam_result_2|alpha_spaces|max:15',
+            'x-ray_sputum_exam_kind_2' => 'nullable|bail|required_with:x-ray_sputum_exam_date_2,x-ray_sputum_exam_result_2|alpha_num_spaces|max:15',
 
-            'x-ray_sputum_exam_result_2' => 'nullable|bail|required_with:x-ray_sputum_exam_date_2,x-ray_sputum_exam_kind_2|alpha_spaces|max:15',
+            'x-ray_sputum_exam_result_2' => 'nullable|bail|required_with:x-ray_sputum_exam_date_2,x-ray_sputum_exam_kind_2|alpha_num_spaces|max:15',
 
 
             'stool_and_other_exam_date_1' => 'nullable|bail|required_with:stool_and_other_exam_kind_1,stool_and_other_exam_result_1|date|before_or_equal:today',
 
-            'stool_and_other_exam_kind_1' => 'nullable|bail|required_with:stool_and_other_exam_date_1,stool_and_other_exam_result_1|alpha_spaces|max:15',
+            'stool_and_other_exam_kind_1' => 'nullable|bail|required_with:stool_and_other_exam_date_1,stool_and_other_exam_result_1|alpha_num_spaces|max:15',
 
-            'stool_and_other_exam_result_1' => 'nullable|bail|required_with:stool_and_other_exam_date_1,stool_and_other_exam_kind_1|alpha_spaces|max:15',
+            'stool_and_other_exam_result_1' => 'nullable|bail|required_with:stool_and_other_exam_date_1,stool_and_other_exam_kind_1|alpha_num_spaces|max:15',
 
 
             'stool_and_other_exam_date_2' => 'nullable|bail|required_with:stool_and_other_exam_kind_2,stool_and_other_exam_result_2|date|before_or_equal:today',
 
-            'stool_and_other_exam_kind_2' => 'nullable|bail|required_with:stool_and_other_exam_date_2,stool_and_other_exam_result_2|alpha_spaces|max:15',
+            'stool_and_other_exam_kind_2' => 'nullable|bail|required_with:stool_and_other_exam_date_2,stool_and_other_exam_result_2|alpha_num_spaces|max:15',
 
-            'stool_and_other_exam_result_2' => 'nullable|bail|required_with:stool_and_other_exam_date_2,stool_and_other_exam_kind_2|alpha_spaces|max:15'
+            'stool_and_other_exam_result_2' => 'nullable|bail|required_with:stool_and_other_exam_date_2,stool_and_other_exam_kind_2|alpha_num_spaces|max:15'
         ]), $custom_messages);
 
         //after validation hook to further add validation rules after the first rules
@@ -500,21 +504,21 @@ class HealthCertificateController extends Controller
 
             if($input_value_from_tables->unique()->count() == 1)
                 $validator->errors()->add('general_table_error', 'There must be at least one result for Immunization, X-Ray, Sputum Exam, Stool, or Other Exam.');
-
         });
 
         //run the validation process. If there are errors, it will automatically redirect back
         $validator->validate();
 
+        //save to database
         if($is_create)
         {
             if($this->request->id == null)//if the validation did not detect errors, it will proceed saving records to the database
             {
                 $applicant = new Applicant;
                 $applicant->first_name = $this->request->first_name;
-                $applicant->middle_name = $this->request->middle_name;
+                $applicant->middle_name = $this->request->middle_name == null ? null : $this->request->middle_name;
                 $applicant->last_name = $this->request->last_name;
-                $applicant->suffix_name = $this->request->suffix_name;
+                $applicant->suffix_name = $this->request->suffix_name == null ? null : $this->request->suffix_name;
                 $applicant->age = $this->request->age;
                 $applicant->gender = $this->request->gender;
             }
@@ -567,7 +571,7 @@ class HealthCertificateController extends Controller
         }
 
         //solve: what if an immunization is only at row 2 or row 1? applies to xray and sputum and stools and others
-
+        //save to database for the 3 tables linked to health certificate
         if($this->request->immunization_date_1 != null && $this->request->immunization_kind_1 != null && $this->request->immunization_date_of_expiration_1 != null)
         {
             $immunization1->health_certificate_id = $health_certificate->health_certificate_id;
@@ -650,8 +654,34 @@ class HealthCertificateController extends Controller
             && !$is_create && $stool_and_others2 != null)
             $stool_and_others2->delete();
 
+        //logic for saving pdf files of certificates
+        if($is_create)
+        {
+        	$path_generator = new CertificateFilepathGenerator;
+        	$path_values = $path_generator->getHealthCertificateFolder($health_certificate);
+
+        	$pdf = PDF::loadView('health_certificate.certificate_for_pdf', $health_certificate)
+        		->setPaper([0, 0, 252.00, 360.00], 'portrait');
+
+        	Storage::put($path_values[2] . 'certificate.pdf', $pdf->output());
+        }
+
+        else
+        {
+
+        }
+
         if($is_create)
             return $health_certificate->health_certificate_id;
+    }
+
+    public function certificateToPdf(HealthCertificate $health_certificate)
+    {
+    	return view('health_certificate.certificate_for_pdf', [
+            'health_certificate' => HealthCertificate::where('health_certificate_id', '=', $health_certificate->health_certificate_id)
+                                                        ->with(['applicant', 'immunizations', 'stool_and_others', 'xray_sputums'])
+                                                        ->first()
+        ]);
     }
 
     private function findByRowNumber($model, $row_number, $class_name)

@@ -21,7 +21,6 @@ class CreateApplicantsTable extends Migration
             $table->string('suffix_name', 4)->nullable();
             $table->tinyInteger('age')->unsigned();
             $table->boolean('gender');
-            $table->string('picture')->nullable();
             $table->timestamps();
         });
     }

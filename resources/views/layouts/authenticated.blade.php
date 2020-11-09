@@ -17,11 +17,11 @@
 				</i>
 			</a>
 
-			<a class="item" href="{{ url('health_certificate') }}">
+			<!--<a class="item" href="{{-- url('health_certificate') --}}">
 				<i class="big icons" data-tooltip="Health Certificates" data-position="bottom center">
 					<i class="id card outline icon"></i>
 				</i>
-			</a>
+			</a>-->
 
 			<a class="item" href="{{ url('applicant') }}">
 				<i class="big icons" data-tooltip="Applicants" data-position="bottom center">
@@ -45,6 +45,12 @@
 							<i class="spy icon"></i>
 						</i>
 					</a>
+
+					<!--<a class="item" href="{{ url('health_certificate_values') }}">
+						<i class="big icons" data-tooltip="Health Certificate Values" data-position="bottom center">
+							<i class="folder icon"></i>
+						</i>
+					</a>-->
 				@endcan
     
     			<a class="item"  href="#" onclick="event.preventDefault(); document.getElementById('logout_form').submit();">

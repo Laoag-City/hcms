@@ -24,7 +24,8 @@ class Applicant extends Model
 
     public function setMiddleNameAttribute($value)
     {
-        $this->attributes['middle_name'] = title_case($value);
+        if($value != null)
+            $this->attributes['middle_name'] = title_case($value);
     }
 
     public function setLastNameAttribute($value)

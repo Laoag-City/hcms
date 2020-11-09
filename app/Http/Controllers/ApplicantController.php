@@ -19,7 +19,7 @@ class ApplicantController extends Controller
 	{
 		return view('applicant.index', [
     		'title' => 'Health Certificates',
-    		'applicants' => Applicant::orderBy('last_name', 'asc')->paginate(50)
+    		'applicants' => Applicant::orderBy('last_name', 'asc')->paginate(100)
     	]);
 	}
 
@@ -35,7 +35,9 @@ class ApplicantController extends Controller
     		return view('applicant.view_edit', [
     			'title' => $applicant->formatName(),
     			'applicant' => $applicant,
-    			'health_certificates' => HealthCertificate::where('applicant_id', '=', $applicant->applicant_id)->paginate(50)
+    			'health_certificates' => HealthCertificate::where('applicant_id', '=', $applicant->applicant_id)
+                                                            ->orderBy('created_at', 'desc')
+                                                            ->paginate(50)
     		]);
     	}
 
