@@ -5,29 +5,22 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-
-    <script>window.Laravel = {!! json_encode(['csrfToken' => csrf_token(), ]) !!};</script>
+    
 	<title>Health Certificate for PDF Download</title>
 
-	<link rel="stylesheet" href="{{ mix('/css/camera.css') }}">
+	<link rel="stylesheet" href="{{ public_path('css/camera.css') }}" media="all">
 </head>
-<body style="width: 337px">
-	@php
-		$picture = $health_certificate->applicant->picture;
-		$url = url("applicant/{$health_certificate->applicant->applicant_id}/picture");
-	@endphp
-
+<body>
 	<div id="front_preview" class="health_certificate">
 		<div id="outer_border">
 			<div id="inner_border">
 				<div id="contents">
 					<div id="header_1">
-						<img id="logo" src="/doh_logo.png" class="pull_left">
+						<img id="logo" src="{{ public_path('doh_logo.png') }}" class="pull_left">
 
 						<p class="text_right standard_font"><b>EHS Form No. 102-A-B</b></p>
-						<p class="text_right" style="font-size: 10.9pt;"><b>DEPARTMENT OF HEALTH</b></p>
+						<p class="text_right" style="font-size: 10.5pt;"><b>DEPARTMENT OF HEALTH</b></p>
 						<p class="text-center standard_font"><b>Office of the City Health Officer</b></p>
 						<p class="text-center standard_font"><b>LAOAG CITY</b></p>
 						<div style="margin: 0pt auto 0pt auto; width: 124pt; border-top: .5625pt solid black; overflow: auto;"></div>
@@ -59,7 +52,7 @@
 					</div>
 
 					<div style="margin-top: 9pt;">
-						<img {{ $picture == null ?: "src=$url"}} id="picture" class="pull_left">
+						<img {{ !$picture_path ?: "src=$picture_path"}} id="picture" class="pull_left">
 
 						<div class="pull_right" style="margin-top: 4.5pt;">
 							<div id="signature_si_in_charge" class="standard_font field" style="border-bottom: 0.7625pt solid black;"></div>

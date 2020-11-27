@@ -57,7 +57,7 @@ td, th
 {
 	width: 252pt;
 	height: 324pt;
-	border: 0.5625pt solid black;
+	border: 0.7625pt solid black !important;
 }
 
 .standard_font
@@ -113,7 +113,7 @@ td, th
 
 .field
 {
-	border-bottom: 0.5625pt solid black;
+	border-bottom: 0.7625pt solid black !important;
 	display: inline-block; 
 	text-align: center;
 }

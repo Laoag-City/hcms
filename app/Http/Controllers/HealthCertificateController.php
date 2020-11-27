@@ -12,8 +12,8 @@ use App\XRaySputum;
 use App\StoolAndOther;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
-use App\Custom\CertificateFilepathGenerator;
-use Barryvdh\DomPDF\Facade as PDF;
+use App\Custom\CertificateFileGenerator;
+use Carbon\Carbon;
 
 class HealthCertificateController extends Controller
 {
@@ -274,7 +274,8 @@ class HealthCertificateController extends Controller
     			'health_certificate' => $health_certificate,
     			'immunization' => $health_certificate->immunizations->sortBy('row_number'),
     			'stool_and_others' => $health_certificate->stool_and_others->sortBy('row_number'),
-    			'xray_sputum' => $health_certificate->xray_sputums->sortBy('row_number')
+    			'xray_sputum' => $health_certificate->xray_sputums->sortBy('row_number'),
+    			'picture_url' => (new CertificateFileGenerator($health_certificate))->getPicturePathAndURL()['url']
     		]);
     	}
 
@@ -307,6 +308,7 @@ class HealthCertificateController extends Controller
     public function printPreview(HealthCertificate $health_certificate)
     {
         return view('health_certificate.preview', [
+        	'picture_url' => (new CertificateFileGenerator($health_certificate))->getPicturePathAndURL()['url'],
             'health_certificate' => HealthCertificate::where('health_certificate_id', '=', $health_certificate->health_certificate_id)
                                                         ->with(['applicant', 'immunizations', 'stool_and_others', 'xray_sputums'])
                                                         ->first()
@@ -317,23 +319,20 @@ class HealthCertificateController extends Controller
     {
         if($this->request->ajax() && $this->request->isMethod('post'))
         {
-            $applicant = $health_certificate->applicant;
-            $filename = snake_case("{$applicant->last_name} {$applicant->first_name} {$applicant->middle_name} {$applicant->suffix_name} " . strtotime('now') .'.png');
-            $path = storage_path("app\\public\\" . $filename);
+            $picture_url_path = (new CertificateFileGenerator($health_certificate))->getPicturePathAndURL(true);
 
-            $binary_data = base64_decode($this->request->webcam);
-            file_put_contents($path, $binary_data);
+            file_put_contents($picture_url_path['path'], base64_decode($this->request->webcam));
+            (new CertificateFileGenerator($health_certificate))->updatePDF();
 
-            if($applicant->picture != null)
-                Storage::delete('public/' . $applicant->picture);
-
-            $applicant->picture = $filename;
-            $applicant->save();
-
-            return response()->json(['url' => url("storage/$filename")]);
+            return response()->json(['url' => $picture_url_path['url']]);
         }
 
         abort(403);
+    }
+
+    public function showPicture(HealthCertificate $health_certificate)
+    {
+        return response()->file((new CertificateFileGenerator($health_certificate))->getPicturePathAndURL()['path'], ['Cache-Control' => 'No-Store']);
     }
 
     /*COMMENTED OUT. Maybe this function will be useful in the future so i'll let it be
@@ -421,6 +420,10 @@ class HealthCertificateController extends Controller
         {
             $create_rules = [];
             $custom_messages = [];
+            $old_health_certificate = $health_certificate->replicate();
+
+            $old_health_certificate->health_certificate_id = $health_certificate->health_certificate_id;
+            $old_health_certificate->created_at = $health_certificate->created_at;
         }
         
         //define validation rules here
@@ -657,31 +660,12 @@ class HealthCertificateController extends Controller
         //logic for saving pdf files of certificates
         if($is_create)
         {
-        	$path_generator = new CertificateFilepathGenerator;
-        	$path_values = $path_generator->getHealthCertificateFolder($health_certificate);
-
-        	$pdf = PDF::loadView('health_certificate.certificate_for_pdf', $health_certificate)
-        		->setPaper([0, 0, 252.00, 360.00], 'portrait');
-
-        	Storage::put($path_values[2] . 'certificate.pdf', $pdf->output());
+	    	(new CertificateFileGenerator($health_certificate))->generatePDF();
+	    	return $health_certificate->health_certificate_id;
         }
 
         else
-        {
-
-        }
-
-        if($is_create)
-            return $health_certificate->health_certificate_id;
-    }
-
-    public function certificateToPdf(HealthCertificate $health_certificate)
-    {
-    	return view('health_certificate.certificate_for_pdf', [
-            'health_certificate' => HealthCertificate::where('health_certificate_id', '=', $health_certificate->health_certificate_id)
-                                                        ->with(['applicant', 'immunizations', 'stool_and_others', 'xray_sputums'])
-                                                        ->first()
-        ]);
+        	(new CertificateFileGenerator($health_certificate))->updatePDF($old_health_certificate);
     }
 
     private function findByRowNumber($model, $row_number, $class_name)

@@ -25,7 +25,7 @@
 			<div class="four wide field"></div>
 
 			<div class="four wide field">
-				<img height="129" width="129" src="{{ $applicant->picture != null ? url("applicant/{$applicant->applicant_id}/picture") : url("/noPicAvailable.png") }}">
+				<img height="129" width="129" src="{{ $picture_url ? $picture_url : url("/noPicAvailable.png") }}">
 			</div>
 
 			<div class="three wide field" style="display: flex; align-items: center;">

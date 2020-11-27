@@ -13,11 +13,6 @@
 	<link rel="stylesheet" href="{{ mix('/css/camera.css') }}">
 </head>
 <body>
-	@php
-		$picture = $health_certificate->applicant->picture;
-		$url = url("applicant/{$health_certificate->applicant->applicant_id}/picture");
-	@endphp
-
 	<div class="no-print">
 		<br>
 		<button onclick="window.location.replace('{{ url()->previous() }}')">GO BACK</button>
@@ -78,7 +73,7 @@
 								</div>
 
 								<div style="margin-top: 9pt;">
-									<img {{ $picture == null ?: "src=$url"}} id="picture" class="pull_left">
+									<img {{ !$picture_url ?: "src=$picture_url"}} id="picture" class="pull_left">
 
 									<div class="pull_right" style="margin-top: 4.5pt;">
 										<div id="signature_si_in_charge" class="standard_font field" style="border-bottom: 0.7625pt solid black;"></div>
@@ -375,7 +370,7 @@
 	
 </body>
 <script>
-	var picture = '{{ $picture == null ?: "#print_front" }}';
+	var picture = '{{ $picture_url == null ?: "#print_front" }}';
 	var id = {{ $health_certificate->health_certificate_id }};
 </script>
 <script src="/webcamjs/webcam.js"></script>

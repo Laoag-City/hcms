@@ -26,7 +26,7 @@ Route::group(['middleware' => 'auth'], function(){
 	//ajax for saving the image
 	Route::post('health_certificate/{health_certificate}/picture', 'HealthCertificateController@savePicture');
 	//shows applicant's id picture
-	Route::get('applicant/{applicant}/picture', 'ApplicantController@showPicture');
+	Route::get('health_certificate/{health_certificate}/picture', 'HealthCertificateController@showPicture');
 	//views and edits a health certificate
 	Route::match(['get', 'put'], 'health_certificate/{health_certificate}', 'HealthCertificateController@viewEditCertificate');
 

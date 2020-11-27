@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Applicant;
 use App\HealthCertificate;
+use App\Custom\CertificateFileGenerator;
 
 class ApplicantController extends Controller
 {
@@ -23,18 +24,16 @@ class ApplicantController extends Controller
     	]);
 	}
 
-    public function showPicture(Applicant $applicant)
-    {
-        return response()->file(storage_path("app/public/{$applicant->picture}"), ['Cache-Control' => 'No-Store']);
-    }
-
 	public function viewEditApplicant(Applicant $applicant)
 	{
+        $latest_health_certificate = HealthCertificate::where('applicant_id', '=', $applicant->applicant_id)->latest()->first();
+
 		if($this->request->isMethod('get'))
     	{
     		return view('applicant.view_edit', [
     			'title' => $applicant->formatName(),
     			'applicant' => $applicant,
+                'picture_url' => (new CertificateFileGenerator($latest_health_certificate))->getPicturePathAndURL()['url'],
     			'health_certificates' => HealthCertificate::where('applicant_id', '=', $applicant->applicant_id)
                                                             ->orderBy('created_at', 'desc')
                                                             ->paginate(50)
@@ -52,13 +51,22 @@ class ApplicantController extends Controller
     			'gender' => 'bail|required|in:0,1',
     		]);
 
+            $old_certificate_file_generator = new CertificateFileGenerator($latest_health_certificate);
+            $old_applicant_folder = $old_certificate_file_generator->getHealthCertificateFolder()['applicant_folder'];
+
     		$applicant->first_name = $this->request->first_name;
-    		$applicant->middle_name = $this->request->middle_name;
+    		$applicant->middle_name = $this->request->middle_name == null ? null : $this->request->middle_name;
     		$applicant->last_name = $this->request->last_name;
-    		$applicant->suffix_name = $this->request->suffix_name;
+    		$applicant->suffix_name = $this->request->suffix_name == null ? null : $this->request->suffix_name;
     		$applicant->age = $this->request->age;
     		$applicant->gender = $this->request->gender;
     		$applicant->save();
+
+            $new_certificate_file_generator = new CertificateFileGenerator($latest_health_certificate->refresh());
+            $new_applicant_folder = $new_certificate_file_generator->getHealthCertificateFolder()['applicant_folder'];
+
+            if($old_applicant_folder != $new_applicant_folder)
+                $new_certificate_file_generator->updateApplicantFolder($old_applicant_folder);
 
     		return back()->with('success', ['header' => 'Applicant updated successfully!', 'message' => null]);
     	}
