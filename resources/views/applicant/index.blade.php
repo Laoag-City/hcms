@@ -14,10 +14,11 @@
 				<tr class="center aligned">
 					<th>Last Name</th>
 					<th>First Name</th>
-					<th>Middle Name</th>
-					<th>Suffix</th>
-					<th>Gender</th>
-					<th>Age</th>
+					<th class="collapsing">Middle Name</th>
+					<th class="collapsing">Suffix</th>
+					<th class="collapsing">Gender</th>
+					<th class="collapsing">Age</th>
+					<th class="collapsing">Health Cert. Reg. No.</th>
 					<th></th>
 				</tr>
 			</thead>
@@ -27,12 +28,13 @@
 					<tr class="center aligned">
 						<td>{{ $app->last_name }}</td>
 						<td>{{ $app->first_name }}</td>
-						<td>{{ $app->middle_name }}</td>
-						<td>{{ $app->suffix_name }}</td>
-						<td>{{ $app->getGender() }}</td>
-						<td>{{ $app->age }}</td>
+						<td class="collapsing">{{ $app->middle_name }}</td>
+						<td class="collapsing">{{ $app->suffix_name }}</td>
+						<td class="collapsing">{{ $app->getGender() }}</td>
+						<td class="collapsing">{{ $app->age }}</td>
+						<td class="collapsing">{{ $app->health_certificate->registration_number }}</td>
 						<td class="collapsing">
-							<a href="{{ url("applicant/$app->applicant_id") }}" class="ui mini inverted blue button">Applicant Info</a>
+							<a href="{{ url("applicant/$app->applicant_id") }}" class="ui mini inverted blue button">View</a>
 						</td>
 					</tr>
 				@endforeach
@@ -40,7 +42,7 @@
 
 			<tfoot>
 				<tr class="center aligned">
-					<th colspan="7">{{ $applicants->links() }}</th>
+					<th colspan="8">{{ $applicants->links() }}</th>
 				</tr>
 			</tfoot>
 		</table>

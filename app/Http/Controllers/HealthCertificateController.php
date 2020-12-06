@@ -28,7 +28,10 @@ class HealthCertificateController extends Controller
     {
     	if($this->request->isMethod('get'))
     	{
-    		return view('health_certificate.create', ['title' => 'Create Health Certificate']);
+    		return view('health_certificate.create', [
+                'title' => 'Create Health Certificate',
+                'certificate_types' => HealthCertificate::CERTIFICATE_TYPES
+            ]);
     	}
 
     	elseif($this->request->isMethod('post'))
@@ -256,26 +259,27 @@ class HealthCertificateController extends Controller
     	}
     }
 
-    public function getHealthCertificates()
+    /*public function getHealthCertificates()
     {
     	return view('health_certificate.index', [
     		'title' => 'Health Certificates',
     		'health_certificates' => HealthCertificate::with('applicant')->orderBy('updated_at', 'desc')->paginate(50)
     	]);
-    }
+    }*/
 
     public function viewEditCertificate(HealthCertificate $health_certificate)
     {
     	if($this->request->isMethod('get'))
     	{
     		return view('health_certificate.view_edit', [
-    			'title' => 'View/Edit Health Certificate',
+    			'title' => "Health Certificate Information | {$health_certificate->registration_number}",
     			'applicant' => $health_certificate->applicant,
     			'health_certificate' => $health_certificate,
     			'immunization' => $health_certificate->immunizations->sortBy('row_number'),
     			'stool_and_others' => $health_certificate->stool_and_others->sortBy('row_number'),
     			'xray_sputum' => $health_certificate->xray_sputums->sortBy('row_number'),
-    			'picture_url' => (new CertificateFileGenerator($health_certificate))->getPicturePathAndURL()['url']
+    			'picture_url' => (new CertificateFileGenerator($health_certificate))->getPicturePathAndURL()['url'],
+                'certificate_types' => HealthCertificate::CERTIFICATE_TYPES
     		]);
     	}
 
@@ -289,27 +293,13 @@ class HealthCertificateController extends Controller
     	}
     }
 
-    public function healthCertificateFrontView(HealthCertificate $health_certificate)
-    {
-        return view('health_certificate.front_view', ['health_certificate' => 
-                                                HealthCertificate::where('health_certificate_id', '=', $health_certificate->health_certificate_id)
-                                                                ->with('applicant')
-                                                                ->first()]);
-    }
-
-    public function healthCertificateBackView(HealthCertificate $health_certificate)
-    {
-        return view('health_certificate.back_view', ['health_certificate' => 
-                                                HealthCertificate::where('health_certificate_id', '=', $health_certificate->health_certificate_id)
-                                                                ->with(['immunizations', 'stool_and_others', 'xray_sputums'])
-                                                                ->first()]);
-    }
-
     public function printPreview(HealthCertificate $health_certificate)
     {
         return view('health_certificate.preview', [
-        	'picture_url' => (new CertificateFileGenerator($health_certificate))->getPicturePathAndURL()['url'],
-            'health_certificate' => HealthCertificate::where('health_certificate_id', '=', $health_certificate->health_certificate_id)
+            'logo' => '/doh_logo.png',
+        	'picture' => (new CertificateFileGenerator($health_certificate))->getPicturePathAndURL()['url'],
+            'color' => $health_certificate->getColor(),
+            'health_certificate' => HealthCertificate::where('applicant_id', '=', $health_certificate->applicant_id)
                                                         ->with(['applicant', 'immunizations', 'stool_and_others', 'xray_sputums'])
                                                         ->first()
         ]);
@@ -374,29 +364,13 @@ class HealthCertificateController extends Controller
         }
     }*/
 
-    private function create_edit_logic($is_create, $health_certificate = null)
+    private function create_edit_logic($is_create, HealthCertificate $health_certificate = null)
     {
-        $unique_rule = Rule::unique('health_certificates');
         //set rules depending on $is_create
         if($is_create)
         {
             $required_message = 'The :attribute field is required.';
             $create_rules = [
-                'existing_client' => 'sometimes|in:on',
-                'whole_name' => 'bail|required_if:existing_client,on|max:107',
-                'id' => [
-                                    'nullable',
-                                    'bail',
-                                    'required_if:existing_client,on',
-                                    Rule::exists('applicants', 'applicant_id')->where(function ($query) {
-
-                                        $query->where('first_name', $this->request->first_name)
-                                                ->where('middle_name', $this->request->middle_name)
-                                                ->where('last_name', $this->request->last_name)
-                                                ->where('suffix_name', $this->request->suffix_name)
-                                                ->where('gender', $this->request->gender);
-                                    })
-                                ],
                 'first_name' => 'bail|required|alpha_spaces|max:40',
                 'middle_name' => 'nullable|bail|alpha_spaces|max:30',
                 'last_name' => 'bail|required|alpha_spaces|max:30',
@@ -404,56 +378,45 @@ class HealthCertificateController extends Controller
                 'age' => 'bail|required|integer|min:0|max:120',
                 'gender' => 'bail|required|in:0,1',
             ];
-
-            $custom_messages = [
-                'id.required_if' => 'The applicant you provided is missing important data.',
-                'id.exists' => 'The applicant you provided does not exist in the system.', 
-                //rather than use required rule on these fields and code the required_if and required_unless logic manually based on if the existing client field exists in the request,
-                //just use the required_if and required_unless rules and change the error message so it will just look like the error message of the required rule.
-                'first_name.required_unless' => $required_message,
-                'last_name.required_unless' => $required_message,
-                'whole_name.required_if' => $required_message,
-            ];
         }
 
         else
         {
+            /*
+            if renew
+                issuance date must be a date after last issuance and before or equal now
+
+            if not renew
+                issuance date must be a date before or equal now
+                proceed regardless if the expiration date computed based on type and issuance is already expired
+            */
             $create_rules = [];
-            $custom_messages = [];
-            $old_health_certificate = $health_certificate->replicate();
+            /*$old_health_certificate = $health_certificate->replicate();
 
             $old_health_certificate->health_certificate_id = $health_certificate->health_certificate_id;
-            $old_health_certificate->created_at = $health_certificate->created_at;
+            $old_health_certificate->created_at = $health_certificate->created_at;*/
         }
         
         //define validation rules here
         $validator = Validator::make($this->request->all(), array_merge($create_rules, [
-            'registration_number' => [
-                                        'bail',
-                                        'required',
-                                        'integer',
-                                        'min:1',
-                                        'max:2147483647',
-                                        $is_create ? $unique_rule : $unique_rule->ignore($health_certificate->health_certificate_id, 'health_certificate_id')
-                                    
-                                    ],
             'type_of_work' => 'bail|required|alpha_spaces|max:40',
             'name_of_establishment' => 'bail|required|max:50',
+            'certificate_type' => 'bail|required|in:' . implode(',', collect(HealthCertificate::CERTIFICATE_TYPES)->pluck('string')->toArray()),
             'date_of_issuance' => 'bail|required|date|before_or_equal:today',
-            'date_of_expiration' => 'bail|required|date|after_or_equal:today',
+            'date_of_expiration' => 'bail|required|date',
 
             'immunization_date_1' => 'nullable|bail|required_with:immunization_kind_1,immunization_date_of_expiration_1|date|before_or_equal:today',
 
             'immunization_kind_1' => 'nullable|bail|required_with:immunization_date_1,immunization_date_of_expiration_1|alpha_num_spaces|max:15',
 
-            'immunization_date_of_expiration_1' => 'nullable|bail|required_with:immunization_date_1,immunization_kind_1|date|after_or_equal:today',
+            'immunization_date_of_expiration_1' => 'nullable|bail|required_with:immunization_date_1,immunization_kind_1|date|after:today',
 
 
             'immunization_date_2' => 'nullable|bail|required_with:immunization_kind_2,immunization_date_of_expiration_2|date|before_or_equal:today',
 
             'immunization_kind_2' => 'nullable|bail|required_with:immunization_date_2,immunization_date_of_expiration_2|alpha_num_spaces|max:15',
 
-            'immunization_date_of_expiration_2' => 'nullable|bail|required_with:immunization_date_2,immunization_kind_2|date|after_or_equal:today',
+            'immunization_date_of_expiration_2' => 'nullable|bail|required_with:immunization_date_2,immunization_kind_2|date|after:today',
 
 
             'x-ray_sputum_exam_date_1' => 'nullable|bail|required_with:x-ray_sputum_exam_kind_1,x-ray_sputum_exam_result_1|date|before_or_equal:today',
@@ -482,18 +445,10 @@ class HealthCertificateController extends Controller
             'stool_and_other_exam_kind_2' => 'nullable|bail|required_with:stool_and_other_exam_date_2,stool_and_other_exam_result_2|alpha_num_spaces|max:15',
 
             'stool_and_other_exam_result_2' => 'nullable|bail|required_with:stool_and_other_exam_date_2,stool_and_other_exam_kind_2|alpha_num_spaces|max:15'
-        ]), $custom_messages);
+        ]));
 
         //after validation hook to further add validation rules after the first rules
         $validator->after(function ($validator) use ($is_create) {
-            if($this->request->id != null && $is_create)
-            {
-                $existing_applicant = Applicant::find($this->request->id);
-
-                if($existing_applicant != null && $existing_applicant->age > (int)$this->request->age)
-                    $validator->errors()->add('age', 'The applicant cannot be younger than his/her current age.');
-            }
-            
             $input_value_from_tables = collect([
                     $this->request->immunization_date_1, $this->request->immunization_kind_1, $this->request->immunization_date_of_expiration_1,
                     $this->request->immunization_date_2, $this->request->immunization_kind_2, $this->request->immunization_date_of_expiration_2,
@@ -515,32 +470,29 @@ class HealthCertificateController extends Controller
         //save to database
         if($is_create)
         {
-            if($this->request->id == null)//if the validation did not detect errors, it will proceed saving records to the database
-            {
-                $applicant = new Applicant;
-                $applicant->first_name = $this->request->first_name;
-                $applicant->middle_name = $this->request->middle_name == null ? null : $this->request->middle_name;
-                $applicant->last_name = $this->request->last_name;
-                $applicant->suffix_name = $this->request->suffix_name == null ? null : $this->request->suffix_name;
-                $applicant->age = $this->request->age;
-                $applicant->gender = $this->request->gender;
-            }
+            //generate reg number
+            $year_now = date('Y', strtotime('now'));
+            $total_registrations_this_year = HealthCertificate::where('registration_number', 'like', "$year_now%")->count();
+            $registration_number = "$year_now-" . sprintf('%05d', $total_registrations_this_year + 1);
 
-            else
-            {
-                $applicant = Applicant::find($this->request->id);
-                $applicant->age = $this->request->age;
-            }
-
+            $applicant = new Applicant;
+            $applicant->first_name = $this->request->first_name;
+            $applicant->middle_name = $this->request->middle_name == null ? null : $this->request->middle_name;
+            $applicant->last_name = $this->request->last_name;
+            $applicant->suffix_name = $this->request->suffix_name == null ? null : $this->request->suffix_name;
+            $applicant->age = $this->request->age;
+            $applicant->gender = $this->request->gender;
             $applicant->save();
 
             $health_certificate = new HealthCertificate;
             $health_certificate->applicant_id = $applicant->applicant_id;
-            $health_certificate->registration_number = $this->request->registration_number;
+            $health_certificate->registration_number = $registration_number;
+            $health_certificate->duration = $this->request->certificate_type;
             $health_certificate->work_type = $this->request->type_of_work;
             $health_certificate->establishment = $this->request->name_of_establishment;
             $health_certificate->issuance_date = $this->request->date_of_issuance;
-            $health_certificate->expiration_date = $this->request->date_of_expiration;
+            $health_certificate->expiration_date = $this->getExpirationDate($this->request->date_of_issuance, $this->request->certificate_type);
+            $health_certificate->is_expired = false;
             $health_certificate->save();
 
             $immunization1 = new Immunization;
@@ -553,22 +505,22 @@ class HealthCertificateController extends Controller
 
         else
         {
-            $health_certificate->registration_number = $this->request->registration_number;
+            $health_certificate->duration = $this->request->certificate_type;
+            $health_certificate->issuance_date = $this->request->date_of_issuance;
+            $health_certificate->expiration_date = $this->getExpirationDate($this->request->date_of_issuance, $this->request->certificate_type);
             $health_certificate->work_type = $this->request->type_of_work;
             $health_certificate->establishment = $this->request->name_of_establishment;
-            $health_certificate->issuance_date = $this->request->date_of_issuance;
-            $health_certificate->expiration_date = $this->request->date_of_expiration;
             $health_certificate->save();
             
-            $immunizations = Immunization::where('health_certificate_id', '=', $health_certificate->health_certificate_id)->get();
+            $immunizations = Immunization::where('applicant_id', '=', $health_certificate->applicant_id)->get();
             $immunization1 = $this->findByRowNumber($immunizations, 1, 'App\Immunization');
             $immunization2 = $this->findByRowNumber($immunizations, 2, 'App\Immunization');
 
-            $x_ray_sputum_exams = XRaySputum::where('health_certificate_id', '=', $health_certificate->health_certificate_id)->get();
+            $x_ray_sputum_exams = XRaySputum::where('applicant_id', '=', $health_certificate->applicant_id)->get();
             $x_ray_sputum_exam1 = $this->findByRowNumber($x_ray_sputum_exams, 1, 'App\XRaySputum');
             $x_ray_sputum_exam2 = $this->findByRowNumber($x_ray_sputum_exams, 2, 'App\XRaySputum');
 
-            $stool_and_others = StoolAndOther::where('health_certificate_id', '=', $health_certificate->health_certificate_id)->get();
+            $stool_and_others = StoolAndOther::where('applicant_id', '=', $health_certificate->applicant_id)->get();
             $stool_and_others1 = $this->findByRowNumber($stool_and_others, 1, 'App\StoolAndOther');
             $stool_and_others2 = $this->findByRowNumber($stool_and_others, 2, 'App\StoolAndOther');
         }
@@ -577,7 +529,7 @@ class HealthCertificateController extends Controller
         //save to database for the 3 tables linked to health certificate
         if($this->request->immunization_date_1 != null && $this->request->immunization_kind_1 != null && $this->request->immunization_date_of_expiration_1 != null)
         {
-            $immunization1->health_certificate_id = $health_certificate->health_certificate_id;
+            $immunization1->applicant_id = $health_certificate->applicant_id;
             $immunization1->date = $this->request->immunization_date_1;
             $immunization1->kind = $this->request->immunization_kind_1;
             $immunization1->expiration_date = $this->request->immunization_date_of_expiration_1;
@@ -590,7 +542,7 @@ class HealthCertificateController extends Controller
 
         if($this->request->immunization_date_2 != null && $this->request->immunization_kind_2 != null && $this->request->immunization_date_of_expiration_2 != null)
         {
-            $immunization2->health_certificate_id = $health_certificate->health_certificate_id;
+            $immunization2->applicant_id = $health_certificate->applicant_id;
             $immunization2->date = $this->request->immunization_date_2;
             $immunization2->kind = $this->request->immunization_kind_2;
             $immunization2->expiration_date = $this->request->immunization_date_of_expiration_2;
@@ -603,7 +555,7 @@ class HealthCertificateController extends Controller
 
         if($this->request->input('x-ray_sputum_exam_date_1') != null && $this->request->input('x-ray_sputum_exam_kind_1') != null && $this->request->input('x-ray_sputum_exam_result_1') != null)
         {
-            $x_ray_sputum_exam1->health_certificate_id = $health_certificate->health_certificate_id;
+            $x_ray_sputum_exam1->applicant_id = $health_certificate->applicant_id;
             $x_ray_sputum_exam1->date = $this->request->input('x-ray_sputum_exam_date_1');
             $x_ray_sputum_exam1->kind = $this->request->input('x-ray_sputum_exam_kind_1');
             $x_ray_sputum_exam1->result = $this->request->input('x-ray_sputum_exam_result_1');
@@ -617,7 +569,7 @@ class HealthCertificateController extends Controller
 
         if($this->request->input('x-ray_sputum_exam_date_2') != null && $this->request->input('x-ray_sputum_exam_kind_2') != null && $this->request->input('x-ray_sputum_exam_result_2') != null)
         {
-            $x_ray_sputum_exam2->health_certificate_id = $health_certificate->health_certificate_id;
+            $x_ray_sputum_exam2->applicant_id = $health_certificate->applicant_id;
             $x_ray_sputum_exam2->date = $this->request->input('x-ray_sputum_exam_date_2');
             $x_ray_sputum_exam2->kind = $this->request->input('x-ray_sputum_exam_kind_2');
             $x_ray_sputum_exam2->result = $this->request->input('x-ray_sputum_exam_result_2');
@@ -631,7 +583,7 @@ class HealthCertificateController extends Controller
 
         if($this->request->stool_and_other_exam_date_1 != null && $this->request->stool_and_other_exam_kind_1 != null && $this->request->stool_and_other_exam_result_1 != null)
         {
-            $stool_and_others1->health_certificate_id = $health_certificate->health_certificate_id;
+            $stool_and_others1->applicant_id = $health_certificate->applicant_id;
             $stool_and_others1->date = $this->request->stool_and_other_exam_date_1;
             $stool_and_others1->kind = $this->request->stool_and_other_exam_kind_1;
             $stool_and_others1->result = $this->request->stool_and_other_exam_result_1;
@@ -645,7 +597,7 @@ class HealthCertificateController extends Controller
 
         if($this->request->stool_and_other_exam_date_2 != null && $this->request->stool_and_other_exam_kind_2 != null && $this->request->stool_and_other_exam_result_2 != null)
         {
-            $stool_and_others2->health_certificate_id = $health_certificate->health_certificate_id;
+            $stool_and_others2->applicant_id = $health_certificate->applicant_id;
             $stool_and_others2->date = $this->request->stool_and_other_exam_date_2;
             $stool_and_others2->kind = $this->request->stool_and_other_exam_kind_2;
             $stool_and_others2->result = $this->request->stool_and_other_exam_result_2;
@@ -661,16 +613,21 @@ class HealthCertificateController extends Controller
         if($is_create)
         {
 	    	(new CertificateFileGenerator($health_certificate))->generatePDF();
-	    	return $health_certificate->health_certificate_id;
+	    	return $health_certificate->applicant_id;
         }
 
         else
-        	(new CertificateFileGenerator($health_certificate))->updatePDF($old_health_certificate);
+        	(new CertificateFileGenerator($health_certificate))->updatePDF(/*$old_health_certificate*/);
     }
 
     private function findByRowNumber($model, $row_number, $class_name)
     {
         $model = $model->where('row_number', $row_number)->first();
         return $model == null ? new $class_name : $model;
+    }
+
+    private function getExpirationDate($issuance_date, $certificate_type)
+    {
+        return date('Y-m-d', strtotime($issuance_date . ' + ' . $certificate_type));
     }
 }

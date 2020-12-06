@@ -14,7 +14,14 @@
 		<div class="ui stackable centered grid">
 			<div class="fourteen wide column"><!--main column-->
 				<div class="ui stackable centered grid">
-					<a href="{{ url("health_certificate/$health_certificate->health_certificate_id/preview") }}" target="_blank" class="ui inverted green fluid button">Print Preview</a>
+					<div class="row">
+						<div class="sixteen wide column">
+							<div class="ui two buttons">
+								<a href="{{ url()->previous() }}" class="ui inverted blue button">Back</a>
+								<a href="{{ url("health_certificate/$health_certificate->applicant_id/preview") }}" target="_blank" class="ui inverted green button">Print Preview</a>
+							</div>
+						</div>
+					</div>
 
 					<div class="row">
 						<div class="three wide column" style="text-align: center;">
@@ -23,16 +30,38 @@
 					</div>
 
 					<div class="row">
-						<div class="nine wide column"><!--nested columns-->
-							<h3><i class="caret right icon"></i>Name: <u>{{ $applicant->formatName() }}</u></h3>
+						<div class="ten wide column"><!--nested columns-->
+							<h3>
+								<i class="caret right icon"></i>
+								<span style="font-weight: normal;">Name:</span> 
+								<u>{{ $applicant->formatName() }}</u>
+							</h3>
 						</div>
 
-						<div class="three wide column">
-							<h3><i class="caret right icon"></i>Age: <u>{{ $applicant->age }} yrs. old</u></h3>
+						<div class="six wide column right aligned">
+							<h3>
+								<i class="caret right icon"></i>
+								<span style="font-weight: normal;">Certificate Status:</span> 
+								<u>{{ $health_certificate->checkIfExpired() ? 'Expired' : 'Not Expired' }}</u>
+							</h3>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="eight wide column">
+							<h3>
+								<i class="caret right icon"></i>
+								<span style="font-weight: normal;">Certificate Validity:</span> 
+								<u>{{ $health_certificate->duration }}</u>
+							</h3>
 						</div>
 
-						<div class="four wide column">
-							<h3><i class="caret right icon"></i>Gender: <u>{{ $applicant->getGender() }}</u></h3>
+						<div class="eight wide column right aligned">
+							<h3>
+								<i class="caret right icon"></i>
+								<span style="font-weight: normal;">Certificate Registration Number:</span> 
+								<u>{{ $health_certificate->registration_number }}</u>
+							</h3>
 						</div>
 					</div>
 				</div>
@@ -40,6 +69,12 @@
 				<div class="ui section divider"></div>
 
 				<form method="POST" action="{{ url()->current() }}" class="ui form text_center {{ $errors->any() ? 'error' : 'success' }}">
+					<h3 class="ui header">
+						Update Health Certificate
+					</h3>
+
+					<br>
+
 					{{ csrf_field() }}
 					{{ method_field('PUT') }}
 
@@ -52,27 +87,39 @@
 					@endif
 
 					<div class="fields">
-						<div class="two wide field"></div>
-
-						<div class="three wide field">
-							<div class="ui toggle checkbox">
-								<input type="checkbox" name="edit_mode" class="hidden" {{ old('edit_mode') != 'on' ?: 'checked' }}>
-								<label>Edit Health Certificate</label>
-							</div>
-						</div>
-
 						<div class="five wide field"></div>
 
-						<div class="four wide field{!! !$errors->has('registration_number') ? '"' : ' error" data-content="' . $errors->first('registration_number') . '" data-position="top center"' !!}>
-							<label>Registration Number:</label>
-							<input type="text" name="registration_number" value="{{ old('registration_number') != null ? old('registration_number') : $health_certificate->registration_number }}" placeholder="Registration Number" class="dynamic_input">
+						<div class="seven wide field">
+							<div class="inline fields">
+							<label>Update Mode: </label>
+							<div class="field">
+								<div class="ui toggle checkbox">
+									<input type="checkbox" id="edit_switch" name="update_mode" value="edit" class="update_switches hidden" {{ old('update_mode') != 'edit' ?: 'checked' }}>
+									<label>Edit Only</label>
+								</div>
+							</div>
+
+							<div class="field">
+								<div class="ui toggle checkbox">
+									<input type="checkbox" id="renew_switch" name="update_mode" value="edit_renew" class="update_switches hidden" {{ old('update_mode') != 'edit_renew' ?: 'checked' }}>
+									<label>Edit and Renew</label>
+								</div>
+							</div>
 						</div>
+						</div>
+						
 					</div>
 
 					<br>
 
 					<div class="fields">
-						<div class="two wide field"></div>
+						<div class="one wide field"></div>
+
+						<div class="two wide field
+						{!! !$errors->has('age') ? '"' : ' error" data-content="' . $errors->first('age') . '" data-position="top center"' !!}>
+							<label>Age:</label>
+							<input type="number" name="age" value="{{ old('age') != null ? old('age') : $health_certificate->applicant->age }}" class="dynamic_input">
+						</div>
 
 						<div class="five wide field{!! !$errors->has('type_of_work') ? '"' : ' error" data-content="' . $errors->first('type_of_work') . '" data-position="top center"' !!}>
 							<label>Type of Work:</label>
@@ -88,7 +135,32 @@
 					<br>
 
 					<div class="fields">
-						<div class="four wide field"></div>
+						<div class="two wide field"></div>
+
+						<div class="four wide field{!! !$errors->has('certificate_type') ? '"' : ' error" data-content="' . $errors->first('certificate_type') . '" data-position="top center"' !!}>
+							<label>Certificate Type:</label>
+							<select name="certificate_type" class="dynamic_input">
+								<option value="" data-years="0" data-months="0" data-days="0"></option>
+
+								@php
+									if(old('certificate_type') != null)
+										$type_value = old('certificate_type');
+									else
+										$type_value = $health_certificate->duration;
+								@endphp
+
+								@foreach($certificate_types as $type => $value)
+									<option 
+										value="{{ $value['string'] }}" {{ $type_value != $value['string'] ?: 'selected' }}
+										data-years="{{ $value['years'] }}"
+										data-months="{{ $value['months'] }}"
+										data-days="{{ $value['days'] }}"
+									>
+										{{ "$type - {$value['string']}" }}
+									</option>
+								@endforeach
+							</select>
+						</div>
 
 						<div class="four wide field{!! !$errors->has('date_of_issuance') ? '"' : ' error" data-content="' . $errors->first('date_of_issuance') . '" data-position="top center"' !!}>
 				    		<label>Date of Issuance:</label>

@@ -12,9 +12,9 @@ class Applicant extends Model
     protected $primaryKey = 'applicant_id';
     protected $searchableColumns = ['first_name', 'middle_name', 'last_name', 'suffix_name'];
 
-    public function health_certificates()
+    public function health_certificate()
     {
-    	return $this->hasMany('App\HealthCertificate', 'applicant_id', 'applicant_id');
+    	return $this->hasOne('App\HealthCertificate', 'applicant_id', 'applicant_id');
     }
 
     public function setFirstNameAttribute($value)

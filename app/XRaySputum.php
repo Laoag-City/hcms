@@ -14,7 +14,7 @@ class XRaySputum extends Model
 
     public function health_certificate()
     {
-    	return $this->belongsTo('App\HealthCertificate', 'health_certificate_id', 'health_certificate_id');
+    	return $this->belongsTo('App\HealthCertificate', 'applicant_id', 'applicant_id');
     }
 
     public function getDateAttribute($value)

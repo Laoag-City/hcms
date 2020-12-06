@@ -71,7 +71,7 @@
 	</div>
 
 	<div id="footer" class="ui borderless mini menu">
-		<div class="item">Copyright {{ date('Y', strtotime('now')) }}. All rights reserved.</div>
+		<div class="item">Copyright 2020. All rights reserved.</div>
 
 		<div class="right menu">
 			<a id="about" class="item">About</a>

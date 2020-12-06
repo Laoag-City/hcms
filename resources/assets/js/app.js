@@ -6,6 +6,7 @@
  */
 
 require('./bootstrap');
+window.dayjs = require('dayjs'); 
 
 //window.Vue = require('vue');
 

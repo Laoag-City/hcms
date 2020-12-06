@@ -12,11 +12,6 @@
 		<h2 class="ui header">
 			Create Health Certificate Form
 		</h2>
-		<p>
-			Fill out the form below to issue a new Health Certificate for an applicant.
-			<br>
-			* If the checkbox for existing applicant is checked, the applicant's records will be updated by the information supplied in this form.
-		</p>
 	</div>
 
 	<div class="ui attached segment">
@@ -24,40 +19,12 @@
 			<div class="fourteen wide column center aligned">
 				<form id="health_certificate_form" method="POST" action="{{ url('/') }}" class="ui form {{ $errors->any() ? 'error' : 'success' }}">
 					{{ csrf_field() }}
-					<input type="hidden" name="id" class="dynamic_on_search" value="{{ old('id') }}">
-
-					<br>
 
 					@if($errors->has('id'))
 						<div class="ui error message">
 							<p>{{ $errors->first('id') }}</p>
 						</div>
 					@endif
-
-					<div class="fields">
-						<div class="two wide field"></div>
-
-						<div class="three wide field">
-							<div class="ui check checkbox">
-								<label>* Check the box if the applicant has existing records or has been given a health certificate before.</label>
-								<input type="checkbox" name="existing_client" {{ old('existing_client') == null ?: 'checked' }}>
-							</div>
-						</div>
-
-						<div id="searchApplicant" class="six wide field ui fluid search{!! !$errors->has('whole_name') 
-							? '" data-content="Type an applicant name and choose from the suggestions below."' 
-							: ' error" data-content="' . $errors->first('whole_name') . '"' !!} 
-							style="visibility: {{ old('existing_client') == null ? 'hidden' : 'visible' }}" data-position="top center">
-								<label>Whole Name:</label>
-								<input class="prompt" type="text" name="whole_name" value="{{ old('whole_name') }}" placeholder="Whole Name" {{ old('existing_client') == null ? 'disabled' : 'required' }}>
-								<div class="results"></div>
-						</div>
-
-						<div class="three wide field{!! !$errors->has('registration_number') ? '"' : ' error" data-content="' . $errors->first('registration_number') . '" data-position="top center"' !!}>
-				    		<label>Registration Number:</label>
-				    		<input type="text" name="registration_number" value="{{ old('registration_number') }}" placeholder="Registration Number">
-				    	</div>
-					</div>
 					
 					<br>
 
@@ -135,18 +102,34 @@
 
 					<br>
 
-					<div class="four fields">
-						<div class="field">
-							
+					<div class="fields">
+						<div class="two wide field"></div>
+						
+						<div class="four wide field{!! !$errors->has('certificate_type') ? '"' : ' error" data-content="' . $errors->first('certificate_type') . '" data-position="top center"' !!}>
+							<label>Certificate Type:</label>
+							<select name="certificate_type">
+								<option value="" data-years="0" data-months="0" data-days="0"></option>
+								@foreach($certificate_types as $type => $value)
+									<option 
+										value="{{ $value['string'] }}" {{ old('certificate_type') != $value['string'] ?: 'selected' }}
+										data-years="{{ $value['years'] }}"
+										data-months="{{ $value['months'] }}"
+										data-days="{{ $value['days'] }}"
+									>
+										{{ "$type - {$value['string']}" }}
+									</option>
+								@endforeach
+							</select>
 						</div>
-				    	<div class="field{!! !$errors->has('date_of_issuance') ? '"' : ' error" data-content="' . $errors->first('date_of_issuance') . '" data-position="top center"' !!}>
+
+				    	<div class="four wide field{!! !$errors->has('date_of_issuance') ? '"' : ' error" data-content="' . $errors->first('date_of_issuance') . '" data-position="top center"' !!}>
 				    		<label>Date of Issuance:</label>
-				    		<input type="date" name="date_of_issuance" value="{{ old('date_of_issuance') }}" placeholder="Date of Issuance">
+				    		<input type="date" name="date_of_issuance" value="{{ old('date_of_issuance') }}">
 				    	</div>
 
-				    	<div class="field{!! !$errors->has('date_of_expiration') ? '"' : ' error" data-content="' . $errors->first('date_of_expiration') . '" data-position="top center"' !!}>
+				    	<div class="four wide field{!! !$errors->has('date_of_expiration') ? '"' : ' error" data-content="' . $errors->first('date_of_expiration') . '" data-position="top center"' !!}>
 				    		<label>Date of Expiration:</label>
-				    		<input type="date" name="date_of_expiration" value="{{ old('date_of_expiration') }}" placeholder="Date of Issuance">
+				    		<input type="date" name="date_of_expiration" value="{{ old('date_of_expiration') }}" readonly="true">
 				    	</div>
 					</div>
 

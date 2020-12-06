@@ -5,7 +5,7 @@ Webcam.set({
 Webcam.attach('#camera');
 
 Webcam.on( 'live', function(){
-	$('#take_picture, #print_back, ' + picture).removeClass('hidden');
+	$('#take_picture, ' + picture).removeClass('hidden');
 
 	$('#take_picture').click(function(){
 		Webcam.freeze();	
@@ -39,14 +39,14 @@ Webcam.on( 'live', function(){
 				complete : function(){
 					console.log('complete');
 					$('#save_picture, #retake_picture').hide();
-					$('#take_picture, #print_front').show();
+					$('#take_picture').show();
 				}
 			});
 		});
 	});
 
 	$('.print').click(function(){
-		if($(this).attr('id') == 'print_front')
+		/*if($(this).attr('id') == 'print_front')
 		{
 			$('#front_preview').removeClass('no-print');
 			$('#back_preview').addClass('no-print');
@@ -56,7 +56,7 @@ Webcam.on( 'live', function(){
 		{
 			$('#back_preview').removeClass('no-print');
 			$('#front_preview').addClass('no-print');
-		}
+		}*/
 		
 		window.print();
 	});

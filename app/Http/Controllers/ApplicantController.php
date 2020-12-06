@@ -18,25 +18,29 @@ class ApplicantController extends Controller
 
 	public function getApplicants()
 	{
+        $applicants = Applicant::with('health_certificate')->orderBy('last_name', 'asc')->paginate(150);
+        $not_yet_expired = $applicants->pluck('health_certificate')->where('is_expired', false);
+
+        if($not_yet_expired->isNotEmpty())
+        {
+            foreach($not_yet_expired as $certificate)
+                $certificate->checkIfExpired();
+        }
+
 		return view('applicant.index', [
     		'title' => 'Health Certificates',
-    		'applicants' => Applicant::orderBy('last_name', 'asc')->paginate(100)
+    		'applicants' => $applicants
     	]);
 	}
 
 	public function viewEditApplicant(Applicant $applicant)
 	{
-        $latest_health_certificate = HealthCertificate::where('applicant_id', '=', $applicant->applicant_id)->latest()->first();
-
 		if($this->request->isMethod('get'))
     	{
     		return view('applicant.view_edit', [
     			'title' => $applicant->formatName(),
     			'applicant' => $applicant,
-                'picture_url' => (new CertificateFileGenerator($latest_health_certificate))->getPicturePathAndURL()['url'],
-    			'health_certificates' => HealthCertificate::where('applicant_id', '=', $applicant->applicant_id)
-                                                            ->orderBy('created_at', 'desc')
-                                                            ->paginate(50)
+                'picture_url' => (new CertificateFileGenerator($applicant->health_certificate))->getPicturePathAndURL()['url'],
     		]);
     	}
 
@@ -51,7 +55,7 @@ class ApplicantController extends Controller
     			'gender' => 'bail|required|in:0,1',
     		]);
 
-            $old_certificate_file_generator = new CertificateFileGenerator($latest_health_certificate);
+            $old_certificate_file_generator = new CertificateFileGenerator($applicant->health_certificate);
             $old_applicant_folder = $old_certificate_file_generator->getHealthCertificateFolder()['applicant_folder'];
 
     		$applicant->first_name = $this->request->first_name;
@@ -62,7 +66,7 @@ class ApplicantController extends Controller
     		$applicant->gender = $this->request->gender;
     		$applicant->save();
 
-            $new_certificate_file_generator = new CertificateFileGenerator($latest_health_certificate->refresh());
+            $new_certificate_file_generator = new CertificateFileGenerator($applicant->health_certificate->refresh());
             $new_applicant_folder = $new_certificate_file_generator->getHealthCertificateFolder()['applicant_folder'];
 
             if($old_applicant_folder != $new_applicant_folder)
@@ -97,7 +101,7 @@ class ApplicantController extends Controller
     	return view('applicant.search', [
             'title' => 'Search Results',
             'keyword' => $this->request->q,
-            'applicants' => Applicant::search($this->request->q)->paginate(50)
+            'applicants' => Applicant::search($this->request->q)->paginate(150)
         ]);
     }
 }

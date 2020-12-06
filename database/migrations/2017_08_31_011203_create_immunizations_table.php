@@ -15,15 +15,15 @@ class CreateImmunizationsTable extends Migration
     {
         Schema::create('immunizations', function (Blueprint $table) {
             $table->increments('immunization_id');
-            $table->integer('health_certificate_id')->unsigned();
+            $table->integer('applicant_id')->unsigned();
             $table->timestamp('date');
             $table->string('kind', 15);
             $table->timestamp('expiration_date');
             $table->tinyInteger('row_number')->unsigned();
             $table->timestamps();
 
-            $table->foreign('health_certificate_id')
-                                    ->references('health_certificate_id')
+            $table->foreign('applicant_id')
+                                    ->references('applicant_id')
                                     ->on('health_certificates')
                                     ->onUpdate('cascade')
                                     ->onDelete('cascade');
