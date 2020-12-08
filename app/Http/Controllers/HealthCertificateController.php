@@ -287,9 +287,11 @@ class HealthCertificateController extends Controller
     	{
     		$this->create_edit_logic(false, $health_certificate);
 
-            return back()->with('success', 
+            return redirect("health_certificate/{$health_certificate->applicant_id}/preview");
+
+            /*return back()->with('success', 
                                 ['header' => 'Health Certificate updated successfully!', 
-                                'message' => null]);
+                                'message' => null]);*/
     	}
     }
 
@@ -370,13 +372,14 @@ class HealthCertificateController extends Controller
         if($is_create)
         {
             $required_message = 'The :attribute field is required.';
-            $create_rules = [
+            $create_edit_rules = [
                 'first_name' => 'bail|required|alpha_spaces|max:40',
                 'middle_name' => 'nullable|bail|alpha_spaces|max:30',
                 'last_name' => 'bail|required|alpha_spaces|max:30',
                 'suffix_name' => 'nullable|bail|in:Jr.,Sr.,I,II,III,IV,V,VI,VII,VIII,IX,X',
                 'age' => 'bail|required|integer|min:0|max:120',
                 'gender' => 'bail|required|in:0,1',
+                'date_of_issuance' => 'bail|required|date|before_or_equal:today',
             ];
         }
 
@@ -390,7 +393,17 @@ class HealthCertificateController extends Controller
                 issuance date must be a date before or equal now
                 proceed regardless if the expiration date computed based on type and issuance is already expired
             */
-            $create_rules = [];
+            if($this->request->update_mode != null && $this->request->update_mode == 'edit_renew')
+                $date_of_issuance_rule = "bail|required|date|before_or_equal:today|after:{$health_certificate->dateToInput('issuance_date')}";
+            else
+                $date_of_issuance_rule = 'bail|required|date|before_or_equal:today';
+
+            $create_edit_rules = [
+                'update_mode' => 'bail|required|in:edit,edit_renew',
+                'age' => "bail|required|integer|min:{$health_certificate->applicant->age}|max:120",
+                'date_of_issuance' => $date_of_issuance_rule,
+
+            ];
             /*$old_health_certificate = $health_certificate->replicate();
 
             $old_health_certificate->health_certificate_id = $health_certificate->health_certificate_id;
@@ -398,53 +411,52 @@ class HealthCertificateController extends Controller
         }
         
         //define validation rules here
-        $validator = Validator::make($this->request->all(), array_merge($create_rules, [
+        $validator = Validator::make($this->request->all(), array_merge($create_edit_rules, [
             'type_of_work' => 'bail|required|alpha_spaces|max:40',
             'name_of_establishment' => 'bail|required|max:50',
             'certificate_type' => 'bail|required|in:' . implode(',', collect(HealthCertificate::CERTIFICATE_TYPES)->pluck('string')->toArray()),
-            'date_of_issuance' => 'bail|required|date|before_or_equal:today',
             'date_of_expiration' => 'bail|required|date',
 
             'immunization_date_1' => 'nullable|bail|required_with:immunization_kind_1,immunization_date_of_expiration_1|date|before_or_equal:today',
 
-            'immunization_kind_1' => 'nullable|bail|required_with:immunization_date_1,immunization_date_of_expiration_1|alpha_num_spaces|max:15',
+            'immunization_kind_1' => 'nullable|bail|required_with:immunization_date_1,immunization_date_of_expiration_1|alpha_num_spaces|max:20',
 
-            'immunization_date_of_expiration_1' => 'nullable|bail|required_with:immunization_date_1,immunization_kind_1|date|after:today',
+            'immunization_date_of_expiration_1' => 'nullable|bail|required_with:immunization_date_1,immunization_kind_1|date|after:immunization_date_1',
 
 
             'immunization_date_2' => 'nullable|bail|required_with:immunization_kind_2,immunization_date_of_expiration_2|date|before_or_equal:today',
 
-            'immunization_kind_2' => 'nullable|bail|required_with:immunization_date_2,immunization_date_of_expiration_2|alpha_num_spaces|max:15',
+            'immunization_kind_2' => 'nullable|bail|required_with:immunization_date_2,immunization_date_of_expiration_2|alpha_num_spaces|max:20',
 
-            'immunization_date_of_expiration_2' => 'nullable|bail|required_with:immunization_date_2,immunization_kind_2|date|after:today',
+            'immunization_date_of_expiration_2' => 'nullable|bail|required_with:immunization_date_2,immunization_kind_2|date|after:immunization_date_2',
 
 
             'x-ray_sputum_exam_date_1' => 'nullable|bail|required_with:x-ray_sputum_exam_kind_1,x-ray_sputum_exam_result_1|date|before_or_equal:today',
 
-            'x-ray_sputum_exam_kind_1' => 'nullable|bail|required_with:x-ray_sputum_exam_date_1,x-ray_sputum_exam_result_1|alpha_num_spaces|max:15',
+            'x-ray_sputum_exam_kind_1' => 'nullable|bail|required_with:x-ray_sputum_exam_date_1,x-ray_sputum_exam_result_1|alpha_num_spaces|max:20',
 
-            'x-ray_sputum_exam_result_1' => 'nullable|bail|required_with:x-ray_sputum_exam_date_1,x-ray_sputum_exam_kind_1|alpha_num_spaces|max:15',
+            'x-ray_sputum_exam_result_1' => 'nullable|bail|required_with:x-ray_sputum_exam_date_1,x-ray_sputum_exam_kind_1|alpha_num_spaces|max:20',
 
 
             'x-ray_sputum_exam_date_2' => 'nullable|bail|required_with:x-ray_sputum_exam_kind_2,x-ray_sputum_exam_result_2|date|before_or_equal:today',
 
-            'x-ray_sputum_exam_kind_2' => 'nullable|bail|required_with:x-ray_sputum_exam_date_2,x-ray_sputum_exam_result_2|alpha_num_spaces|max:15',
+            'x-ray_sputum_exam_kind_2' => 'nullable|bail|required_with:x-ray_sputum_exam_date_2,x-ray_sputum_exam_result_2|alpha_num_spaces|max:20',
 
-            'x-ray_sputum_exam_result_2' => 'nullable|bail|required_with:x-ray_sputum_exam_date_2,x-ray_sputum_exam_kind_2|alpha_num_spaces|max:15',
+            'x-ray_sputum_exam_result_2' => 'nullable|bail|required_with:x-ray_sputum_exam_date_2,x-ray_sputum_exam_kind_2|alpha_num_spaces|max:20',
 
 
             'stool_and_other_exam_date_1' => 'nullable|bail|required_with:stool_and_other_exam_kind_1,stool_and_other_exam_result_1|date|before_or_equal:today',
 
-            'stool_and_other_exam_kind_1' => 'nullable|bail|required_with:stool_and_other_exam_date_1,stool_and_other_exam_result_1|alpha_num_spaces|max:15',
+            'stool_and_other_exam_kind_1' => 'nullable|bail|required_with:stool_and_other_exam_date_1,stool_and_other_exam_result_1|alpha_num_spaces|max:20',
 
-            'stool_and_other_exam_result_1' => 'nullable|bail|required_with:stool_and_other_exam_date_1,stool_and_other_exam_kind_1|alpha_num_spaces|max:15',
+            'stool_and_other_exam_result_1' => 'nullable|bail|required_with:stool_and_other_exam_date_1,stool_and_other_exam_kind_1|alpha_num_spaces|max:20',
 
 
             'stool_and_other_exam_date_2' => 'nullable|bail|required_with:stool_and_other_exam_kind_2,stool_and_other_exam_result_2|date|before_or_equal:today',
 
-            'stool_and_other_exam_kind_2' => 'nullable|bail|required_with:stool_and_other_exam_date_2,stool_and_other_exam_result_2|alpha_num_spaces|max:15',
+            'stool_and_other_exam_kind_2' => 'nullable|bail|required_with:stool_and_other_exam_date_2,stool_and_other_exam_result_2|alpha_num_spaces|max:20',
 
-            'stool_and_other_exam_result_2' => 'nullable|bail|required_with:stool_and_other_exam_date_2,stool_and_other_exam_kind_2|alpha_num_spaces|max:15'
+            'stool_and_other_exam_result_2' => 'nullable|bail|required_with:stool_and_other_exam_date_2,stool_and_other_exam_kind_2|alpha_num_spaces|max:20'
         ]));
 
         //after validation hook to further add validation rules after the first rules
@@ -511,6 +523,8 @@ class HealthCertificateController extends Controller
             $health_certificate->work_type = $this->request->type_of_work;
             $health_certificate->establishment = $this->request->name_of_establishment;
             $health_certificate->save();
+
+            $health_certificate->checkIfExpired();
             
             $immunizations = Immunization::where('applicant_id', '=', $health_certificate->applicant_id)->get();
             $immunization1 = $this->findByRowNumber($immunizations, 1, 'App\Immunization');

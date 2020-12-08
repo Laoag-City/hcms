@@ -17,7 +17,7 @@ class CreateImmunizationsTable extends Migration
             $table->increments('immunization_id');
             $table->integer('applicant_id')->unsigned();
             $table->timestamp('date');
-            $table->string('kind', 15);
+            $table->string('kind', 20);
             $table->timestamp('expiration_date');
             $table->tinyInteger('row_number')->unsigned();
             $table->timestamps();

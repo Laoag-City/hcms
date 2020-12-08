@@ -17,8 +17,8 @@ class CreateStoolAndOthersTable extends Migration
             $table->increments('stool_and_other_id');
             $table->integer('applicant_id')->unsigned();
             $table->timestamp('date');
-            $table->string('kind', 15);
-            $table->string('result', 15);
+            $table->string('kind', 20);
+            $table->string('result', 20);
             $table->tinyInteger('row_number')->unsigned();
             $table->timestamps();
 
