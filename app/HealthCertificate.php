@@ -80,6 +80,15 @@ class HealthCertificate extends Model
             return true;
         }
 
+        else
+        {
+            if($this->is_expired == true)
+            {
+                $this->is_expired = false;
+                $this->save();
+            }
+
             return false;
+        }
     }
 }

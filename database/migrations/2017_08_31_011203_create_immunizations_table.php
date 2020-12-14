@@ -16,7 +16,7 @@ class CreateImmunizationsTable extends Migration
         Schema::create('immunizations', function (Blueprint $table) {
             $table->increments('immunization_id');
             $table->integer('applicant_id')->unsigned();
-            $table->timestamp('date');
+            $table->timestamp('date')->nullable();
             $table->string('kind', 20);
             $table->timestamp('expiration_date');
             $table->tinyInteger('row_number')->unsigned();

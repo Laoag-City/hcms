@@ -22,7 +22,7 @@ $('.update_switches').change(function(){
 
 	$(to_switch_off).prop('checked', false);
 
-	alterFormState(true);
+	alterFormState();
 });
 
 $('select[name=certificate_type]').change(function(){
@@ -54,20 +54,19 @@ function getExpirationDate()
 		$('input[name=date_of_expiration]').val("");
 }
 
-function alterFormState(fade)
+function alterFormState()
 {
 	if($('.update_switches').is(':checked'))
 	{
 		$('.dynamic_input').attr('readonly', false);
 		$('select.dynamic_input').attr('disabled', false);
+		$('#update_button').transition('show');
 	}
 
 	else
 	{
 		$('.dynamic_input').attr('readonly', true);
 		$('select.dynamic_input').attr('disabled', true);
+		$('#update_button').transition('hide');
 	}
-
-	if(fade)
-		$('#update_button').transition('fade');
 }

@@ -307,6 +307,22 @@ class HealthCertificateController extends Controller
         ]);
     }
 
+    public function bulkPrintPreview()
+    {
+        if(session()->has('print_ids'))
+        {
+            return view('health_certificate.bulk_print_preview', [
+                'logo' => '/doh_logo.png',
+                'health_certificates' => HealthCertificate::whereIn('applicant_id', session()->get('print_ids'))
+                                            ->with(['applicant', 'immunizations', 'stool_and_others', 'xray_sputums'])
+                                            ->get()
+            ]);
+        }
+
+        else
+            return redirect('/');
+    }
+
     public function savePicture(HealthCertificate $health_certificate)
     {
         if($this->request->ajax() && $this->request->isMethod('post'))
@@ -377,7 +393,6 @@ class HealthCertificateController extends Controller
                 'middle_name' => 'nullable|bail|alpha_spaces|max:30',
                 'last_name' => 'bail|required|alpha_spaces|max:30',
                 'suffix_name' => 'nullable|bail|in:Jr.,Sr.,I,II,III,IV,V,VI,VII,VIII,IX,X',
-                'age' => 'bail|required|integer|min:0|max:120',
                 'gender' => 'bail|required|in:0,1',
                 'date_of_issuance' => 'bail|required|date|before_or_equal:today',
             ];
@@ -400,7 +415,6 @@ class HealthCertificateController extends Controller
 
             $create_edit_rules = [
                 'update_mode' => 'bail|required|in:edit,edit_renew',
-                'age' => "bail|required|integer|min:{$health_certificate->applicant->age}|max:120",
                 'date_of_issuance' => $date_of_issuance_rule,
 
             ];
@@ -412,6 +426,7 @@ class HealthCertificateController extends Controller
         
         //define validation rules here
         $validator = Validator::make($this->request->all(), array_merge($create_edit_rules, [
+            'age' => 'bail|required|integer|min:0|max:120',
             'type_of_work' => 'bail|required|alpha_spaces|max:40',
             'name_of_establishment' => 'bail|required|max:50',
             'certificate_type' => 'bail|required|in:' . implode(',', collect(HealthCertificate::CERTIFICATE_TYPES)->pluck('string')->toArray()),
@@ -517,6 +532,10 @@ class HealthCertificateController extends Controller
 
         else
         {
+            $applicant = $health_certificate->applicant;
+            $applicant->age = $this->request->age;
+            $applicant->save();
+            
             $health_certificate->duration = $this->request->certificate_type;
             $health_certificate->issuance_date = $this->request->date_of_issuance;
             $health_certificate->expiration_date = $this->getExpirationDate($this->request->date_of_issuance, $this->request->certificate_type);

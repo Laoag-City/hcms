@@ -5,8 +5,9 @@
     "/css/camera.css": "/css/camera.css?id=42666c3693cfaf9b3610",
     "/js/authenticated.js": "/js/authenticated.js?id=4ca781de45cacef2d04f",
     "/js/user_administration.js": "/js/user_administration.js?id=cd97dee89e50fe1cd1a8",
-    "/js/health_certificate_information.js": "/js/health_certificate_information.js?id=78a2295852336385e500",
+    "/js/health_certificate_information.js": "/js/health_certificate_information.js?id=8fe1cecf23097acf4c3c",
     "/js/camera.js": "/js/camera.js?id=c3aebdecf2feeb3ec998",
     "/js/create_health_certificate.js": "/js/create_health_certificate.js?id=9621c9eab5bd23cbd041",
-    "/js/applicant_information.js": "/js/applicant_information.js?id=aee0011a27d2f99b104d"
+    "/js/applicant_information.js": "/js/applicant_information.js?id=aee0011a27d2f99b104d",
+    "/js/bulk_print.js": "/js/bulk_print.js?id=f4104fafe6f76d3f3860"
 }

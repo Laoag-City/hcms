@@ -16,7 +16,7 @@ class CreateStoolAndOthersTable extends Migration
         Schema::create('stool_and_others', function (Blueprint $table) {
             $table->increments('stool_and_other_id');
             $table->integer('applicant_id')->unsigned();
-            $table->timestamp('date');
+            $table->timestamp('date')->nullable();
             $table->string('kind', 20);
             $table->string('result', 20);
             $table->tinyInteger('row_number')->unsigned();

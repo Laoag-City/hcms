@@ -19,8 +19,8 @@ class CreateHealthCertificatesTable extends Migration
             $table->string('duration', 20);
             $table->string('work_type', 40);
             $table->string('establishment', 50);
-            $table->timestamp('issuance_date');
-            $table->timestamp('expiration_date');
+            $table->timestamp('issuance_date')->nullable();
+            $table->timestamp('expiration_date')->nullable();
             $table->boolean('is_expired');
             $table->timestamps();
 

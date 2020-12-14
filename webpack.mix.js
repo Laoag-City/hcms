@@ -30,4 +30,6 @@ mix.js('resources/assets/js/app.js', 'public/js')
 
 	.scripts(['resources/assets/js/custom/applicant_information.js'], 'public/js/applicant_information.js')
 
+	.scripts(['resources/assets/js/custom/bulk_print.js'], 'public/js/bulk_print.js')
+
 	.version();

@@ -169,7 +169,7 @@
 
 				    	<div class="four wide field{!! !$errors->has('date_of_expiration') ? '"' : ' error" data-content="' . $errors->first('date_of_expiration') . '" data-position="top center"' !!}>
 				    		<label>Date of Expiration:</label>
-				    		<input type="date" name="date_of_expiration" value="{{ old('date_of_expiration') != null ? old('date_of_expiration') : $health_certificate->dateToInput('expiration_date') }}" placeholder="Date of Issuance" class="dynamic_input">
+				    		<input type="date" name="date_of_expiration" value="{{ old('date_of_expiration') != null ? old('date_of_expiration') : $health_certificate->dateToInput('expiration_date') }}" placeholder="Date of Issuance" readonly="">
 				    	</div>
 					</div>
 

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Applicant;
 use App\HealthCertificate;
 use App\Custom\CertificateFileGenerator;
+use Validator;
 
 class ApplicantController extends Controller
 {
@@ -28,7 +29,7 @@ class ApplicantController extends Controller
         }
 
 		return view('applicant.index', [
-    		'title' => 'Health Certificates',
+    		'title' => 'Applicants',
     		'applicants' => $applicants
     	]);
 	}
@@ -75,6 +76,28 @@ class ApplicantController extends Controller
     		return back()->with('success', ['header' => 'Applicant updated successfully!', 'message' => null]);
     	}
 	}
+
+    public function bulkPrintCertificates()
+    {
+        if($this->request->isMethod('get'))
+        {
+            return view('applicant.bulk_print', [
+                'title' => 'Bulk Print Health Certificates'
+            ]);
+        }
+
+        elseif($this->request->isMethod('post'))
+        {
+            Validator::make($this->request->all(), [
+                'ids' => 'required|array',
+                'ids.*' => 'distinct|exists:applicants,applicant_id'
+            ])->validate();
+
+            $this->request->session()->flash('print_ids', $this->request->ids);
+
+            return redirect('health_certificate/bulk_print_preview');
+        }
+    }
 
     public function searchApplicantsForHealthCertificate()
     {

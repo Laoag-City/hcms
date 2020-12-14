@@ -16,7 +16,7 @@ class CreateXRaySputumsTable extends Migration
         Schema::create('x-ray_sputums', function (Blueprint $table) {
             $table->increments('x-ray_sputum_id');
             $table->integer('applicant_id')->unsigned();
-            $table->timestamp('date');
+            $table->timestamp('date')->nullable();
             $table->string('kind', 20);
             $table->string('result', 20);
             $table->tinyInteger('row_number')->unsigned();

@@ -23,6 +23,8 @@ Route::group(['middleware' => 'auth'], function(){
 	//Route::get('health_certificate', 'HealthCertificateController@getHealthCertificates');
 	//shows the preview of the health certificate and the take picture feature
 	Route::get('health_certificate/{health_certificate}/preview', 'HealthCertificateController@printPreview');
+	//ahow bulk print preview
+	Route::get('health_certificate/bulk_print_preview', 'HealthCertificateController@bulkPrintPreview');
 	//ajax for saving the image
 	Route::post('health_certificate/{health_certificate}/picture', 'HealthCertificateController@savePicture');
 	//shows applicant's id picture
@@ -32,6 +34,8 @@ Route::group(['middleware' => 'auth'], function(){
 
 	//shows applicant list
 	Route::get('applicant', 'ApplicantController@getApplicants');
+	//bulk-print health certificates
+	Route::match(['get', 'post'], 'applicant/bulk_print', 'ApplicantController@bulkPrintCertificates');
 	//view or edit an applicant
 	Route::match(['get', 'put'], 'applicant/{applicant}', 'ApplicantController@viewEditApplicant');
 	
