@@ -319,11 +319,11 @@
 								</td>
 
 								<td class="field{!! !$errors->has('x-ray_sputum_exam_kind_1') ? '"' : ' error" data-content="' . $errors->first('x-ray_sputum_exam_kind_1') . '" data-position="top center"' !!}>
-									<input type="text" name="x-ray_sputum_exam_kind_1" value="{{ old('x-ray_sputum_exam_kind_1') != null ? old('x-ray_sputum_exam_kind_1') : $xray_sputum_exam_kind_1 }}" class="dynamic_input">
+									<input type="text" name="x-ray_sputum_exam_kind_1" value="SPUTUM{{-- old('x-ray_sputum_exam_kind_1') != null ? old('x-ray_sputum_exam_kind_1') : $xray_sputum_exam_kind_1 --}}" readonly="">
 								</td>
 
 								<td class="field{!! !$errors->has('x-ray_sputum_exam_result_1') ? '"' : ' error" data-content="' . $errors->first('x-ray_sputum_exam_result_1') . '" data-position="top center"' !!}>
-									<input type="text" name="x-ray_sputum_exam_result_1" value="{{ old('x-ray_sputum_exam_result_1') != null ? old('x-ray_sputum_exam_result_1') : $xray_sputum_exam_result_1 }}" class="dynamic_input">
+									<input type="text" name="x-ray_sputum_exam_result_1" value="NEG ( - ){{-- old('x-ray_sputum_exam_result_1') != null ? old('x-ray_sputum_exam_result_1') : $xray_sputum_exam_result_1 --}}" readonly="">
 								</td>
 							</tr>
 
@@ -413,11 +413,11 @@
 								</td>
 
 								<td class="field{!! !$errors->has('stool_and_other_exam_kind_1') ? '"' : ' error" data-content="' . $errors->first('stool_and_other_exam_kind_1') . '" data-position="top center"' !!}>
-									<input type="text" name="stool_and_other_exam_kind_1" value="{{ old('stool_and_other_exam_kind_1') != null ? old('stool_and_other_exam_kind_1') : $stool_and_other_exam_kind_1 }}" class="dynamic_input">
+									<input type="text" name="stool_and_other_exam_kind_1" value="STOOL{{-- old('stool_and_other_exam_kind_1') != null ? old('stool_and_other_exam_kind_1') : $stool_and_other_exam_kind_1 --}}" readonly="">
 								</td>
 
 								<td class="field{!! !$errors->has('stool_and_other_exam_result_1') ? '"' : ' error" data-content="' . $errors->first('stool_and_other_exam_result_1') . '" data-position="top center"' !!}>
-									<input type="text" name="stool_and_other_exam_result_1" value="{{ old('stool_and_other_exam_result_1') != null ? old('stool_and_other_exam_result_1') : $stool_and_other_exam_result_1 }}" class="dynamic_input">
+									<input type="text" name="stool_and_other_exam_result_1" value="NOPS{{-- old('stool_and_other_exam_result_1') != null ? old('stool_and_other_exam_result_1') : $stool_and_other_exam_result_1 --}}" readonly="">
 								</td>
 							</tr>
 
@@ -452,11 +452,11 @@
 								</td>
 
 								<td class="field{!! !$errors->has('stool_and_other_exam_kind_2') ? '"' : ' error" data-content="' . $errors->first('stool_and_other_exam_kind_2') . '" data-position="top center"' !!}>
-									<input type="text" name="stool_and_other_exam_kind_2" value="{{ old('stool_and_other_exam_kind_2') != null ? old('stool_and_other_exam_kind_2') : $stool_and_other_exam_kind_2 }}" class="dynamic_input">
+									<input type="text" name="stool_and_other_exam_kind_2" value="URINE{{-- old('stool_and_other_exam_kind_2') != null ? old('stool_and_other_exam_kind_2') : $stool_and_other_exam_kind_2 --}}" readonly="">
 								</td>
 
 								<td class="field{!! !$errors->has('stool_and_other_exam_result_2') ? '"' : ' error" data-content="' . $errors->first('stool_and_other_exam_result_2') . '" data-position="top center"' !!}>
-									<input type="text" name="stool_and_other_exam_result_2" value="{{ old('stool_and_other_exam_result_2') != null ? old('stool_and_other_exam_result_2') : $stool_and_other_exam_result_2 }}" class="dynamic_input">
+									<input type="text" name="stool_and_other_exam_result_2" value="NORMAL{{-- old('stool_and_other_exam_result_2') != null ? old('stool_and_other_exam_result_2') : $stool_and_other_exam_result_2 --}}" readonly="">
 								</td>
 							</tr>
 						</tbody>

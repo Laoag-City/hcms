@@ -62,14 +62,27 @@ class UserController extends Controller
 
 	private function create_edit_logic($user = null)
 	{
+		if($user == null)
+		{
+			$username_unique_rule = 'unique:users,username';
+			$full_name_unique_rule = 'unique:users,full_name';
+		}
+		else
+		{
+			$username_unique_rule = "unique:users,username,{$user->user_id},user_id";
+			$full_name_unique_rule = "unique:users,full_name,{$user->user_id},user_id";
+		}
+
 		$this->validate($this->request, [
-			'username' => 'bail|required|alpha_dash|max:15',
+			'username' => "bail|required|alpha_dash|max:15|$username_unique_rule",
+			'full_name' => "bail|required|alpha_spaces|max:100|$full_name_unique_rule",
 			'password' => 'bail|required|min:6|confirmed',
 			'password_confirmation' => 'bail|required'
 		]);
 
 		$user = $user != null ? $user : new User;
 		$user->username = $this->request->username;
+		$user->full_name = $this->request->full_name;
 		$user->password = bcrypt($this->request->password);
 		$user->save();
 	}

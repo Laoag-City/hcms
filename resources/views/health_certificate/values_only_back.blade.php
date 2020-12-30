@@ -1,46 +1,46 @@
 <div id="back_preview" class="health_certificate">
-	<div id="outer_border">
-		<div id="inner_border">
+	<div id="outer_border" class="no_outer_border">
+		<div id="inner_border" class="no_inner_border">
 			<div id="contents">
 				<div>
-					<h4 id="h4_back" class="block_center text-center">IMPORTANT</h4>
+					<h4 id="h4_back" class="block_center text-center invisible_on_print">IMPORTANT</h4>
 				</div>
 
 				<div>
-					<p class="text-center standard_font no_margin" style="margin-top: 13.5pt;">
+					<p class="text-center standard_font no_margin invisible_on_print" style="margin-top: 13.5pt;">
 						THIS HEALTH CERTIFICATE IS NON-TRANSFERABLE. ALWAYS WEAR YOUR CERTIFICATE IN THE UPPER LEFT SIDE FRONT PORTION OF YOUR GARMENT WHILE WORKING. VALID ONLY UNTIL THE NEXT DATE OF EXAMINATION, AS INDICATED BELOW.
 					</p>
 				</div>
 
 				<div class="text-center">
 					<div style="display: inline-block;">
-						<div class="field standard_font dates" style="margin-top: 15pt;">
+						<div class="field standard_font dates no_border_on_print" style="margin-top: 15pt;">
 							{{ $health_certificate->issuance_date }}
 						</div>
 
-						<div class="standard_font">
+						<div class="standard_font invisible_on_print">
 							Date of Issuance
 						</div>
 					</div>
 					
 
 					<div style="display: inline-block;">
-						<div class="field standard_font dates" style="margin-top: 15pt;">
+						<div class="field standard_font dates no_border_on_print" style="margin-top: 15pt;">
 							{{ $health_certificate->expiration_date }}
 						</div>
 
-						<div class="standard_font">
+						<div class="standard_font invisible_on_print">
 							Date of Expiration
 						</div>
 					</div>
 				</div>
 
 				<div class="table_wrapper text-center">
-					<div class="standard_font"><b>IMMUNIZATION</b></div>
+					<div class="standard_font invisible_on_print"><b>IMMUNIZATION</b></div>
 
-					<table>
+					<table class="no_borders">
 						<thead>
-							<tr>
+							<tr class="invisible_on_print">
 								<th>DATE</th>
 								<th>KIND</th>
 								<th>DATE OF EXP.</th>
@@ -110,11 +110,11 @@
 				</div>
 
 				<div class="table_wrapper text-center">
-					<div class="standard_font"><b>X-RAY, SPUTUM EXAM</b></div>
+					<div class="standard_font invisible_on_print"><b>X-RAY, SPUTUM EXAM</b></div>
 
-					<table>
+					<table class="no_borders">
 						<thead>
-							<tr>
+							<tr class="invisible_on_print">
 								<th>DATE</th>
 								<th>KIND</th>
 								<th>RESULT</th>
@@ -184,11 +184,11 @@
 				</div>
 
 				<div class="table_wrapper text-center">
-					<div class="standard_font"><b>STOOL AND OTHER EXAM</b></div>
+					<div class="standard_font invisible_on_print"><b>STOOL AND OTHER EXAM</b></div>
 
-					<table>
+					<table class="no_borders">
 						<thead>
-							<tr>
+							<tr class="invisible_on_print">
 								<th>DATE</th>
 								<th>KIND</th>
 								<th>RESULT</th>

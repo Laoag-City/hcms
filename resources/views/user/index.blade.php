@@ -18,6 +18,7 @@
 					<thead>
 						<tr>
 							<th>Username</th>
+							<th>Full Name</th>
 							<th></th>
 							<th></th>
 						</tr>
@@ -27,6 +28,7 @@
 						@foreach($users as $user)
 							<tr>
 								<td>{{ $user->username }}</td>
+								<td>{{ $user->full_name }}</td>
 								<td class="collapsing">
 									<a href="{{ url("users/{$user->user_id}") }}" class="ui mini yellow button">Edit</a>
 								</td>
@@ -56,6 +58,11 @@
 					<div class="field{!! !$errors->has('username') ? '"' : ' error" data-content="' . $errors->first('username') . '" data-position="top center"' !!}>
 						<label>Username:</label>
 						<input type="text" name="username" value="{{ old('username') }}" required>
+					</div>
+
+					<div class="field{!! !$errors->has('full_name') ? '"' : ' error" data-content="' . $errors->first('full_name') . '" data-position="top center"' !!}>
+						<label>Full Name:</label>
+						<input type="text" name="full_name" value="{{ old('full_name') }}" required>
 					</div>
 
 					<div class="field{!! !$errors->has('password') ? '"' : ' error" data-content="' . $errors->first('password') . '" data-position="top center"' !!}>

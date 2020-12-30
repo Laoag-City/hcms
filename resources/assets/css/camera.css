@@ -67,7 +67,7 @@ td, th
 
 .smaller_font
 {
-	font-size: 7pt;
+	font-size: 7.5pt;
 }
 
 .pull_left
@@ -148,6 +148,13 @@ td, th
 	margin-bottom: 5px;
 }
 
+#page_breaker
+{
+	width: 50px; 
+	height: 1px; 
+	float: left;
+}
+
 #outer_border
 {
 	margin: 18pt;
@@ -199,27 +206,27 @@ td, th
 
 #name
 {
-	width: 174pt; 
+	width: 173pt; 
 }
 
 #age
 {
-	width: 18pt;
+	width: 17pt;
 }
 
 #sex
 {
-	width: 12pt;
+	width: 10pt;
 }
 
 #work_type
 {
-	width: 98pt;
+	width: 97pt;
 }
 
 #establishment
 {
-	width: 149pt;
+	width: 145pt;
 }
 
 #camera
@@ -254,12 +261,42 @@ td, th
 
     #certificates-wrapper
     {
-    	text-align: justify;
+    	text-align: justify !important;
+    }
+
+    .no_outer_border
+    {
+    	border: none !important;
+    	padding: 2.25pt !important;
+    }
+
+    .no_inner_border
+    {
+    	border: none !important;
+    	padding: 1.125pt !important;
     }
 
     .health_certificate
     {
-    	margin-top: 3px;
-    	margin-left: 3px;
+    	margin-top: 3px !important;
+    	margin-left: 3px !important;
+    }
+
+    .invisible_on_print
+    {
+    	visibility: hidden !important;
+    }
+
+    .no_border_on_print, table.no_borders, table.no_borders td, table.no_borders th
+    {
+    	border: none !important;
+    }
+
+    #page_breaker
+    {
+    	break-before: always !important;
+    	width: 0px !important;
+    	height: 0px !important;
+    	clear: both !important;
     }
 }

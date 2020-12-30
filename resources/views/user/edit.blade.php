@@ -29,6 +29,11 @@
 						<input type="text" name="username" value="{{ old('username') != null ? old('username') : $user->username }}">
 					</div>
 
+					<div class="field{!! !$errors->has('full_name') ? '"' : ' error" data-content="' . $errors->first('full_name') . '" data-position="top center"' !!}>
+						<label>Full Name:</label>
+						<input type="text" name="full_name" value="{{ old('full_name') }}" required>
+					</div>
+
 					<div class="field{!! !$errors->has('password') ? '"' : ' error" data-content="' . $errors->first('password') . '" data-position="top center"' !!}>
 						<label>Password:</label>
 						<input type="password" name="password" value="{{ old('password') }}">

@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         DB::table('users')->insert([
             'username' => 'administrator',
+            'full_name' => 'Administrator',
             'password' => bcrypt('city_health_admin'),
             'admin' => true
         ]);
