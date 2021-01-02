@@ -4,7 +4,7 @@
 <div class="sixteen wide column center aligned">
 	<div class="ui attached message">
 		<h2 class="ui header">
-			Applicant's Information
+			Client's Information
 		</h2>
 	</div>
 

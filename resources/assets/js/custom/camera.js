@@ -44,25 +44,25 @@ Webcam.on( 'live', function(){
 			});
 		});
 	});
-
-	$('.print').click(function(){
-		/*if($(this).attr('id') == 'print_front')
-		{
-			$('#front_preview').removeClass('no-print');
-			$('#back_preview').addClass('no-print');
-		}
-
-		else if($(this).attr('id') == 'print_back')
-		{
-			$('#back_preview').removeClass('no-print');
-			$('#front_preview').addClass('no-print');
-		}*/
-		
-		window.print();
-	});
 });
 
 Webcam.on( 'error', function(err){
 	window.alert('There is an error in your camera. Please plug it and enable access to your web browser.');
 	console.log(err);
+});
+
+$('.print').click(function(){
+	/*if($(this).attr('id') == 'print_front')
+	{
+		$('#front_preview').removeClass('no-print');
+		$('#back_preview').addClass('no-print');
+	}
+
+	else if($(this).attr('id') == 'print_back')
+	{
+		$('#back_preview').removeClass('no-print');
+		$('#front_preview').addClass('no-print');
+	}*/
+	
+	window.print();
 });

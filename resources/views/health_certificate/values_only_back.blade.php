@@ -1,4 +1,4 @@
-<div id="back_preview" class="health_certificate">
+<div id="back_preview" class="health_certificate no_main_border">
 	<div id="outer_border" class="no_outer_border">
 		<div id="inner_border" class="no_inner_border">
 			<div id="contents">
@@ -7,14 +7,14 @@
 				</div>
 
 				<div>
-					<p class="text-center standard_font no_margin invisible_on_print" style="margin-top: 13.5pt;">
+					<p class="text-center standard_font no_margin invisible_on_print" style="margin-top: 13.5pt; font-size: 7pt;">
 						THIS HEALTH CERTIFICATE IS NON-TRANSFERABLE. ALWAYS WEAR YOUR CERTIFICATE IN THE UPPER LEFT SIDE FRONT PORTION OF YOUR GARMENT WHILE WORKING. VALID ONLY UNTIL THE NEXT DATE OF EXAMINATION, AS INDICATED BELOW.
 					</p>
 				</div>
 
 				<div class="text-center">
 					<div style="display: inline-block;">
-						<div class="field standard_font dates no_border_on_print" style="margin-top: 15pt;">
+						<div class="field dates no_border_on_print larger_font" style="margin-top: 10pt;">
 							{{ $health_certificate->issuance_date }}
 						</div>
 
@@ -25,7 +25,7 @@
 					
 
 					<div style="display: inline-block;">
-						<div class="field standard_font dates no_border_on_print" style="margin-top: 15pt;">
+						<div class="field dates no_border_on_print larger_font" style="margin-top: 10pt;">
 							{{ $health_certificate->expiration_date }}
 						</div>
 
@@ -41,9 +41,9 @@
 					<table class="no_borders">
 						<thead>
 							<tr class="invisible_on_print">
-								<th>DATE</th>
-								<th>KIND</th>
-								<th>DATE OF EXP.</th>
+								<th class="larger_font">DATE</th>
+								<th class="larger_font">KIND</th>
+								<th class="larger_font">DATE OF EXP.</th>
 							</tr>
 						</thead>
 
@@ -72,9 +72,9 @@
 									}
 								@endphp
 
-								<td class="{{ $immunization_date_1 != null ?: 'empty_cell' }}">{{ $immunization_date_1 }}</td>
-								<td class="{{ $immunization_kind_1 != null ?: 'empty_cell' }}">{{ $immunization_kind_1 }}</td>
-								<td class="{{ $immunization_date_of_expiration_1 != null ?: 'empty_cell' }}">{{ $immunization_date_of_expiration_1 }}</td>
+								<td class="{{ $immunization_date_1 != null ? 'larger_font' : 'empty_cell_large' }}">{{ $immunization_date_1 }}</td>
+								<td class="{{ $immunization_kind_1 != null ? 'larger_font' : 'empty_cell_large' }}">{{ $immunization_kind_1 }}</td>
+								<td class="{{ $immunization_date_of_expiration_1 != null ? 'larger_font' : 'empty_cell_large' }}">{{ $immunization_date_of_expiration_1 }}</td>
 							</tr>
 
 							<tr>
@@ -101,9 +101,9 @@
 									}
 								@endphp
 
-								<td class="{{ $immunization_date_2 != null ?: 'empty_cell' }}">{{ $immunization_date_2 }}</td>
-								<td class="{{ $immunization_kind_2 != null ?: 'empty_cell' }}">{{ $immunization_kind_2 }}</td>
-								<td class="{{ $immunization_date_of_expiration_2 != null ?: 'empty_cell' }}">{{ $immunization_date_of_expiration_2 }}</td>
+								<td class="{{ $immunization_date_2 != null ? 'larger_font' : 'empty_cell_large' }}">{{ $immunization_date_2 }}</td>
+								<td class="{{ $immunization_kind_2 != null ? 'larger_font' : 'empty_cell_large' }}">{{ $immunization_kind_2 }}</td>
+								<td class="{{ $immunization_date_of_expiration_2 != null ? 'larger_font' : 'empty_cell_large' }}">{{ $immunization_date_of_expiration_2 }}</td>
 							</tr>
 						</tbody>
 					</table>
@@ -115,9 +115,9 @@
 					<table class="no_borders">
 						<thead>
 							<tr class="invisible_on_print">
-								<th>DATE</th>
-								<th>KIND</th>
-								<th>RESULT</th>
+								<th class="larger_font">DATE</th>
+								<th class="larger_font">KIND</th>
+								<th class="larger_font">RESULT</th>
 							</tr>
 						</thead>
 
@@ -146,9 +146,9 @@
 									}
 								@endphp
 
-								<td class="{{ $xray_sputum_exam_date_1 != null ?: 'empty_cell' }}">{{ $xray_sputum_exam_date_1 }}</td>
-								<td class="{{ $xray_sputum_exam_kind_1 != null ?: 'empty_cell' }}">{{ $xray_sputum_exam_kind_1 }}</td>
-								<td class="{{ $xray_sputum_exam_result_1 != null ?: 'empty_cell' }}">{{ $xray_sputum_exam_result_1 }}</td>
+								<td class="{{ $xray_sputum_exam_date_1 != null ? 'larger_font' : 'empty_cell_large' }}">{{ $xray_sputum_exam_date_1 }}</td>
+								<td class="{{ $xray_sputum_exam_kind_1 != null ? 'larger_font' : 'empty_cell_large' }}">{{-- $xray_sputum_exam_kind_1 --}}</td>
+								<td class="{{ $xray_sputum_exam_result_1 != null ? 'larger_font' : 'empty_cell_large' }}">{{-- $xray_sputum_exam_result_1 --}}</td>
 							</tr>
 
 							<tr>
@@ -175,9 +175,9 @@
 									}
 								@endphp
 
-								<td class="{{ $xray_sputum_exam_date_2 != null ?: 'empty_cell' }}">{{ $xray_sputum_exam_date_2 }}</td>
-								<td class="{{ $xray_sputum_exam_kind_2 != null ?: 'empty_cell' }}">{{ $xray_sputum_exam_kind_2 }}</td>
-								<td class="{{ $xray_sputum_exam_result_2 != null ?: 'empty_cell' }}">{{ $xray_sputum_exam_result_2 }}</td>
+								<td class="{{ $xray_sputum_exam_date_2 != null ? 'larger_font' : 'empty_cell_large' }}">{{ $xray_sputum_exam_date_2 }}</td>
+								<td class="{{ $xray_sputum_exam_kind_2 != null ? 'larger_font' : 'empty_cell_large' }}">{{ $xray_sputum_exam_kind_2 }}</td>
+								<td class="{{ $xray_sputum_exam_result_2 != null ? 'larger_font' : 'empty_cell_large' }}">{{ $xray_sputum_exam_result_2 }}</td>
 							</tr>
 						</tbody>
 					</table>
@@ -189,9 +189,9 @@
 					<table class="no_borders">
 						<thead>
 							<tr class="invisible_on_print">
-								<th>DATE</th>
-								<th>KIND</th>
-								<th>RESULT</th>
+								<th class="larger_font">DATE</th>
+								<th class="larger_font">KIND</th>
+								<th class="larger_font">RESULT</th>
 							</tr>
 						</thead>
 
@@ -220,9 +220,9 @@
 									}
 								@endphp
 
-								<td class="{{ $stool_and_other_exam_date_1 != null ?: 'empty_cell' }}">{{ $stool_and_other_exam_date_1 }}</td>
-								<td class="{{ $stool_and_other_exam_kind_1 != null ?: 'empty_cell' }}">{{ $stool_and_other_exam_kind_1 }}</td>
-								<td class="{{ $stool_and_other_exam_result_1 != null ?: 'empty_cell' }}">{{ $stool_and_other_exam_result_1 }}</td>
+								<td class="{{ $stool_and_other_exam_date_1 != null ? 'larger_font' : 'empty_cell_large' }}">{{ $stool_and_other_exam_date_1 }}</td>
+								<td class="{{ $stool_and_other_exam_kind_1 != null ? 'larger_font' : 'empty_cell_large' }}">{{-- $stool_and_other_exam_kind_1 --}}</td>
+								<td class="{{ $stool_and_other_exam_result_1 != null ? 'larger_font' : 'empty_cell_large' }}">{{-- $stool_and_other_exam_result_1 --}}</td>
 							</tr>
 
 							<tr>
@@ -249,9 +249,9 @@
 									}
 								@endphp
 
-								<td class="{{ $stool_and_other_exam_date_2 != null ?: 'empty_cell' }}">{{ $stool_and_other_exam_date_2 }}</td>
-								<td class="{{ $stool_and_other_exam_kind_2 != null ?: 'empty_cell' }}">{{ $stool_and_other_exam_kind_2 }}</td>
-								<td class="{{ $stool_and_other_exam_result_2 != null ?: 'empty_cell' }}">{{ $stool_and_other_exam_result_2 }}</td>
+								<td class="{{ $stool_and_other_exam_date_2 != null ? 'larger_font' : 'empty_cell_large' }}">{{ $stool_and_other_exam_date_2 }}</td>
+								<td class="{{ $stool_and_other_exam_kind_2 != null ? 'larger_font' : 'empty_cell_large' }}">{{-- $stool_and_other_exam_kind_2 --}}</td>
+								<td class="{{ $stool_and_other_exam_result_2 != null ? 'larger_font' : 'empty_cell_large' }}">{{-- $stool_and_other_exam_result_2 --}}</td>
 							</tr>
 						</tbody>
 					</table>

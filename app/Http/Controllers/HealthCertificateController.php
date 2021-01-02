@@ -296,7 +296,7 @@ class HealthCertificateController extends Controller
     }
 
     public function printPreview(HealthCertificate $health_certificate)
-    {
+    {   //to use the view for printing side-by-side, remove values_only_
         return view('health_certificate.values_only_preview', [
             'logo' => '/doh_logo.png',
         	'picture' => (new CertificateFileGenerator($health_certificate))->getPicturePathAndURL()['url'],
@@ -310,7 +310,7 @@ class HealthCertificateController extends Controller
     public function bulkPrintPreview()
     {
         if(session()->has('print_ids'))
-        {
+        {   //to use the view for printing side-by-side, remove values_only_
             return view('health_certificate.values_only_bulk_print_preview', [
                 'logo' => '/doh_logo.png',
                 'health_certificates' => HealthCertificate::whereIn('applicant_id', session()->get('print_ids'))

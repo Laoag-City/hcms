@@ -24,7 +24,7 @@
 			</a>-->
 
 			<a class="item" href="{{ url('applicant') }}">
-				<i class="big icons" data-tooltip="Applicants" data-position="bottom center">
+				<i class="big icons" data-tooltip="Clients" data-position="bottom center">
 					<i class="users icon"></i>
 				</i>
 			</a>
@@ -39,7 +39,7 @@
 			<div class="right menu">
 				<form action="{{ url('search') }}" class="item">
 					<div class="ui action input">
-						<input type="text" name="q" placeholder="Search Applicants">
+						<input type="text" name="q" placeholder="Search Clients">
 						<button class="ui icon button">
     						<i class="search icon"></i>
   						</button>

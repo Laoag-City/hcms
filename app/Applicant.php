@@ -17,6 +17,11 @@ class Applicant extends Model
     	return $this->hasOne('App\HealthCertificate', 'applicant_id', 'applicant_id');
     }
 
+    public function sanitary_permits()
+    {
+        return $this->hasMany('App\SanitaryPermit', 'applicant_id', 'applicant_id');
+    }
+
     public function setFirstNameAttribute($value)
     {
         $this->attributes['first_name'] = title_case($value);

@@ -15,21 +15,30 @@ table
 	border-collapse: collapse;
 }
 
-th
-{
-	font-size: 7pt;
-}
-
 td
 {
-	font-size: 6pt;
 	padding: 1.125pt 0pt 1.125pt 0pt !important;
 }
 
 td, th
 {
+	font-size: 7pt;
 	border: 1pt solid black;
-	width: 33.3333%;
+}
+
+td:nth-child(1), th:nth-child(1)
+{
+	width: 30%;
+}
+
+td:nth-child(2), th:nth-child(2)
+{
+	width: 35%;
+}
+
+td:nth-child(3), th:nth-child(3)
+{
+	width: 35%;
 }
 
 #h4_front
@@ -58,6 +67,12 @@ td, th
 	width: 252pt;
 	height: 324pt;
 	border: 0.7625pt solid black !important;
+}
+
+.larger_font
+{
+	font-size: 9pt;
+	font-weight: bold;
 }
 
 .standard_font
@@ -130,7 +145,12 @@ td, th
 
 .empty_cell
 {
-	height: 6pt;
+	height: 7pt;
+}
+
+.empty_cell_large
+{
+	height: 9pt;
 }
 
 .hidden
@@ -262,6 +282,12 @@ td, th
     #certificates-wrapper
     {
     	text-align: justify !important;
+    }
+
+    .no_main_border
+    {
+    	border: none !important;
+    	padding: 0.7625pt !important;
     }
 
     .no_outer_border

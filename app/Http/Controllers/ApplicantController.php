@@ -29,7 +29,7 @@ class ApplicantController extends Controller
         }
 
 		return view('applicant.index', [
-    		'title' => 'Applicants',
+    		'title' => 'Clients',
     		'applicants' => $applicants
     	]);
 	}

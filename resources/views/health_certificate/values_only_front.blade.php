@@ -1,4 +1,4 @@
-<div id="front_preview" class="health_certificate">
+<div id="front_preview" class="health_certificate no_main_border">
 	<div id="outer_border" class="no_outer_border">
 		<div id="inner_border" class="no_inner_border">
 			<div id="contents">
@@ -13,7 +13,7 @@
 				</div>
 
 				<div id="header_2" class="text_right">
-					<div class="label smaller_font invisible_on_print">Reg. No.</div><div id="reg_number" class="smaller_font field no_border_on_print">{{ $health_certificate->registration_number }}</div>
+					<div class="label smaller_font invisible_on_print">Reg. No.</div><div id="reg_number" class="field no_border_on_print larger_font">{{ $health_certificate->registration_number }}</div>
 					<h4 id="h4_front" class="no_margin text-center invisible_on_print" style="margin-top: 4.5pt; background-color: {{ $color }}">HEALTH CERTIFICATE</h4>
 				</div>
 
@@ -24,17 +24,17 @@
 				</div>
 
 				<div style="margin-top: 4.5pt;">
-					<div class="label smaller_font invisible_on_print">Name</div><div id="name" class="smaller_font field no_border_on_print">{{ $health_certificate->applicant->formatName() }}</div>
+					<div class="label smaller_font invisible_on_print">Name</div><div id="name" class="field no_border_on_print larger_font">{{ $health_certificate->applicant->formatName() }}</div>
 				</div>
 
 				<div style="margin-top: 4.5pt;">
-					<div class="label smaller_font invisible_on_print">Age</div><div id="age" class="smaller_font field no_border_on_print">{{ $health_certificate->applicant->age }}</div>
-					<div class="label smaller_font invisible_on_print">Sex</div><div id="sex" class="smaller_font field no_border_on_print">{{ $health_certificate->applicant->gender == 1 ? 'M' : 'F' }}</div>
-					<div class="label smaller_font invisible_on_print">Work Type</div><div id="work_type" class="smaller_font field no_border_on_print">{{ $health_certificate->work_type }}</div>
+					<div class="label smaller_font invisible_on_print">Age</div><div id="age" class="field no_border_on_print larger_font">{{ $health_certificate->applicant->age }}</div>
+					<div class="label smaller_font invisible_on_print">Sex</div><div id="sex" class="field no_border_on_print larger_font">{{ $health_certificate->applicant->gender == 1 ? 'M' : 'F' }}</div>
+					<div class="label smaller_font invisible_on_print">Work Type</div><div id="work_type" class="field no_border_on_print larger_font">{{ $health_certificate->work_type }}</div>
 				</div>
 
 				<div style="margin-top: 4.5pt;">
-					<div class="label smaller_font invisible_on_print">Establishment</div><div id="establishment" class="smaller_font field no_border_on_print">{{ $health_certificate->establishment }}</div>
+					<div class="label smaller_font invisible_on_print">Establishment</div><div id="establishment" class="field no_border_on_print larger_font">{{ $health_certificate->establishment }}</div>
 				</div>
 
 				<div style="margin-top: 9pt;" class="invisible_on_print">
