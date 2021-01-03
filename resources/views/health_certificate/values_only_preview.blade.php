@@ -16,6 +16,9 @@
 	<div class="no-print">
 		<br>
 		<button onclick="window.location.replace('{{ url('/') }}')">GO BACK</button>
+		<button onclick="window.location.replace('{{ url("applicant/{$health_certificate->applicant->applicant_id}/sanitary_permit/create") }}')">
+			ADD SANITARY PERMIT
+		</button>
 		<button id="print_back" class="pull_right print" style="margin-left: 10px;">PRINT (BACK)</button>
 		<button id="print_front" class="pull_right print">PRINT (FRONT)</button>
 		<br>
