@@ -19,12 +19,6 @@
 			<div class="fourteen wide column center aligned">
 				<form id="health_certificate_form" method="POST" action="{{ url('/') }}" class="ui form {{ $errors->any() ? 'error' : 'success' }}">
 					{{ csrf_field() }}
-
-					@if($errors->has('id'))
-						<div class="ui error message">
-							<p>{{ $errors->first('id') }}</p>
-						</div>
-					@endif
 					
 					<br>
 
@@ -302,8 +296,6 @@
 			</div>
 		</div>			
 	</div>
-
-	
 </div>
 @endsection
 

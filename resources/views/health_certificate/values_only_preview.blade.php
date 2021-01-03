@@ -8,7 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <script>window.Laravel = {!! json_encode(['csrfToken' => csrf_token(), ]) !!};</script>
-	<title>Health Certificate - Front</title>
+	<title>Health Certificate</title>
 
 	<link rel="stylesheet" href="{{ mix('/css/camera.css') }}">
 </head>
@@ -16,8 +16,8 @@
 	<div class="no-print">
 		<br>
 		<button onclick="window.location.replace('{{ url('/') }}')">GO BACK</button>
-		<!--<button id="print_back" class="pull_right print" style="margin-left: 10px;">PRINT (BACK)</button>-->
-		<button id="print_front" class="pull_right print">PRINT</button>
+		<button id="print_back" class="pull_right print" style="margin-left: 10px;">PRINT (BACK)</button>
+		<button id="print_front" class="pull_right print">PRINT (FRONT)</button>
 		<br>
 		<br>
 		<button id="take_picture" class="hidden">TAKE PICTURE</button>
@@ -52,5 +52,5 @@
 </script>
 <script src="/webcamjs/webcam.js"></script>
 <script src="{{ mix('/js/app.js') }}"></script>
-<script src="{{ mix('/js/camera.js') }}"></script>
+<script src="{{ mix('/js/values_only_camera.js') }}"></script>
 </html>

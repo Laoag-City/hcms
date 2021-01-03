@@ -39,6 +39,11 @@ Route::group(['middleware' => 'auth'], function(){
 	//view or edit an applicant
 	Route::match(['get', 'put'], 'applicant/{applicant}', 'ApplicantController@viewEditApplicant');
 	
+	Route::match(['get', 'post'], 'applicant/{applicant}/sanitary_permit/create', 'SanitaryPermitController@createSanitaryPermit');
+	Route::get('applicant/{applicant}/sanitary_permit', 'SanitaryPermitController@sanitaryPermits');
+	Route::match(['get', 'put'], 'sanitary_permit/{sanitary_permit}', 'SanitaryPermitController@viewEditSanitaryPermit');
+	Route::get('sanitary_permit/{sanitary_permit}/preview', 'SanitaryPermitController@printPreview');
+
 	//searches applicants
 	Route::get('search', 'ApplicantController@searchApplicants');
 

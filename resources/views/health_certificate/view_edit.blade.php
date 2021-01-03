@@ -91,23 +91,22 @@
 
 						<div class="seven wide field">
 							<div class="inline fields">
-							<label>Update Mode: </label>
-							<div class="field">
-								<div class="ui toggle checkbox">
-									<input type="checkbox" id="edit_switch" name="update_mode" value="edit" class="update_switches hidden" {{ old('update_mode') != 'edit' ?: 'checked' }}>
-									<label>Edit Only</label>
+								<label>Update Mode: </label>
+								<div class="field">
+									<div class="ui toggle checkbox">
+										<input type="radio" id="edit_switch" name="update_mode" value="edit" class="update_switches hidden" {{ old('update_mode') != 'edit' ?: 'checked' }}>
+										<label>Edit Only</label>
+									</div>
 								</div>
-							</div>
 
-							<div class="field">
-								<div class="ui toggle checkbox">
-									<input type="checkbox" id="renew_switch" name="update_mode" value="edit_renew" class="update_switches hidden" {{ old('update_mode') != 'edit_renew' ?: 'checked' }}>
-									<label>Edit and Renew</label>
+								<div class="field">
+									<div class="ui toggle checkbox">
+										<input type="radio" id="renew_switch" name="update_mode" value="edit_renew" class="update_switches hidden" {{ old('update_mode') != 'edit_renew' ?: 'checked' }}>
+										<label>Edit and Renew</label>
+									</div>
 								</div>
 							</div>
 						</div>
-						</div>
-						
 					</div>
 
 					<br>
@@ -126,7 +125,7 @@
 							<input type="text" name="type_of_work" value="{{ old('type_of_work') != null ? old('type_of_work') : $health_certificate->work_type }}" placeholder="Type of Work" class="dynamic_input">
 						</div>
 
-						<div class="seven wide field{!! !$errors->has('type_of_work') ? '"' : ' error" data-content="' . $errors->first('type_of_work') . '" data-position="top center"' !!}>
+						<div class="seven wide field{!! !$errors->has('name_of_establishment') ? '"' : ' error" data-content="' . $errors->first('name_of_establishment') . '" data-position="top center"' !!}>
 							<label>Name of Establishment:</label>
 							<input type="text" name="name_of_establishment" value="{{ old('name_of_establishment') != null ? old('name_of_establishment') : $health_certificate->establishment }}" placeholder="Name of Establishment" class="dynamic_input">
 						</div>
@@ -463,7 +462,7 @@
 					</table>
 
 					<div class="field">
-						<button type="submit" id="update_button" class="ui fluid inverted blue button" style="visibility: {{ old('edit_mode') != 'on' ? 'hidden' : 'visible' }};">
+						<button type="submit" id="update_button" class="ui fluid inverted blue button">
 							Update
 						</button>
 					</div>

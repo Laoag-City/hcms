@@ -1,4 +1,4 @@
-<div id="front_preview" class="health_certificate no_main_border">
+<div id="front_preview" class="health_certificate">
 	<div id="outer_border" class="no_outer_border">
 		<div id="inner_border" class="no_inner_border">
 			<div id="contents">

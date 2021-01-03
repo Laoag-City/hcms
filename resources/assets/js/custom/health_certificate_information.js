@@ -9,19 +9,9 @@ let issuance_date = $('input[name=date_of_issuance]').val();
 alterFormState();
 	
 $('.ui.checkbox').checkbox();
-$('.field').popup(false);
+$('.field').popup();
 
 $('.update_switches').change(function(){
-	let to_switch_off = '';
-
-	if($(this).val() == 'edit')
-		to_switch_off = '#renew_switch';
-
-	else if($(this).val() == 'edit_renew')
-		to_switch_off = '#edit_switch';
-
-	$(to_switch_off).prop('checked', false);
-
 	alterFormState();
 });
 

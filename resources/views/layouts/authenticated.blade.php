@@ -29,12 +29,12 @@
 				</i>
 			</a>
 
-			<a class="item" href="{{ url('applicant/bulk_print') }}">
+			<!--<a class="item" href="{{ url('applicant/bulk_print') }}">
 				<i class="big icons" data-tooltip="Bulk-Print Health Certificates" data-position="bottom center">
 					<i class="print icon"></i>
 					<i class="corner address card outline icon"></i>
 				</i>
-			</a>
+			</a>-->
 
 			<div class="right menu">
 				<form action="{{ url('search') }}" class="item">

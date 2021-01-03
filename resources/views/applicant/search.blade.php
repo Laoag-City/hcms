@@ -34,7 +34,19 @@
 						<td class="collapsing">{{ $app->age }}</td>
 						<td class="collapsing">{{ $app->health_certificate->registration_number }}</td>
 						<td class="collapsing">
-							<a href="{{ url("applicant/$app->applicant_id") }}" class="ui mini inverted blue button">View</a>
+							<div class="ui small compact menu">
+								<div class="ui simple dropdown item">
+									<i class="list icon"></i>
+									<i class="dropdown icon"></i>
+									<div class="menu">
+										<a href="{{ url("applicant/$app->applicant_id") }}" class="item">View Client</a>
+										<a href="{{ url("health_certificate/$app->applicant_id") }}" class="item">View Health Certificate</a>
+										<a href="{{ url("health_certificate/$app->applicant_id/preview") }}" class="item">Print Health Certificate</a>
+										<a href="{{ url("applicant/$app->applicant_id/sanitary_permit/create") }}" class="item">Add Sanitary Permit</a>
+										<a href="{{ url("applicant/$app->applicant_id/sanitary_permit") }}" class="item">View Sanitary Permits</a>
+									</div>
+								</div>
+							</div>
 						</td>
 					</tr>
 				@endforeach

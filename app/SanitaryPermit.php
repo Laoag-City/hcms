@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Custom\DateToInputFormatter;
 
 class SanitaryPermit extends Model
 {
+	use DateToInputFormatter;
+
     protected $primaryKey = 'sanitary_permit_id';
     public const DATES_FORMAT = 'M. d, Y';
 
@@ -22,6 +25,11 @@ class SanitaryPermit extends Model
     public function getExpirationDateAttribute($value)
     {
         return date(self::DATES_FORMAT, strtotime($value));
+    }
+
+    public function dateToInput($attribute)
+    {
+        return $this->convertDateForInputField($this->attributes[$attribute]);
     }
 
     public function checkIfExpired()

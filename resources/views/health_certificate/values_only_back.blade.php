@@ -1,4 +1,4 @@
-<div id="back_preview" class="health_certificate no_main_border">
+<div id="back_preview" class="health_certificate">
 	<div id="outer_border" class="no_outer_border">
 		<div id="inner_border" class="no_inner_border">
 			<div id="contents">
@@ -12,7 +12,7 @@
 					</p>
 				</div>
 
-				<div class="text-center">
+				<div class="text-center" style="margin-bottom: 14pt;">
 					<div style="display: inline-block;">
 						<div class="field dates no_border_on_print larger_font" style="margin-top: 10pt;">
 							{{ $health_certificate->issuance_date }}
