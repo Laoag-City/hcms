@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Validator;
 use App\Applicant;
 use App\SanitaryPermit;
+use App\Custom\PermitFileGenerator;
 
 class SanitaryPermitController extends Controller
 {
@@ -17,11 +18,11 @@ class SanitaryPermitController extends Controller
 		$this->request = $request;
 	}
 
-	public function createSanitaryPermit(Applicant $applicant)
+	public function createSanitaryPermitExistingClient(Applicant $applicant)
 	{
 		if($this->request->isMethod('get'))
     	{
-    		return view('sanitary_permit.create', [
+    		return view('sanitary_permit.existing_client_create', [
                 'title' => 'Add Sanitary Permit',
                 'applicant' => $applicant
             ]);
@@ -42,6 +43,23 @@ class SanitaryPermitController extends Controller
 			'applicant' => $applicant,
 			'sanitary_permits' => $applicant->sanitary_permits
 		]);
+	}
+
+	public function createSanitaryPermit()
+	{
+		if($this->request->isMethod('get'))
+    	{
+    		return view('sanitary_permit.create', [
+                'title' => 'New Sanitary Permit'
+            ]);
+    	}
+
+    	elseif($this->request->isMethod('post'))
+    	{
+            $id = $this->create_edit_logic(true);
+
+            return redirect("sanitary_permit/$id/preview");
+    	}
 	}
 
 	public function viewEditSanitaryPermit(SanitaryPermit $sanitary_permit)
@@ -71,17 +89,26 @@ class SanitaryPermitController extends Controller
         ]);
 	}
 
-	public function bulkPrintPreview()
-	{
-		
-	}
-
-	private function create_edit_logic($is_create, Applicant $applicant, SanitaryPermit $sanitary_permit = null)
+	private function create_edit_logic($is_create, Applicant $applicant = null, SanitaryPermit $sanitary_permit = null)
 	{
 		if($is_create)
-			$rules = [
-				'date_of_issuance' => 'bail|required|date|before_or_equal:today',
-			];
+		{
+			if($applicant != null)
+				$rules = [
+					'date_of_issuance' => 'bail|required|date|before_or_equal:today',
+				];
+
+			else
+				$rules = [
+					'first_name' => 'bail|required|alpha_spaces|max:40',
+	                'middle_name' => 'nullable|bail|alpha_spaces|max:30',
+	                'last_name' => 'bail|required|alpha_spaces|max:30',
+	                'suffix_name' => 'nullable|bail|in:Jr.,Sr.,I,II,III,IV,V,VI,VII,VIII,IX,X',
+	                'age' => 'bail|required|integer|min:0|max:120',
+	                'gender' => 'bail|required|in:0,1',
+					'date_of_issuance' => 'bail|required|date|before_or_equal:today',
+				];
+		}
 
 		else
 		{
@@ -105,6 +132,18 @@ class SanitaryPermitController extends Controller
 
 		if($is_create)
 		{
+			if($applicant == null)
+			{
+				$applicant = new Applicant;
+	            $applicant->first_name = $this->request->first_name;
+	            $applicant->middle_name = $this->request->middle_name == null ? null : $this->request->middle_name;
+	            $applicant->last_name = $this->request->last_name;
+	            $applicant->suffix_name = $this->request->suffix_name == null ? null : $this->request->suffix_name;
+	            $applicant->age = $this->request->age;
+	            $applicant->gender = $this->request->gender;
+	            $applicant->save();
+			}
+
 			$sanitary_permit = new SanitaryPermit;
 			$sanitary_permit->applicant_id = $applicant->applicant_id;
 			$sanitary_permit->establishment_type = $this->request->establishment_type;
@@ -116,12 +155,18 @@ class SanitaryPermitController extends Controller
 
 			$year_now = date('Y', strtotime('now'));
             $total_registrations_this_year = SanitaryPermit::where('sanitary_permit_number', 'like', "$year_now%")->count();
-            $registration_number = "$year_now-" . sprintf('%05d', $total_registrations_this_year + 1);
+            $iteration = 1;
+
+            do
+            {
+            	$registration_number = "$year_now-" . sprintf('%05d', $total_registrations_this_year + $iteration);
+            	++$iteration;
+            }
+
+            while(SanitaryPermit::where('sanitary_permit_number', '=', $registration_number)->count() > 0);
 
             $sanitary_permit->sanitary_permit_number = $registration_number;
 			$sanitary_permit->save();
-
-			return $sanitary_permit->sanitary_permit_id;
 		}
 
 		else
@@ -135,5 +180,14 @@ class SanitaryPermitController extends Controller
 
 			$sanitary_permit->checkIfExpired();
 		}
+
+		if($is_create)
+        {
+	    	(new PermitFileGenerator($sanitary_permit))->generatePDF();
+	    	return $sanitary_permit->sanitary_permit_id;
+        }
+
+        else
+        	(new PermitFileGenerator($sanitary_permit))->updatePDF();
 	}
 }

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Applicant;
 use App\HealthCertificate;
 use App\Custom\CertificateFileGenerator;
+use App\Custom\PermitFileGenerator;
 use Validator;
 
 class ApplicantController extends Controller
@@ -25,7 +26,8 @@ class ApplicantController extends Controller
         if($not_yet_expired->isNotEmpty())
         {
             foreach($not_yet_expired as $certificate)
-                $certificate->checkIfExpired();
+                if($certificate != null)
+                    $certificate->checkIfExpired();
         }
 
 		return view('applicant.index', [
@@ -41,7 +43,7 @@ class ApplicantController extends Controller
     		return view('applicant.view_edit', [
     			'title' => $applicant->formatName(),
     			'applicant' => $applicant,
-                'picture_url' => (new CertificateFileGenerator($applicant->health_certificate))->getPicturePathAndURL()['url'],
+                'picture_url' => $applicant->health_certificate ? (new CertificateFileGenerator($applicant->health_certificate))->getPicturePathAndURL()['url'] : null
     		]);
     	}
 
@@ -56,8 +58,17 @@ class ApplicantController extends Controller
     			'gender' => 'bail|required|in:0,1',
     		]);
 
-            $old_certificate_file_generator = new CertificateFileGenerator($applicant->health_certificate);
-            $old_applicant_folder = $old_certificate_file_generator->getHealthCertificateFolder()['applicant_folder'];
+            if($applicant->health_certificate != null)
+            {
+                $old_certificate_file_generator = new CertificateFileGenerator($applicant->health_certificate);
+                $old_applicant_certificate_folder = $old_certificate_file_generator->getHealthCertificateFolder()['applicant_folder'];
+            }
+
+            if($applicant->sanitary_permits->isNotEmpty())
+            {
+                $old_permit_file_generator = new PermitFileGenerator($applicant->sanitary_permits->first());
+                $old_applicant_permit_folder = $old_permit_file_generator->getSanitaryPermitFolder()['applicant_folder'];
+            }
 
     		$applicant->first_name = $this->request->first_name;
     		$applicant->middle_name = $this->request->middle_name == null ? null : $this->request->middle_name;
@@ -67,11 +78,23 @@ class ApplicantController extends Controller
     		$applicant->gender = $this->request->gender;
     		$applicant->save();
 
-            $new_certificate_file_generator = new CertificateFileGenerator($applicant->health_certificate->refresh());
-            $new_applicant_folder = $new_certificate_file_generator->getHealthCertificateFolder()['applicant_folder'];
+            if($applicant->health_certificate != null)
+            {
+                $new_certificate_file_generator = new CertificateFileGenerator($applicant->health_certificate->refresh());
+                $new_applicant_certificate_folder = $new_certificate_file_generator->getHealthCertificateFolder()['applicant_folder'];
 
-            if($old_applicant_folder != $new_applicant_folder)
-                $new_certificate_file_generator->updateApplicantFolder($old_applicant_folder);
+                if($old_applicant_certificate_folder != $new_applicant_certificate_folder)
+                    $new_certificate_file_generator->updateApplicantFolder($old_applicant_certificate_folder);
+            }
+
+            if($applicant->sanitary_permits->isNotEmpty())
+            {
+                $new_permit_file_generator = new PermitFileGenerator($applicant->sanitary_permits->first()->refresh());
+                $new_applicant_permit_folder = $new_permit_file_generator->getSanitaryPermitFolder()['applicant_folder'];
+
+                if($old_applicant_permit_folder != $new_applicant_permit_folder)
+                    $new_permit_file_generator->updateApplicantFolder($old_applicant_permit_folder);
+            }
 
     		return back()->with('success', ['header' => 'Applicant updated successfully!', 'message' => null]);
     	}
@@ -102,6 +125,7 @@ class ApplicantController extends Controller
     public function searchApplicantsForHealthCertificate()
     {
     	return collect(['results' => Applicant::search($this->request->q)
+                        ->join('health_certificates', 'applicants.applicant_id', '=', 'health_certificates.applicant_id')
 				    	->get()
 				    	->transform(function($item, $key){
 				    		return collect([

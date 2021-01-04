@@ -29,7 +29,7 @@ class HealthCertificateController extends Controller
     	if($this->request->isMethod('get'))
     	{
     		return view('health_certificate.create', [
-                'title' => 'Create Health Certificate',
+                'title' => 'New Health Certificate',
                 'certificate_types' => HealthCertificate::CERTIFICATE_TYPES
             ]);
     	}
@@ -285,7 +285,7 @@ class HealthCertificateController extends Controller
 
     	elseif($this->request->isMethod('put'))
     	{
-    		$this->create_edit_logic(false, $health_certificate);
+    		$this->create_edit_logic(false, $health_certificate->applicant, $health_certificate);
 
             return redirect("health_certificate/{$health_certificate->applicant_id}/preview");
 
@@ -293,6 +293,25 @@ class HealthCertificateController extends Controller
                                 ['header' => 'Health Certificate updated successfully!', 
                                 'message' => null]);*/
     	}
+    }
+
+    public function createHealthCertificateExistingClient(Applicant $applicant)
+    {
+        if($this->request->isMethod('get'))
+        {
+            return view('health_certificate.existing_client_create', [
+                'title' => 'Add Health Certificate',
+                'applicant' => $applicant,
+                'certificate_types' => HealthCertificate::CERTIFICATE_TYPES
+            ]);
+        }
+
+        elseif($this->request->isMethod('post'))
+        {
+            $id = $this->create_edit_logic(true, $applicant);
+
+            return redirect("health_certificate/$id/preview");
+        }
     }
 
     public function printPreview(HealthCertificate $health_certificate)
@@ -382,20 +401,28 @@ class HealthCertificateController extends Controller
         }
     }*/
 
-    private function create_edit_logic($is_create, HealthCertificate $health_certificate = null)
+    private function create_edit_logic($is_create, Applicant $applicant = null, HealthCertificate $health_certificate = null)
     {
         //set rules depending on $is_create
         if($is_create)
         {
             $required_message = 'The :attribute field is required.';
-            $create_edit_rules = [
-                'first_name' => 'bail|required|alpha_spaces|max:40',
-                'middle_name' => 'nullable|bail|alpha_spaces|max:30',
-                'last_name' => 'bail|required|alpha_spaces|max:30',
-                'suffix_name' => 'nullable|bail|in:Jr.,Sr.,I,II,III,IV,V,VI,VII,VIII,IX,X',
-                'gender' => 'bail|required|in:0,1',
-                'date_of_issuance' => 'bail|required|date|before_or_equal:today',
-            ];
+
+            if($applicant != null)
+                $create_edit_rules = [
+                    'date_of_issuance' => 'bail|required|date|before_or_equal:today',
+                ];
+
+            else
+                $create_edit_rules = [
+                    'first_name' => 'bail|required|alpha_spaces|max:40',
+                    'middle_name' => 'nullable|bail|alpha_spaces|max:30',
+                    'last_name' => 'bail|required|alpha_spaces|max:30',
+                    'suffix_name' => 'nullable|bail|in:Jr.,Sr.,I,II,III,IV,V,VI,VII,VIII,IX,X',
+                    'age' => 'bail|required|integer|min:0|max:120',
+                    'gender' => 'bail|required|in:0,1',
+                    'date_of_issuance' => 'bail|required|date|before_or_equal:today',
+                ];
         }
 
         else
@@ -415,6 +442,7 @@ class HealthCertificateController extends Controller
 
             $create_edit_rules = [
                 'update_mode' => 'bail|required|in:edit,edit_renew',
+                'age' => 'bail|required|integer|min:0|max:120',
                 'date_of_issuance' => $date_of_issuance_rule,
 
             ];
@@ -426,7 +454,6 @@ class HealthCertificateController extends Controller
         
         //define validation rules here
         $validator = Validator::make($this->request->all(), array_merge($create_edit_rules, [
-            'age' => 'bail|required|integer|min:0|max:120',
             'type_of_work' => 'bail|required|alpha_spaces|max:40',
             'name_of_establishment' => 'bail|required|max:50',
             'certificate_type' => 'bail|required|in:' . implode(',', collect(HealthCertificate::CERTIFICATE_TYPES)->pluck('string')->toArray()),
@@ -500,16 +527,27 @@ class HealthCertificateController extends Controller
             //generate reg number
             $year_now = date('Y', strtotime('now'));
             $total_registrations_this_year = HealthCertificate::where('registration_number', 'like', "$year_now%")->count();
-            $registration_number = "$year_now-" . sprintf('%05d', $total_registrations_this_year + 1);
+            $iteration = 1;
 
-            $applicant = new Applicant;
-            $applicant->first_name = $this->request->first_name;
-            $applicant->middle_name = $this->request->middle_name == null ? null : $this->request->middle_name;
-            $applicant->last_name = $this->request->last_name;
-            $applicant->suffix_name = $this->request->suffix_name == null ? null : $this->request->suffix_name;
-            $applicant->age = $this->request->age;
-            $applicant->gender = $this->request->gender;
-            $applicant->save();
+            do
+            {
+                $registration_number = "$year_now-" . sprintf('%05d', $total_registrations_this_year + $iteration);
+                ++$iteration;
+            }
+            
+            while(HealthCertificate::where('registration_number', '=', $registration_number)->count() > 0);
+
+            if($applicant == null)
+            {
+                $applicant = new Applicant;
+                $applicant->first_name = $this->request->first_name;
+                $applicant->middle_name = $this->request->middle_name == null ? null : $this->request->middle_name;
+                $applicant->last_name = $this->request->last_name;
+                $applicant->suffix_name = $this->request->suffix_name == null ? null : $this->request->suffix_name;
+                $applicant->age = $this->request->age;
+                $applicant->gender = $this->request->gender;
+                $applicant->save();
+            }
 
             $health_certificate = new HealthCertificate;
             $health_certificate->applicant_id = $applicant->applicant_id;

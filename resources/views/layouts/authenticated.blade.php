@@ -12,8 +12,16 @@
 	<div id="main_menu" class="ui fluid stackable menu">
 		<div class="ui container">
 			<a class="item" href="{{ url('/') }}">
-				<i class="big icons" data-tooltip="Create A Health Certificate" data-position="bottom center">
-					<i class="add square icon"></i>
+				<i class="big icons" data-tooltip="New Health Certificate" data-position="bottom center">
+					<i class="address card icon"></i>
+					<i class="corner add square icon"></i>
+				</i>
+			</a>
+
+			<a class="item" href="{{ url('sanitary_permit') }}">
+				<i class="big icons" data-tooltip="New Sanitary Permit" data-position="bottom center">
+					<i class="file icon"></i>
+					<i class="corner add square icon"></i>
 				</i>
 			</a>
 

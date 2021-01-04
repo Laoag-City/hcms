@@ -32,7 +32,7 @@
 						<td class="collapsing">{{ $app->suffix_name }}</td>
 						<td class="collapsing">{{ $app->getGender() }}</td>
 						<td class="collapsing">{{ $app->age }}</td>
-						<td class="collapsing">{{ $app->health_certificate->registration_number }}</td>
+						<td class="collapsing">{{ $app->health_certificate ? $app->health_certificate->registration_number : '' }}</td>
 						<td class="collapsing">
 							<div class="ui small compact menu">
 								<div class="ui simple dropdown item">
@@ -40,8 +40,14 @@
 									<i class="dropdown icon"></i>
 									<div class="menu">
 										<a href="{{ url("applicant/$app->applicant_id") }}" class="item">View Client</a>
-										<a href="{{ url("health_certificate/$app->applicant_id") }}" class="item">View Health Certificate</a>
-										<a href="{{ url("health_certificate/$app->applicant_id/preview") }}" class="item">Print Health Certificate</a>
+
+										@if($app->health_certificate != null)
+											<a href="{{ url("health_certificate/$app->applicant_id") }}" class="item">View Health Certificate</a>
+											<a href="{{ url("health_certificate/$app->applicant_id/preview") }}" class="item">Print Health Certificate</a>
+										@else
+											<a href="{{ url("applicant/$app->applicant_id/health_certificate/create") }}" class="item">Add Health Certificate</a>
+										@endif
+
 										<a href="{{ url("applicant/$app->applicant_id/sanitary_permit/create") }}" class="item">Add Sanitary Permit</a>
 										<a href="{{ url("applicant/$app->applicant_id/sanitary_permit") }}" class="item">View Sanitary Permits</a>
 									</div>

@@ -9,28 +9,30 @@
 	</div>
 
 	<form method="POST" action="{{ url()->current() }}" class="ui form attached fluid segment {{ $errors->any() ? 'error' : 'success' }}">
-		<div>
-			<h3 class="ui left floated header left aligned">
-				<u>Health Certificate Registration Number:
-					<div class="ui large labels" style="margin-top: 5px">
-						<a class="ui {{ $applicant->health_certificate->getColor() }} label">
-							{{ $applicant->health_certificate->registration_number }}
-						</a>
-						@if($applicant->health_certificate->checkIfExpired())
-							<a class="ui red label">
-								<i class="exclamation circle icon"></i>
-								EXPIRED
+		@if($applicant->health_certificate != null)
+			<div>
+				<h3 class="ui left floated header left aligned">
+					<u>Health Certificate Registration Number:
+						<div class="ui large labels" style="margin-top: 5px">
+							<a class="ui {{ $applicant->health_certificate->getColor() }} label">
+								{{ $applicant->health_certificate->registration_number }}
 							</a>
-						@endif
-					</div>
-				</u>
-			</h3>
+							@if($applicant->health_certificate->checkIfExpired())
+								<a class="ui red label">
+									<i class="exclamation circle icon"></i>
+									EXPIRED
+								</a>
+							@endif
+						</div>
+					</u>
+				</h3>
 
-			<div class="ui small buttons right floated">
-				<a class="ui basic black button" href="{{ url("health_certificate/$applicant->applicant_id") }}">Health Certificate Info</a>
-				<a class="ui basic black button" href="{{ url("health_certificate/$applicant->applicant_id/preview") }}" target="_blank">Print Preview</a>
+				<div class="ui small buttons right floated">
+					<a class="ui basic black button" href="{{ url("health_certificate/$applicant->applicant_id") }}">Health Certificate Info</a>
+					<a class="ui basic black button" href="{{ url("health_certificate/$applicant->applicant_id/preview") }}" target="_blank">Print Preview</a>
+				</div>
 			</div>
-		</div>
+		@endif
 
 		<div style="clear: both;">
 			{{ csrf_field() }}
