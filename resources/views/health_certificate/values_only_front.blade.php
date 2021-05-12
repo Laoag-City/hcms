@@ -12,7 +12,7 @@
 					<div style="margin: 0pt auto 0pt auto; width: 124pt; border-top: .5625pt solid black; overflow: auto;"></div>
 				</div>
 
-				<div id="header_2" class="text_right">
+				<div id="header_2" class="text_right" style="margin-top: 8pt;">
 					<div class="label smaller_font invisible_on_print">Reg. No.</div><div id="reg_number" class="field no_border_on_print larger_font">{{ $health_certificate->registration_number }}</div>
 					<h4 id="h4_front" class="no_margin text-center invisible_on_print" style="margin-top: 4.5pt; background-color: {{ $color }}">HEALTH CERTIFICATE</h4>
 				</div>

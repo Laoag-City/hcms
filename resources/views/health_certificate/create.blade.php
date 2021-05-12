@@ -118,12 +118,12 @@
 
 				    	<div class="four wide field{!! !$errors->has('date_of_issuance') ? '"' : ' error" data-content="' . $errors->first('date_of_issuance') . '" data-position="top center"' !!}>
 				    		<label>Date of Issuance:</label>
-				    		<input type="date" name="date_of_issuance" value="{{ old('date_of_issuance') }}">
+				    		<input type="date" name="date_of_issuance" value="{{ old('date_of_issuance') ? old('date_of_issuance') : date('Y-m-d', strtotime('now')) }}">
 				    	</div>
 
 				    	<div class="four wide field{!! !$errors->has('date_of_expiration') ? '"' : ' error" data-content="' . $errors->first('date_of_expiration') . '" data-position="top center"' !!}>
 				    		<label>Date of Expiration:</label>
-				    		<input type="date" name="date_of_expiration" value="{{ old('date_of_expiration') }}" readonly="true">
+				    		<input type="date" name="date_of_expiration" value="{{ old('date_of_expiration') }}">
 				    	</div>
 					</div>
 
@@ -200,7 +200,7 @@
 								<td>1</td>
 
 								<td class="field{!! !$errors->has('x-ray_sputum_exam_date_1') ? '"' : ' error" data-content="' . $errors->first('x-ray_sputum_exam_date_1') . '" data-position="top center"' !!}>
-									<input type="date" name="x-ray_sputum_exam_date_1" value="{{ old('x-ray_sputum_exam_date_1') }}">
+									<input type="date" name="x-ray_sputum_exam_date_1" value="{{ old('x-ray_sputum_exam_date_1') ? old('x-ray_sputum_exam_date_1') : date('Y-m-d', strtotime('now')) }}">
 								</td>
 
 								<td class="field{!! !$errors->has('x-ray_sputum_exam_kind_1') ? '"' : ' error" data-content="' . $errors->first('x-ray_sputum_exam_kind_1') . '" data-position="top center"' !!}>
@@ -248,7 +248,7 @@
 								<td>1</td>
 
 								<td class="field{!! !$errors->has('stool_and_other_exam_date_1') ? '"' : ' error" data-content="' . $errors->first('stool_and_other_exam_date_1') . '" data-position="top center"' !!}>
-									<input type="date" name="stool_and_other_exam_date_1" value="{{ old('stool_and_other_exam_date_1') }}">
+									<input type="date" name="stool_and_other_exam_date_1" value="{{ old('stool_and_other_exam_date_1') ? old('stool_and_other_exam_date_1') : date('Y-m-d', strtotime('now')) }}">
 								</td>
 
 								<td class="field{!! !$errors->has('stool_and_other_exam_kind_1') ? '"' : ' error" data-content="' . $errors->first('stool_and_other_exam_kind_1') . '" data-position="top center"' !!}>
@@ -264,7 +264,7 @@
 								<td>2</td>
 
 								<td class="field{!! !$errors->has('stool_and_other_exam_date_2') ? '"' : ' error" data-content="' . $errors->first('stool_and_other_exam_date_2') . '" data-position="top center"' !!}>
-									<input type="date" name="stool_and_other_exam_date_2" value="{{ old('stool_and_other_exam_date_2') }}">
+									<input type="date" name="stool_and_other_exam_date_2" value="{{ old('stool_and_other_exam_date_2') ? old('stool_and_other_exam_date_2') : date('Y-m-d', strtotime('now')) }}">
 								</td>
 
 								<td class="field{!! !$errors->has('stool_and_other_exam_kind_2') ? '"' : ' error" data-content="' . $errors->first('stool_and_other_exam_kind_2') . '" data-position="top center"' !!}>

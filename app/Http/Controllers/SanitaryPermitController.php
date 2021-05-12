@@ -124,7 +124,7 @@ class SanitaryPermitController extends Controller
 		}
 
 		Validator::make($this->request->all(), array_merge($rules, [
-			'establishment_type' => 'bail|required|string|alpha_spaces|max:100',
+			'establishment_type' => 'bail|required|string|max:100',
 			'date_of_expiration' => 'bail|required|date|after:date_of_issuance',
 			'address' => 'bail|required|string|max:150',
 			'sanitary_inspector' => 'bail|required|string|alpha_spaces|max:100'

@@ -12,7 +12,7 @@
 					</p>
 				</div>
 
-				<div class="text-center" style="margin-bottom: 14pt;">
+				<div class="text-center" style="margin-bottom: 14pt; margin-top: 6pt;">
 					<div style="display: inline-block;">
 						<div class="field dates no_border_on_print larger_font" style="margin-top: 10pt;">
 							{{ $health_certificate->issuance_date }}

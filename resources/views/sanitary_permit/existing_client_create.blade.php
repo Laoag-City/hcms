@@ -52,12 +52,12 @@
 					<div class="fields">
 				    	<div class="four wide field{!! !$errors->has('date_of_issuance') ? '"' : ' error" data-content="' . $errors->first('date_of_issuance') . '" data-position="top center"' !!}>
 				    		<label>Date of Issuance:</label>
-				    		<input type="date" name="date_of_issuance" value="{{ old('date_of_issuance') }}">
+				    		<input type="date" name="date_of_issuance" value="{{ old('date_of_issuance') ? old('date_of_issuance') : date('Y-m-d', strtotime('now')) }}">
 				    	</div>
 
 				    	<div class="four wide field{!! !$errors->has('date_of_expiration') ? '"' : ' error" data-content="' . $errors->first('date_of_expiration') . '" data-position="top center"' !!}>
 				    		<label>Date of Expiration:</label>
-				    		<input type="date" name="date_of_expiration" value="{{ old('date_of_expiration') }}">
+				    		<input type="date" name="date_of_expiration" value="{{ date('Y', strtotime('now')) . '-12-31' }}" readonly="true">
 				    	</div>
 
 				    	<div class="eight wide field

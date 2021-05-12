@@ -15,12 +15,12 @@ $('select[name=certificate_type]').change(function(){
 	cert_type_duration.years = Number($('option[value="' + this.value + '"]').attr('data-years'));
 	cert_type_duration.months = Number($('option[value="' + this.value + '"]').attr('data-months'));
 	cert_type_duration.days = Number($('option[value="' + this.value + '"]').attr('data-days'));
-	getExpirationDate();
+	//getExpirationDate();
 });
 
 $('input[name=date_of_issuance]').change(function(){
 	issuance_date = this.value;
-	getExpirationDate();
+	//getExpirationDate();
 });
 
 function getExpirationDate()

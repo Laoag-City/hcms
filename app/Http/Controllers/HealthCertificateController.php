@@ -457,7 +457,7 @@ class HealthCertificateController extends Controller
             'type_of_work' => 'bail|required|alpha_spaces|max:40',
             'name_of_establishment' => 'bail|required|max:50',
             'certificate_type' => 'bail|required|in:' . implode(',', collect(HealthCertificate::CERTIFICATE_TYPES)->pluck('string')->toArray()),
-            'date_of_expiration' => 'bail|required|date',
+            'date_of_expiration' => 'bail|required|date|after:date_of_issuance',
 
             'immunization_date_1' => 'nullable|bail|required_with:immunization_kind_1,immunization_date_of_expiration_1|date|before_or_equal:today',
 
@@ -556,7 +556,7 @@ class HealthCertificateController extends Controller
             $health_certificate->work_type = $this->request->type_of_work;
             $health_certificate->establishment = $this->request->name_of_establishment;
             $health_certificate->issuance_date = $this->request->date_of_issuance;
-            $health_certificate->expiration_date = $this->getExpirationDate($this->request->date_of_issuance, $this->request->certificate_type);
+            $health_certificate->expiration_date = $this->request->date_of_expiration;//$this->getExpirationDate($this->request->date_of_issuance, $this->request->certificate_type);
             $health_certificate->is_expired = false;
             $health_certificate->save();
 
@@ -576,7 +576,7 @@ class HealthCertificateController extends Controller
             
             $health_certificate->duration = $this->request->certificate_type;
             $health_certificate->issuance_date = $this->request->date_of_issuance;
-            $health_certificate->expiration_date = $this->getExpirationDate($this->request->date_of_issuance, $this->request->certificate_type);
+            $health_certificate->expiration_date = $this->request->date_of_expiration;//$this->getExpirationDate($this->request->date_of_issuance, $this->request->certificate_type);
             $health_certificate->work_type = $this->request->type_of_work;
             $health_certificate->establishment = $this->request->name_of_establishment;
             $health_certificate->save();
