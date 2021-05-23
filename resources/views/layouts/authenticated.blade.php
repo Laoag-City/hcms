@@ -8,41 +8,30 @@
 	@php
 		$current_url = request()->path();
 	@endphp
-	
+
 	<div id="main_menu" class="ui fluid stackable menu">
 		<div class="ui container">
-			<a class="item" href="{{ url('/') }}">
-				<i class="big icons" data-tooltip="New Health Certificate" data-position="bottom center">
-					<i class="address card icon"></i>
-					<i class="corner add square icon"></i>
-				</i>
-			</a>
+			<div class="ui simple dropdown item">
+				Health Certificate
+				<i class="dropdown icon"></i>
 
-			<a class="item" href="{{ url('sanitary_permit') }}">
-				<i class="big icons" data-tooltip="New Sanitary Permit" data-position="bottom center">
-					<i class="file icon"></i>
-					<i class="corner add square icon"></i>
-				</i>
-			</a>
+				<div class="menu">
+					<a href="{{ url('/') }}" class="item">New Health Certificate</a>
+					<a href="{{ url('health_certificate/existing_client') }}" class="item">Add Health Certificate To Existing Client</a>
+					<a href="" class="item">Renew A Health Certificate</a>
+				</div>
+			</div>
 
-			<!--<a class="item" href="{{-- url('health_certificate') --}}">
-				<i class="big icons" data-tooltip="Health Certificates" data-position="bottom center">
-					<i class="id card outline icon"></i>
-				</i>
-			</a>-->
+			<div class="ui simple dropdown item">
+				Sanitary Permit
+				<i class="dropdown icon"></i>
 
-			<a class="item" href="{{ url('applicant') }}">
-				<i class="big icons" data-tooltip="Clients" data-position="bottom center">
-					<i class="users icon"></i>
-				</i>
-			</a>
-
-			<!--<a class="item" href="{{ url('applicant/bulk_print') }}">
-				<i class="big icons" data-tooltip="Bulk-Print Health Certificates" data-position="bottom center">
-					<i class="print icon"></i>
-					<i class="corner address card outline icon"></i>
-				</i>
-			</a>-->
+				<div class="menu">
+					<a href="{{ url('sanitary_permit') }}" class="item">New Sanitary Permit</a>
+					<a href="" class="item">Add Sanitary Permit To Existing Client/Business</a>
+					<a href="" class="item">Renew A Sanitary Permit</a>
+				</div>
+			</div>
 
 			<div class="right menu">
 				<form action="{{ url('search') }}" class="item">
@@ -55,29 +44,24 @@
 				</form>
 
 				@can('is-admin')
-					<a class="item" href="{{ url('users') }}">
-						<i class="big icons" data-tooltip="User Administration" data-position="bottom center">
-							<i class="spy icon"></i>
-						</i>
-					</a>
+					<div class="ui simple dropdown item">
+						Admin Controls
+						<i class="dropdown icon"></i>
 
-					<!--<a class="item" href="{{ url('health_certificate_values') }}">
-						<i class="big icons" data-tooltip="Health Certificate Values" data-position="bottom center">
-							<i class="folder icon"></i>
-						</i>
-					</a>-->
+						<div class="menu">
+							<a href="{{ url('users') }}" class="item">User Administration</a>
+						</div>
+					</div>
 				@endcan
-    
-    			<a class="item"  href="#" onclick="event.preventDefault(); document.getElementById('logout_form').submit();">
-    				<i class="big icons" data-tooltip="Logout" data-position="bottom center">
-						<i class="sign out icon"></i>
-					</i>
+
+				<a class="item" href="#" onclick="event.preventDefault(); document.getElementById('logout_form').submit();">
+					Logout
     			</a>
 
     			<form id="logout_form" action="{{ url('/logout') }}" method="POST" style="display: none;">
         			{{ csrf_field() }}
     			</form>
-  			</div>
+			</div>
 		</div>
 	</div>
 

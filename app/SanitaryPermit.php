@@ -17,6 +17,11 @@ class SanitaryPermit extends Model
     	return $this->belongsTo('App\Applicant', 'applicant_id', 'applicant_id');
     }
 
+    public function business()
+    {
+        return $this->belongsTo('App\Business', 'business_id', 'business_id');
+    }
+
     public function getIssuanceDateAttribute($value)
     {
         return date(self::DATES_FORMAT, strtotime($value));

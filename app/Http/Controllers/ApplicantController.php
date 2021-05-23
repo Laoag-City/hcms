@@ -20,15 +20,7 @@ class ApplicantController extends Controller
 
 	public function getApplicants()
 	{
-        $applicants = Applicant::with('health_certificate')->orderBy('last_name', 'asc')->paginate(150);
-        $not_yet_expired = $applicants->pluck('health_certificate')->where('is_expired', false);
-
-        if($not_yet_expired->isNotEmpty())
-        {
-            foreach($not_yet_expired as $certificate)
-                if($certificate != null)
-                    $certificate->checkIfExpired();
-        }
+        $applicants = Applicant::with('health_certificates')->orderBy('updated_at', 'asc')->paginate(150);
 
 		return view('applicant.index', [
     		'title' => 'Clients',
@@ -43,7 +35,7 @@ class ApplicantController extends Controller
     		return view('applicant.view_edit', [
     			'title' => $applicant->formatName(),
     			'applicant' => $applicant,
-                'picture_url' => $applicant->health_certificate ? (new CertificateFileGenerator($applicant->health_certificate))->getPicturePathAndURL()['url'] : null
+                'picture_url' => $applicant->health_certificates ? (new CertificateFileGenerator($applicant->health_certificates->first()))->getPicturePathAndURL()['url'] : null
     		]);
     	}
 
@@ -100,6 +92,7 @@ class ApplicantController extends Controller
     	}
 	}
 
+    /*Commented out because end users do not need it yet. If they'll need it, update its logic because it is outdated
     public function bulkPrintCertificates()
     {
         if($this->request->isMethod('get'))
@@ -121,24 +114,29 @@ class ApplicantController extends Controller
             return redirect('health_certificate/bulk_print_preview');
         }
     }
+    */
 
     public function searchApplicantsForHealthCertificate()
     {
     	return collect(['results' => Applicant::search($this->request->q)
-                        ->join('health_certificates', 'applicants.applicant_id', '=', 'health_certificates.applicant_id')
+                        ->with('health_certificates')
 				    	->get()
 				    	->transform(function($item, $key){
 				    		return collect([
-				    						'id' => $item->applicant_id,
-				    						'first_name' => $item->first_name,
-				    						'middle_name' => $item->middle_name,
-				    						'last_name' => $item->last_name,
-				    						'suffix_name' => $item->suffix_name,
-				    						'age' => $item->age,
-				    						'gender' => $item->gender,
-				    						'whole_name' => $item->formatName(), 
-				    						'basic_info' => "{$item->getGender()} / $item->age yrs. old"
-				    				]); 
+				    			'id' => $item->applicant_id,
+				    			'first_name' => $item->first_name,
+				    			'middle_name' => $item->middle_name,
+				    			'last_name' => $item->last_name,
+				    			'suffix_name' => $item->suffix_name,
+				    			'age' => $item->age,
+				    			'gender' => $item->gender,
+				    			'whole_name' => $item->formatName(), 
+				    			'basic_info' => "{$item->getGender()}, $item->age / " . 
+                                                    $item->health_certificates->sortByDesc('health_certificate_id')
+                                                        ->take(3)->pluck('establishment')
+                                                        ->implode(', ') . 
+                                                        ($item->health_certificates->count() > 3 ? ', etc.' : '')
+				    		]); 
 				    	})
 				   	]);
     }

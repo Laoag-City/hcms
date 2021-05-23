@@ -51,7 +51,7 @@
 </body>
 <script>
 	var picture = '{{ $picture == null ?: "#print_front" }}';
-	var id = {{ $health_certificate->applicant_id }};
+	var id = {{ $health_certificate->health_certificate_id }};
 </script>
 <script src="/webcamjs/webcam.js"></script>
 <script src="{{ mix('/js/app.js') }}"></script>

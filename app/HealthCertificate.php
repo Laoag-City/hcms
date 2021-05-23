@@ -9,8 +9,7 @@ class HealthCertificate extends Model
 {
     use DateToInputFormatter;
 
-    protected $primaryKey = 'applicant_id';
-    public $incrementing = false;
+    protected $primaryKey = 'health_certificate_id';
     public const DATES_FORMAT = 'M. d, Y';
     public const CERTIFICATE_TYPES = [
         'Yellow' => [
@@ -34,17 +33,17 @@ class HealthCertificate extends Model
 
     public function immunizations()
     {
-    	return $this->hasMany('App\Immunization', 'applicant_id', 'applicant_id');
+    	return $this->hasMany('App\Immunization', 'health_certificate_id', 'health_certificate_id');
     }
 
     public function stool_and_others()
     {
-    	return $this->hasMany('App\StoolAndOther', 'applicant_id', 'applicant_id');
+    	return $this->hasMany('App\StoolAndOther', 'health_certificate_id', 'health_certificate_id');
     }
 
     public function xray_sputums()
     {
-    	return $this->hasMany('App\XRaySputum', 'applicant_id', 'applicant_id');
+    	return $this->hasMany('App\XRaySputum', 'health_certificate_id', 'health_certificate_id');
     }
 
     public function getIssuanceDateAttribute($value)

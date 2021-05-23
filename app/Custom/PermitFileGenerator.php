@@ -30,12 +30,12 @@ class PermitFileGenerator
 		];
 	}
 
-	public function generatePDF($other_file_path = null, $other_permit = null)
+	public function generatePDF(/*$other_file_path = null, $other_permit = null*/)
 	{
 		PDF::loadView('sanitary_permit.permit_for_pdf', [
 				'logo' => public_path('laoag_logo.png'),
-				'permit' => !$other_permit ? $this->sanitary_permit : $other_permit,
-		])->setPaper('letter')->setOrientation('portrait')->save(!$other_file_path ? $this->getSanitaryPermitFolder()['permit_file_path'] : $other_file_path);
+				'permit' => /*!$other_permit ?*/ $this->sanitary_permit /*: $other_permit*/,
+		])->setPaper('letter')->setOrientation('portrait')->save(/*!$other_file_path ?*/ $this->getSanitaryPermitFolder()['permit_file_path'] /*: $other_file_path*/);
 	}
 
 	public function updatePDF()
@@ -48,6 +48,11 @@ class PermitFileGenerator
 
 	public function updateApplicantfolder($old_applicant_folder)
 	{
+		$applicant_folder = $this->getSanitaryPermitFolder()['applicant_folder'];
+
+		Storage::move("permits\\$old_applicant_folder", "permits\\$applicant_folder");
+
+		/*too expensive a process, update only happens on edit or renew to cut processing overhead
 		Storage::deleteDirectory("permits\\$old_applicant_folder");
 		
 		$applicant = $this->sanitary_permit->applicant;
@@ -58,6 +63,7 @@ class PermitFileGenerator
 			$file_path = $this->getSanitaryPermitFolder()['permit_folder_path'] . "permit_{$permit->sanitary_permit_id}.pdf";
 			$this->generatePDF($file_path, $permit);
 		}
+		*/
 	}
 }
 

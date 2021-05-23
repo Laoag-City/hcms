@@ -15,28 +15,18 @@ class CertificateFileGenerator
 		$this->health_certificate = $health_certificate;
 	}
 
-	public function getHealthCertificateFolder(HealthCertificate $health_certificate = null)
+	public function getHealthCertificateFolder()
 	{
-		if($health_certificate == null)
-			$health_certificate = $this->health_certificate;
-
-		$applicant = $health_certificate->applicant;
+		$applicant = $this->health_certificate->applicant;
 		$middle_name = $applicant->middle_name != null ? '_' . snake_case($applicant->middle_name) . '_' : "_";
 		$suffix = $applicant->suffix_name != null ? strtolower("_{$applicant->suffix_name}") : "";
 		
 		$applicant_folder = $applicant->applicant_id . '_' . snake_case("{$applicant->first_name}") . $middle_name . snake_case($applicant->last_name) . str_replace('.', '', $suffix);
-		
-		//$health_certificate_id = $health_certificate->applicant_id;
-		//$reg_number = $health_certificate->registration_number;
-		//$timestamp = $health_certificate->created_at->toDateString();
-
-		//$certificate_folder = $health_certificate_id . '_' . $reg_number . '_' . $timestamp;
 
 		return [
 			'applicant_folder' => $applicant_folder,
-			//'certificate_folder' => $certificate_folder,
 			'certificate_folder_path' => storage_path("app\\certificates\\$applicant_folder\\"),
-			'certificate_file_path' => storage_path("app\\certificates\\$applicant_folder\\certificate.pdf")
+			'certificate_file_path' => storage_path("app\\certificates\\$applicant_folder\\certificate_{$this->health_certificate->health_certificate_id}.pdf")
 		];
 	}
 
@@ -50,19 +40,11 @@ class CertificateFileGenerator
 			])->setOption('margin-left', 0.2)->setOption('margin-top', 0.2)->save($this->getHealthCertificateFolder()['certificate_file_path']);
 	}
 
-	public function updatePDF(/*HealthCertificate $old_health_certificate = null*/)
+	public function updatePDF()
 	{
 		$path = $this->getHealthCertificateFolder();
 
-		/*if($old_health_certificate != null && $old_health_certificate->registration_number != $this->health_certificate->registration_number)
-		{
-			$old_path = $this->getHealthCertificateFolder($old_health_certificate);
-
-			//test these two lines of code if the delete is needed or not after the move
-			Storage::move("certificates\\{$old_path['applicant_folder']}", "certificates\\{$path['applicant_folder']}");
-		}*/
-
-		Storage::delete("certificates\\{$path['applicant_folder']}\\certificate.pdf");
+		Storage::delete("certificates\\{$path['applicant_folder']}\\certificate_{$this->health_certificate->health_certificate_id}.pdf");
 		$this->generatePDF();
 	}
 
@@ -71,7 +53,9 @@ class CertificateFileGenerator
 		$applicant_folder = $this->getHealthCertificateFolder()['applicant_folder'];
 
 		Storage::move("certificates\\$old_applicant_folder", "certificates\\$applicant_folder");
-		$this->updatePDF();
+
+		/*too expensive a process, update only happens on edit or renew to cut processing overhead
+		$this->updatePDF();*/
 	}
 
 	public function getPicturePathAndURL($generate_paths_skip_exist_check = false)
@@ -81,13 +65,13 @@ class CertificateFileGenerator
 		if($generate_paths_skip_exist_check)
 			return [
 					'path' => $certificate_path['certificate_folder_path'] . 'picture.png',
-					'url' => url("health_certificate/{$this->health_certificate->applicant_id}/picture")
+					'url' => url("health_certificate/{$this->health_certificate->health_certificate_id}/picture")
 				];
 
 		if(Storage::exists("certificates\\{$certificate_path['applicant_folder']}\\picture.png"))
 			return [
 					'path' => $certificate_path['certificate_folder_path'] . 'picture.png',
-					'url' => url("health_certificate/{$this->health_certificate->applicant_id}/picture")
+					'url' => url("health_certificate/{$this->health_certificate->health_certificate_id}/picture")
 				];
 		else
 			return ['path' => null, 'url' => null];
