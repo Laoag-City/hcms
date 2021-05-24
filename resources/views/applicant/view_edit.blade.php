@@ -9,25 +9,9 @@
 	</div>
 
 	<form method="POST" action="{{ url()->current() }}" class="ui form attached fluid segment {{ $errors->any() ? 'error' : 'success' }}">
-		@if($applicant->health_certificate != null)
-			<div>
-				<h3 class="ui left floated header left aligned">
-					<u>Health Certificate Registration Number:
-						<div class="ui large labels" style="margin-top: 5px">
-							<a class="ui {{ $applicant->health_certificate->getColor() }} label">
-								{{ $applicant->health_certificate->registration_number }}
-							</a>
-							@if($applicant->health_certificate->checkIfExpired())
-								<a class="ui red label">
-									<i class="exclamation circle icon"></i>
-									EXPIRED
-								</a>
-							@endif
-						</div>
-					</u>
-				</h3>
-			</div>
-		@endif
+		<div style="overflow: auto;">
+			<a href="{{ url('applicants') }}" class="ui left floated blue inverted button">Back</a>
+		</div>
 
 		<div style="clear: both;">
 			{{ csrf_field() }}
@@ -147,48 +131,108 @@
 
 		<div class="ui section divider"></div>
 
-		<div class="ui attached message">
-			<h3 class="ui header">
-				Health Certificates
-			</h3>
+		<div class="ui top attached tabular menu">
+			<a class="item active" data-tab="first">Health Certificates</a>
+			<a class="item" data-tab="second">Sanitary Permits</a>
 		</div>
 
-		<table class="ui attached striped selectable structured celled table">
-			<thead>
-				<tr class="center aligned">
-					<th>Registration Number</th>
-					<th>Type of Work</th>
-					<th>Name of Establishment</th>
-					<th>Issuance Date</th>
-					<th>Expiration Date</th>
-					<th>Options</th>
-				</tr>
-			</thead>
-
-			<tbody>
-				@foreach($health_certificates as $hc)
+		<div class="ui bottom attached tab segment active" data-tab="first">
+			<table class="ui attached striped selectable structured celled table">
+				<thead>
 					<tr class="center aligned">
-						<td>{{ $hc->registration_number }}</td>
-						<td>{{ $hc->work_type }}</td>
-						<td>{{ $hc->establishment }}</td>
-						<td>{{ $hc->issuance_date }}</td>
-						<td>{{ $hc->expiration_date }}</td>
-						<td class="collapsing">
-							<div class="ui compact menu">
-								<div class="ui simple dropdown item">
-									<i class="options icon"></i>
-									<i class="dropdown icon"></i>
-									<div class="menu">
-										<a class="item" href="{{ url("health_certificate/$hc->health_certificate_id") }}">Health Certificate Info</a>
-										<a class="item" href="{{ url("health_certificate/$hc->health_certificate_id/preview") }}" target="_blank">Print Preview</a>
+						<th>Registration Number</th>
+						<th>Type of Work</th>
+						<th>Name of Establishment</th>
+						<th class="collapsing">Expired</th>
+						<th class="collapsing">Issuance Date</th>
+						<th class="collapsing">Expiration Date</th>
+						<th class="collapsing">Options</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					@foreach($health_certificates as $hc)
+						@php
+							$expired = $hc->checkIfExpired();
+						@endphp
+
+						<tr class="center aligned">
+							<td class="collapsing">{{ $hc->registration_number }}</td>
+							<td>{{ $hc->work_type }}</td>
+							<td>{{ $hc->establishment }}</td>
+							@if($expired)
+								<td class="error">Yes</td>
+							@else
+								<td>No</td>
+							@endif
+							<td>{{ $hc->issuance_date }}</td>
+							<td>{{ $hc->expiration_date }}</td>
+							<td class="collapsing">
+								<div class="ui compact menu">
+									<div class="ui simple dropdown item">
+										<i class="options icon"></i>
+										<i class="dropdown icon"></i>
+										<div class="menu">
+											<a class="item" href="{{ url("health_certificate/$hc->health_certificate_id") }}">Health Certificate Info</a>
+											<a class="item" href="{{ url("health_certificate/$hc->health_certificate_id/preview") }}" target="_blank">Print Preview</a>
+										</div>
 									</div>
 								</div>
-							</div>
-						</td>
+							</td>
+						</tr>
+					@endforeach
+				</tbody>
+			</table>
+		</div>
+
+		<div class="ui bottom attached tab segment" data-tab="second">
+			<table class="ui attached striped selectable structured celled table">
+				<thead>
+					<tr class="center aligned">
+						<th class="collapsing">Sanitary Permit Number</th>
+						<th>Establishment Type</th>
+						<th>Address</th>
+						<th class="collapsing">Expired</th>
+						<th class="collapsing">Issuance Date</th>
+						<th class="collapsing">Expiration Date</th>
+						<th class="collapsing">Options</th>
 					</tr>
-				@endforeach
-			</tbody>
-		</table>
+				</thead>
+
+				<tbody>
+					@foreach($sanitary_permits as $sc)
+						@php
+							$expired = $sc->checkIfExpired();
+						@endphp
+
+						<tr class="center aligned">
+							<td>{{ $sc->registration_number }}</td>
+							<td>{{ $sc->work_type }}</td>
+							<td>{{ $sc->establishment }}</td>
+							@if($expired)
+								<td class="error">Yes</td>
+							@else
+								<td>No</td>
+							@endif
+							<td>{{ $sc->issuance_date }}</td>
+							<td>{{ $sc->expiration_date }}</td>
+							<td class="collapsing">
+								<div class="ui compact menu">
+									<div class="ui simple dropdown item">
+										<i class="options icon"></i>
+										<i class="dropdown icon"></i>
+										<div class="menu">
+											<a class="item" href="{{ url("health_certificate/$sc->health_certificate_id") }}">Health Certificate Info</a>
+											<a class="item" href="{{ url("health_certificate/$sc->health_certificate_id/preview") }}" target="_blank">Print Preview</a>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+					@endforeach
+				</tbody>
+			</table>
+		</div>
 	</form>
 </div>
 @endsection

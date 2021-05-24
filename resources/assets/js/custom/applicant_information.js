@@ -2,6 +2,7 @@ alterFormState();
 	
 $('.ui.checkbox').checkbox();
 $('.field').popup(false);
+$('.menu .item').tab();
 
 $('input[name="edit_mode"]').change(function(){
 	alterFormState(true);

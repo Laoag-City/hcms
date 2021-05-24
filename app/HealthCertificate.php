@@ -10,7 +10,7 @@ class HealthCertificate extends Model
     use DateToInputFormatter;
 
     protected $primaryKey = 'health_certificate_id';
-    public const DATES_FORMAT = 'M. d, Y';
+    public const DATES_FORMAT = 'M d, Y';
     public const CERTIFICATE_TYPES = [
         'Yellow' => [
             'string' => '6 months',

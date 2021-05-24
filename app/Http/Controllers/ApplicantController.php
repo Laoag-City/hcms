@@ -34,6 +34,7 @@ class ApplicantController extends Controller
     			'title' => $applicant->formatName(),
     			'applicant' => $applicant,
                 'health_certificates' => $applicant->health_certificates,
+                'sanitary_permits' => $applicant->sanitary_permits,
                 'picture_url' => $applicant->health_certificates ? (new CertificateFileGenerator($applicant->health_certificates->first()))->getPicturePathAndURL()['url'] : null
     		]);
     	}
@@ -49,9 +50,9 @@ class ApplicantController extends Controller
     			'gender' => 'bail|required|in:0,1',
     		]);
 
-            if($applicant->health_certificate != null)
+            if($applicant->health_certificates != null)
             {
-                $old_certificate_file_generator = new CertificateFileGenerator($applicant->health_certificate);
+                $old_certificate_file_generator = new CertificateFileGenerator($applicant->health_certificates->first());
                 $old_applicant_certificate_folder = $old_certificate_file_generator->getHealthCertificateFolder()['applicant_folder'];
             }
 
@@ -69,9 +70,9 @@ class ApplicantController extends Controller
     		$applicant->gender = $this->request->gender;
     		$applicant->save();
 
-            if($applicant->health_certificate != null)
+            if($applicant->health_certificates != null)
             {
-                $new_certificate_file_generator = new CertificateFileGenerator($applicant->health_certificate->refresh());
+                $new_certificate_file_generator = new CertificateFileGenerator($applicant->health_certificates->first()->refresh());
                 $new_applicant_certificate_folder = $new_certificate_file_generator->getHealthCertificateFolder()['applicant_folder'];
 
                 if($old_applicant_certificate_folder != $new_applicant_certificate_folder)

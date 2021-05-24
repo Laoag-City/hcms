@@ -10,7 +10,7 @@ class SanitaryPermit extends Model
 	use DateToInputFormatter;
 
     protected $primaryKey = 'sanitary_permit_id';
-    public const DATES_FORMAT = 'M. d, Y';
+    public const DATES_FORMAT = 'M d, Y';
 
     public function applicant()
     {

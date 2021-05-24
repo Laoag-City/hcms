@@ -12,8 +12,11 @@
 	<div id="main_menu" class="ui fluid stackable menu">
 		<div class="ui container">
 			<div class="header item">
-				<i class="address card outline icon"></i>
-				HCMS	
+				<i class="icons" data-tooltip="Logged in as {{ Auth::user()->username }}" data-position="bottom center">
+					<i class="address card outline icon"></i>
+					HCMS
+				</i>
+
 			</div>
 
 			<div class="ui simple dropdown item">

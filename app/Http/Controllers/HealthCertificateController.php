@@ -451,13 +451,13 @@ class HealthCertificateController extends Controller
                 issuance date must be a date before or equal now
                 proceed regardless if the expiration date computed based on type and issuance is already expired
             */
-            if($this->request->update_mode != null && $this->request->update_mode == 'edit_renew')
+            if($mode == 'renew')
                 $date_of_issuance_rule = "bail|required|date|before_or_equal:today|after:{$health_certificate->dateToInput('issuance_date')}";
             else
                 $date_of_issuance_rule = 'bail|required|date|before_or_equal:today';
 
             $create_or_edit_rules = [
-                'update_mode' => 'bail|required|in:edit,edit_renew',
+                'update_mode' => 'bail|required|accepted',
                 'age' => 'bail|required|integer|min:15|max:65',
                 'date_of_issuance' => $date_of_issuance_rule,
 
