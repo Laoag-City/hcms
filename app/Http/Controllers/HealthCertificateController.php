@@ -272,7 +272,7 @@ class HealthCertificateController extends Controller
     	if($this->request->isMethod('get'))
     	{
     		return view('health_certificate.view_edit', [
-    			'title' => "Health Certificate Information | {$health_certificate->registration_number}",
+    			'title' => "Health Certificate Information - {$health_certificate->registration_number}",
     			'applicant' => $health_certificate->applicant,
     			'health_certificate' => $health_certificate,
     			'immunization' => $health_certificate->immunizations->sortBy('row_number'),
@@ -295,11 +295,11 @@ class HealthCertificateController extends Controller
     	}
     }
 
-    public function createHealthCertificateExistingClient()
+    public function createHealthCertificateExistingApplicant()
     {
         if($this->request->isMethod('get'))
         {
-            return view('health_certificate.existing_client_create', [
+            return view('health_certificate.existing_applicant_create', [
                 'title' => 'Add Health Certificate To Existing Client',
                 'certificate_types' => HealthCertificate::CERTIFICATE_TYPES
             ]);

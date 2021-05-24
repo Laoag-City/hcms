@@ -11,13 +11,18 @@
 
 	<div id="main_menu" class="ui fluid stackable menu">
 		<div class="ui container">
+			<div class="header item">
+				<i class="address card outline icon"></i>
+				HCMS	
+			</div>
+
 			<div class="ui simple dropdown item">
 				Health Certificate
 				<i class="dropdown icon"></i>
 
 				<div class="menu">
 					<a href="{{ url('/') }}" class="item">New Health Certificate</a>
-					<a href="{{ url('health_certificate/existing_client') }}" class="item">Add Health Certificate To Existing Client</a>
+					<a href="{{ url('health_certificate/existing_applicant') }}" class="item">Add Health Certificate To Existing Client</a>
 					<a href="" class="item">Renew A Health Certificate</a>
 				</div>
 			</div>
@@ -33,6 +38,16 @@
 				</div>
 			</div>
 
+			<div class="ui simple dropdown item">
+				Records
+				<i class="dropdown icon"></i>
+
+				<div class="menu">
+					<a href="{{ url('applicants') }}" class="item">Clients</a>
+					<a href="{{ url('businesses') }}" class="item">Businesses</a>
+				</div>
+			</div>
+
 			<div class="right menu">
 				<form action="{{ url('search') }}" class="item">
 					<div class="ui action input">
@@ -45,7 +60,8 @@
 
 				@can('is-admin')
 					<div class="ui simple dropdown item">
-						Admin Controls
+						<i class="cogs icon"></i>
+
 						<i class="dropdown icon"></i>
 
 						<div class="menu">

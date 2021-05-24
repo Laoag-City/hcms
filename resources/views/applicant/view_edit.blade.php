@@ -26,11 +26,6 @@
 						</div>
 					</u>
 				</h3>
-
-				<div class="ui small buttons right floated">
-					<a class="ui basic black button" href="{{ url("health_certificate/$applicant->applicant_id") }}">Health Certificate Info</a>
-					<a class="ui basic black button" href="{{ url("health_certificate/$applicant->applicant_id/preview") }}" target="_blank">Print Preview</a>
-				</div>
 			</div>
 		@endif
 
@@ -149,6 +144,51 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="ui section divider"></div>
+
+		<div class="ui attached message">
+			<h3 class="ui header">
+				Health Certificates
+			</h3>
+		</div>
+
+		<table class="ui attached striped selectable structured celled table">
+			<thead>
+				<tr class="center aligned">
+					<th>Registration Number</th>
+					<th>Type of Work</th>
+					<th>Name of Establishment</th>
+					<th>Issuance Date</th>
+					<th>Expiration Date</th>
+					<th>Options</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				@foreach($health_certificates as $hc)
+					<tr class="center aligned">
+						<td>{{ $hc->registration_number }}</td>
+						<td>{{ $hc->work_type }}</td>
+						<td>{{ $hc->establishment }}</td>
+						<td>{{ $hc->issuance_date }}</td>
+						<td>{{ $hc->expiration_date }}</td>
+						<td class="collapsing">
+							<div class="ui compact menu">
+								<div class="ui simple dropdown item">
+									<i class="options icon"></i>
+									<i class="dropdown icon"></i>
+									<div class="menu">
+										<a class="item" href="{{ url("health_certificate/$hc->health_certificate_id") }}">Health Certificate Info</a>
+										<a class="item" href="{{ url("health_certificate/$hc->health_certificate_id/preview") }}" target="_blank">Print Preview</a>
+									</div>
+								</div>
+							</div>
+						</td>
+					</tr>
+				@endforeach
+			</tbody>
+		</table>
 	</form>
 </div>
 @endsection

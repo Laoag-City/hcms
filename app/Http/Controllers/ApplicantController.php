@@ -20,11 +20,9 @@ class ApplicantController extends Controller
 
 	public function getApplicants()
 	{
-        $applicants = Applicant::with('health_certificates')->orderBy('updated_at', 'asc')->paginate(150);
-
 		return view('applicant.index', [
     		'title' => 'Clients',
-    		'applicants' => $applicants
+    		'applicants' => Applicant::with('health_certificates')->orderBy('updated_at', 'asc')->paginate(150)
     	]);
 	}
 
@@ -35,6 +33,7 @@ class ApplicantController extends Controller
     		return view('applicant.view_edit', [
     			'title' => $applicant->formatName(),
     			'applicant' => $applicant,
+                'health_certificates' => $applicant->health_certificates,
                 'picture_url' => $applicant->health_certificates ? (new CertificateFileGenerator($applicant->health_certificates->first()))->getPicturePathAndURL()['url'] : null
     		]);
     	}

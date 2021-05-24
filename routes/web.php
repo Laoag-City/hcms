@@ -18,7 +18,7 @@ Route::group(['middleware' => 'auth'], function(){
 	Route::match(['get', 'post'], '/', 'HealthCertificateController@createHealthCertificate');
 
 	//adds another health certificate to an existing applicant
-	Route::match(['get', 'post'], 'health_certificate/existing_client', 'HealthCertificateController@createHealthCertificateExistingClient');
+	Route::match(['get', 'post'], 'health_certificate/existing_applicant', 'HealthCertificateController@createHealthCertificateExistingApplicant');
 
 	//views and edits a health certificate
 	Route::match(['get', 'put'], 'health_certificate/{health_certificate}', 'HealthCertificateController@viewEditCertificate');
@@ -40,7 +40,7 @@ Route::group(['middleware' => 'auth'], function(){
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	//shows applicant list
-	Route::get('applicant', 'ApplicantController@getApplicants');
+	Route::get('applicants', 'ApplicantController@getApplicants');
 
 	//view or edit an applicant
 	Route::match(['get', 'put'], 'applicant/{applicant}', 'ApplicantController@viewEditApplicant');
@@ -55,7 +55,7 @@ Route::group(['middleware' => 'auth'], function(){
 	//Route::match(['get', 'post'], 'applicant/bulk_print', 'ApplicantController@bulkPrintCertificates');
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	Route::match(['get', 'post'], 'applicant/{applicant}/sanitary_permit/create', 'SanitaryPermitController@createSanitaryPermitExistingClient');
+	Route::match(['get', 'post'], 'applicant/{applicant}/sanitary_permit/create', 'SanitaryPermitController@createSanitaryPermitExistingApplicant');
 
 	Route::get('applicant/{applicant}/sanitary_permit', 'SanitaryPermitController@sanitaryPermits');
 

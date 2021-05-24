@@ -18,11 +18,11 @@ class SanitaryPermitController extends Controller
 		$this->request = $request;
 	}
 
-	public function createSanitaryPermitExistingClient(Applicant $applicant)
+	public function createSanitaryPermitExistingApplicant(Applicant $applicant)
 	{
 		if($this->request->isMethod('get'))
     	{
-    		return view('sanitary_permit.existing_client_create', [
+    		return view('sanitary_permit.existing_applicant_create', [
                 'title' => 'Add Sanitary Permit',
                 'applicant' => $applicant
             ]);
