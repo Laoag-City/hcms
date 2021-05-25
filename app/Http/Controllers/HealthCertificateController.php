@@ -295,6 +295,53 @@ class HealthCertificateController extends Controller
     	}
     }
 
+    public function renewCertificate()
+    {
+        if($this->request->isMethod('get'))
+        {
+            $searches = null;
+            $health_certificate = null;
+            $immunization = null;
+            $stool_and_others = null;
+            $xray_sputum = null;
+
+            if($this->request->search)
+                $searches = Applicant::search($this->request->search)
+                                        ->join('health_certificates', 'applicant.applicant_id', '=', 'health_certificates.applicant_id')
+                                        ->get();
+
+            if($this->request->id)
+            {
+                Validator::make($this->request->all(), [
+                    'id' => 'bail|required|exists:health_certificates,health_certificate_id'
+                ])->validate();
+
+                $health_certificate = HealthCertificate::with(['immunizations', 'stool_and_others', 'x-ray_sputums'])
+                                                        ->find($this->request->id);
+
+                $immunization = $health_certificate->immunizations->sortBy('row_number');
+                $stool_and_others = $health_certificate->stool_and_others->sortBy('row_number');
+                $xray_sputum = $health_certificate->xray_sputums->sortBy('row_number');
+            }
+
+            return view('health_certificate.renew', [
+                'title' => "Renew A Health Certificate",
+                'health_certificate' => $health_certificate,
+                'immunization' => $immunization,
+                'stool_and_others' => $stool_and_others,
+                'xray_sputum' => $xray_sputum,
+                'certificate_types' => HealthCertificate::CERTIFICATE_TYPES
+            ]);
+        }
+
+        elseif($this->request->isMethod('put'))
+        {
+            $id = $this->create_edit_logic('renew');
+
+            return redirect("health_certificate/{$id}/preview");
+        }
+    }
+
     public function createHealthCertificateExistingApplicant()
     {
         if($this->request->isMethod('get'))

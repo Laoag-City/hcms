@@ -22,7 +22,7 @@ class ApplicantController extends Controller
 	{
 		return view('applicant.index', [
     		'title' => 'Clients',
-    		'applicants' => Applicant::with('health_certificates')->orderBy('updated_at', 'asc')->paginate(150)
+    		'applicants' => Applicant::orderBy('updated_at', 'desc')->paginate(150)
     	]);
 	}
 

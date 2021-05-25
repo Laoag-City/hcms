@@ -41,11 +41,11 @@
 									<div class="menu">
 										<a href="{{ url("applicant/$app->applicant_id") }}" class="item">View Client</a>
 
-										<a href="{{ url("applicant/$app->applicant_id/health_certificate/create") }}" class="item">Add Health Certificate</a>
+										<a href="{{ url("applicant/$app->applicant_id/health_certificate/create") }}" class="item">RemoveAdd Health Certificate</a>
 
-										<a href="{{ url("applicant/$app->applicant_id/sanitary_permit/create") }}" class="item">Add Sanitary Permit</a>
+										<a href="{{ url("applicant/$app->applicant_id/sanitary_permit/create") }}" class="item">RemoveAdd Sanitary Permit</a>
 										
-										<a href="{{ url("applicant/$app->applicant_id/sanitary_permit") }}" class="item">View Sanitary Permits</a>
+										<a href="{{ url("applicant/$app->applicant_id/sanitary_permit") }}" class="item">RemoveView Sanitary Permits</a>
 									</div>
 								</div>
 							</div>

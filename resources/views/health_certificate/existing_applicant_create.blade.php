@@ -31,8 +31,8 @@
 							? '" data-content="Type a client\'s name and choose from the suggestions below."' 
 							: ' error" data-content="' . $errors->first('whole_name') . '"' !!} 
 							data-position="top center">
-								<label>Whole Name:</label>
-								<input class="prompt" type="text" name="whole_name" value="{{ old('whole_name') }}" placeholder="Whole Name" required="">
+								<label>Search Whole Name:</label>
+								<input class="prompt" type="text" name="whole_name" value="{{ old('whole_name') }}" placeholder="Search Whole Name" required="">
 								<div class="results"></div>
 						</div>
 					</div>
