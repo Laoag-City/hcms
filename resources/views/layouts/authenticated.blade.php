@@ -26,7 +26,7 @@
 				<div class="menu">
 					<a href="{{ url('/') }}" class="item">New Health Certificate</a>
 					<a href="{{ url('health_certificate/existing_applicant') }}" class="item">Add Health Certificate To Existing Client</a>
-					<a href="" class="item">Renew A Health Certificate</a>
+					<a href="{{ url('health_certificate/renew') }}" class="item">Renew A Health Certificate</a>
 				</div>
 			</div>
 

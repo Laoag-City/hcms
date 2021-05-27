@@ -21,10 +21,10 @@ Route::group(['middleware' => 'auth'], function(){
 	Route::match(['get', 'post'], 'health_certificate/existing_applicant', 'HealthCertificateController@createHealthCertificateExistingApplicant');
 
 	//views and edits a health certificate
-	Route::match(['get', 'put'], 'health_certificate/{health_certificate}', 'HealthCertificateController@viewEditCertificate');
+	Route::match(['get', 'put'], 'health_certificate/renew', 'HealthCertificateController@renewCertificate');
 
 	//views and edits a health certificate
-	Route::match(['get', 'put'], 'health_certificate/renew', 'HealthCertificateController@renewCertificate');
+	Route::match(['get', 'put'], 'health_certificate/{health_certificate}', 'HealthCertificateController@viewEditCertificate');
 
 	//shows the preview of the health certificate and the take picture feature
 	Route::get('health_certificate/{health_certificate}/preview', 'HealthCertificateController@printPreview');
