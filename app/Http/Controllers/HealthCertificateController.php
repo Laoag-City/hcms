@@ -306,9 +306,11 @@ class HealthCertificateController extends Controller
             $xray_sputum = null;
 
             if($this->request->search)
+            {
                 $searches = Applicant::search($this->request->search)
-                                        ->join('health_certificates', 'applicant.applicant_id', '=', 'health_certificates.applicant_id')
+                                        ->with('health_certificates')
                                         ->get();
+            }
 
             if($this->request->id)
             {
@@ -316,7 +318,7 @@ class HealthCertificateController extends Controller
                     'id' => 'bail|required|exists:health_certificates,health_certificate_id'
                 ])->validate();
 
-                $health_certificate = HealthCertificate::with(['immunizations', 'stool_and_others', 'x-ray_sputums'])
+                $health_certificate = HealthCertificate::with(['immunizations', 'stool_and_others', 'xray_sputums'])
                                                         ->find($this->request->id);
 
                 $immunization = $health_certificate->immunizations->sortBy('row_number');
@@ -326,6 +328,7 @@ class HealthCertificateController extends Controller
 
             return view('health_certificate.renew', [
                 'title' => "Renew A Health Certificate",
+                'searches' => $searches,
                 'health_certificate' => $health_certificate,
                 'immunization' => $immunization,
                 'stool_and_others' => $stool_and_others,
@@ -408,6 +411,23 @@ class HealthCertificateController extends Controller
     public function showPicture(HealthCertificate $health_certificate)
     {
         return response()->file((new CertificateFileGenerator($health_certificate))->getPicturePathAndURL()['path'], ['Cache-Control' => 'No-Store']);
+    }
+
+    public function deleteCertificate(HealthCertificate $health_certificate)
+    {
+        $validator = Validator::make($this->request->all(), [
+            'password' => 'bail|required'
+        ]);
+
+        $validator->after(function ($validator){
+            if(!app('hash')->check($this->request->password, $this->request->user()->password))
+                $validator->errors()->add('password_error', 'Incorrect password.');
+        });
+
+        $validator->validate();
+
+        $health_certificate->delete();
+        return back();
     }
 
     /*COMMENTED OUT. Maybe this function will be useful in the future so i'll let it be

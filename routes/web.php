@@ -26,6 +26,9 @@ Route::group(['middleware' => 'auth'], function(){
 	//views and edits a health certificate
 	Route::match(['get', 'put'], 'health_certificate/{health_certificate}', 'HealthCertificateController@viewEditCertificate');
 
+	//deletes a health certificate
+	Route::delete('health_certificate/{health_certificate}', 'HealthCertificateController@deleteCertificate');
+
 	//shows the preview of the health certificate and the take picture feature
 	Route::get('health_certificate/{health_certificate}/preview', 'HealthCertificateController@printPreview');
 
