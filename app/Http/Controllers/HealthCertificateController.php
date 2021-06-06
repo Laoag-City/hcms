@@ -13,6 +13,7 @@ use App\StoolAndOther;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
 use App\Custom\CertificateFileGenerator;
+use App\Custom\RegistrationNumberGenerator;
 use Carbon\Carbon;
 
 class HealthCertificateController extends Controller
@@ -297,35 +298,35 @@ class HealthCertificateController extends Controller
 
     public function renewCertificate()
     {
+        $searches = null;
+        $health_certificate = null;
+        $immunization = null;
+        $stool_and_others = null;
+        $xray_sputum = null;
+
+        if($this->request->search)
+        {
+            $searches = Applicant::search($this->request->search)
+                                    ->with('health_certificates')
+                                    ->get();
+        }
+
+        if($this->request->id)
+        {
+            Validator::make($this->request->all(), [
+                'id' => 'bail|required|exists:health_certificates,health_certificate_id'
+            ])->validate();
+
+            $health_certificate = HealthCertificate::with(['immunizations', 'stool_and_others', 'xray_sputums'])
+                                                    ->find($this->request->id);
+
+            $immunization = $health_certificate->immunizations->sortBy('row_number');
+            $stool_and_others = $health_certificate->stool_and_others->sortBy('row_number');
+            $xray_sputum = $health_certificate->xray_sputums->sortBy('row_number');
+        }
+
         if($this->request->isMethod('get'))
         {
-            $searches = null;
-            $health_certificate = null;
-            $immunization = null;
-            $stool_and_others = null;
-            $xray_sputum = null;
-
-            if($this->request->search)
-            {
-                $searches = Applicant::search($this->request->search)
-                                        ->with('health_certificates')
-                                        ->get();
-            }
-
-            if($this->request->id)
-            {
-                Validator::make($this->request->all(), [
-                    'id' => 'bail|required|exists:health_certificates,health_certificate_id'
-                ])->validate();
-
-                $health_certificate = HealthCertificate::with(['immunizations', 'stool_and_others', 'xray_sputums'])
-                                                        ->find($this->request->id);
-
-                $immunization = $health_certificate->immunizations->sortBy('row_number');
-                $stool_and_others = $health_certificate->stool_and_others->sortBy('row_number');
-                $xray_sputum = $health_certificate->xray_sputums->sortBy('row_number');
-            }
-
             return view('health_certificate.renew', [
                 'title' => "Renew A Health Certificate",
                 'searches' => $searches,
@@ -339,7 +340,7 @@ class HealthCertificateController extends Controller
 
         elseif($this->request->isMethod('put'))
         {
-            $id = $this->create_edit_logic('renew');
+            $id = $this->create_edit_logic('renew', $health_certificate);
 
             return redirect("health_certificate/{$id}/preview");
         }
@@ -421,13 +422,13 @@ class HealthCertificateController extends Controller
 
         $validator->after(function ($validator){
             if(!app('hash')->check($this->request->password, $this->request->user()->password))
-                $validator->errors()->add('password_error', 'Incorrect password.');
+                $validator->errors()->add('password', 'Incorrect password.');
         });
 
         $validator->validate();
 
         $health_certificate->delete();
-        return back();
+        return redirect(explode('?', url()->previous())[0]);
     }
 
     /*COMMENTED OUT. Maybe this function will be useful in the future so i'll let it be
@@ -519,16 +520,24 @@ class HealthCertificateController extends Controller
                 proceed regardless if the expiration date computed based on type and issuance is already expired
             */
             if($mode == 'renew')
-                $date_of_issuance_rule = "bail|required|date|before_or_equal:today|after:{$health_certificate->dateToInput('issuance_date')}";
+            {
+                $specific_rules = [
+                    'date_of_issuance' => "bail|required|date|before_or_equal:today|after:{$health_certificate->dateToInput('issuance_date')}"
+                ];
+            }
+
             else
-                $date_of_issuance_rule = 'bail|required|date|before_or_equal:today';
+            {
+                $specific_rules = [
+                    'date_of_issuance' => 'bail|required|date|before_or_equal:today',
+                    'update_mode' => 'bail|required|accepted',
+                ];
+            }
 
-            $create_or_edit_rules = [
-                'update_mode' => 'bail|required|accepted',
-                'age' => 'bail|required|integer|min:15|max:65',
-                'date_of_issuance' => $date_of_issuance_rule,
+            $create_or_edit_rules = array_merge($specific_rules, [
+                'age' => 'bail|required|integer|min:15|max:65'
 
-            ];
+            ]);
             /*$old_health_certificate = $health_certificate->replicate();
 
             $old_health_certificate->health_certificate_id = $health_certificate->health_certificate_id;
@@ -630,21 +639,7 @@ class HealthCertificateController extends Controller
             $health_certificate->issuance_date = $this->request->date_of_issuance;
             $health_certificate->expiration_date = $this->request->date_of_expiration;//$this->getExpirationDate($this->request->date_of_issuance, $this->request->certificate_type);
             $health_certificate->is_expired = false;
-
-            //generate reg number
-            $year_now = date('Y', strtotime('now'));
-            $total_registrations_this_year = HealthCertificate::where('registration_number', 'like', "$year_now%")->count();
-            $iteration = 1;
-
-            do
-            {
-                $registration_number = "$year_now-" . sprintf('%05d', $total_registrations_this_year + $iteration);
-                ++$iteration;
-            }
-            
-            while(HealthCertificate::where('registration_number', '=', $registration_number)->count() > 0);
-
-            $health_certificate->registration_number = $registration_number;
+            $health_certificate->registration_number = (new RegistrationNumberGenerator)->getRegistrationNumber('App\HealthCertificate', 'registration_number');
             $health_certificate->save();
 
             $immunization1 = new Immunization;
@@ -770,12 +765,12 @@ class HealthCertificateController extends Controller
         //logic for saving pdf files of certificates
         if($mode != 'edit')
         {
-	    	(new CertificateFileGenerator($health_certificate))->generatePDF();
+	    	//(new CertificateFileGenerator($health_certificate))->generatePDF();
 	    	return $health_certificate->health_certificate_id;
         }
 
-        else
-        	(new CertificateFileGenerator($health_certificate))->updatePDF(/*$old_health_certificate*/);
+        //else
+        	//(new CertificateFileGenerator($health_certificate))->updatePDF(/*$old_health_certificate*/);
     }
 
     private function findByRowNumber($model, $row_number, $class_name)

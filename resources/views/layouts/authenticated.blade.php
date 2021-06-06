@@ -36,8 +36,8 @@
 
 				<div class="menu">
 					<a href="{{ url('sanitary_permit') }}" class="item">New Sanitary Permit</a>
-					<a href="" class="item">Add Sanitary Permit To Existing Client/Business</a>
-					<a href="" class="item">Renew A Sanitary Permit</a>
+					<a href="{{ url('sanitary_permit/existing') }}" class="item">Add Sanitary Permit To Existing Client/Business</a>
+					<a href="{{ url('sanitary_permit/renew') }}" class="item">Renew A Sanitary Permit</a>
 				</div>
 			</div>
 

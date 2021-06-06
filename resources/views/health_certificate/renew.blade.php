@@ -27,6 +27,21 @@
 					</div>
 
 					@if($searches)
+						@if($errors->has('password'))
+							<div class="ui error message">
+								<div class="header">
+									Whoops! Something went wrong.
+								</div>
+
+								<div class="ui divider"></div>
+								<div>
+									<i class="pointing right icon"></i>
+									{{ $errors->first('password') }}
+								</div>
+								
+							</div>
+						@endif
+
 						<h3 style="text-align: left;">Search results for <u>{{ Request::input('search') }}</u></h3>
 
 						<table class="ui striped selectable center aligned structured celled padded table">
@@ -69,7 +84,7 @@
 											</td>
 
 											<td>
-												<button class="ui mini red delete button" data-id="{{ $hc->health_certificate_id }}">Remove</button>
+												<button type="button" class="ui mini red delete button" data-id="{{ $hc->health_certificate_id }}">Remove</button>
 											</td>
 										</tr>
 									@endforeach
@@ -82,9 +97,11 @@
 
 			@if($health_certificate && $immunization && $stool_and_others && $xray_sputum)
 				<div class="fourteen wide column center aligned">
-					<form method="POST" action="{{ url()->current() }}" class="ui form text_center {{ $errors->any() ? 'error' : 'success' }}">
+					<br>
+
+					<form method="POST" action="{{ url()->full() }}" class="ui form text_center {{ $errors->any() ? 'error' : 'success' }}">
 						<h3 class="ui header">
-							Edit Health Certificate
+							Renew Health Certificate Form
 						</h3>
 
 						<br>
@@ -99,17 +116,6 @@
 								<p>{{ session('success')['message'] }}</p>
 							</div>
 						@endif
-
-						<div class="fields">
-							<div class="five wide field"></div>
-
-							<div class="six wide inline field">
-								<div class="ui toggle checkbox">
-									<label><b>Edit Health Certificate</b></label>
-									<input type="checkbox" name="update_mode" value="on" class="update_switches hidden" {{ !old('update_mode') ?: 'checked' }}>
-								</div>
-							</div>
-						</div>
 
 						<br>
 
@@ -478,40 +484,8 @@
 
 @section('sub_custom_js')
 
-<script src="{{ mix('/js/renew.js') }}"></script>
+<script src="{{ mix('/js/renew_health_certificate.js') }}"></script>
 
-<form id="delete_form" class="ui modal form" method="POST">
-	<i class="close icon"></i>
-
-	<div class="header">
-		Remove Health Certificate
-	</div>
-
-	<div class="content">
-		<p>Are you sure you want to remove the selected health certificate? <b style="color: red;"><u>This cannot be undone.</u></b></p>
-
-		<br>
-
-		{{ csrf_field() }}
-		{{ method_field('DELETE') }}
-
-		<div class="fields">
-			<div class="four wide field"></div>
-
-			<div class="eight wide field">
-				<label>Confirm your password before deleting:</label>
-				<input type="password" name="password" required="">
-			</div>
-		</div>
-	</div>
-
-	<div class="actions">
-		<div class="ui black deny button">
-			No
-		</div>
-
-		<button class="ui red button" type="submit">Yes</button>
-	</div>
-</form>
+@include('commons.delete_modal')
 
 @endsection

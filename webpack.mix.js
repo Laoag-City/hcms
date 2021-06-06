@@ -34,6 +34,6 @@ mix.js('resources/assets/js/app.js', 'public/js')
 
 	.scripts(['resources/assets/js/custom/bulk_print.js'], 'public/js/bulk_print.js')
 
-	.scripts(['resources/assets/js/custom/renew.js'], 'public/js/renew.js')
+	.scripts(['resources/assets/js/custom/renew_health_certificate.js'], 'public/js/renew_health_certificate.js')
 
 	.version();

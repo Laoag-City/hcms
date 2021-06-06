@@ -8,6 +8,7 @@ use Validator;
 use App\Applicant;
 use App\SanitaryPermit;
 use App\Custom\PermitFileGenerator;
+use App\Custom\RegistrationNumberGenerator;
 
 class SanitaryPermitController extends Controller
 {
@@ -16,6 +17,23 @@ class SanitaryPermitController extends Controller
 	public function __construct(Request $request)
 	{
 		$this->request = $request;
+	}
+
+	public function createSanitaryPermit()
+	{
+		if($this->request->isMethod('get'))
+    	{
+    		return view('sanitary_permit.create', [
+                'title' => 'New Sanitary Permit'
+            ]);
+    	}
+
+    	elseif($this->request->isMethod('post'))
+    	{
+            $id = $this->create_edit_logic(true);
+
+            return redirect("sanitary_permit/$id/preview");
+    	}
 	}
 
 	public function createSanitaryPermitExistingApplicant(Applicant $applicant)
@@ -36,31 +54,14 @@ class SanitaryPermitController extends Controller
     	}
 	}
 
-	public function sanitaryPermits(Applicant $applicant)
+	/*public function sanitaryPermits(Applicant $applicant)
 	{
 		return view('sanitary_permit.permits_list', [
 			'title' => "Client's Sanitary Permits",
 			'applicant' => $applicant,
 			'sanitary_permits' => $applicant->sanitary_permits
 		]);
-	}
-
-	public function createSanitaryPermit()
-	{
-		if($this->request->isMethod('get'))
-    	{
-    		return view('sanitary_permit.create', [
-                'title' => 'New Sanitary Permit'
-            ]);
-    	}
-
-    	elseif($this->request->isMethod('post'))
-    	{
-            $id = $this->create_edit_logic(true);
-
-            return redirect("sanitary_permit/$id/preview");
-    	}
-	}
+	}*/
 
 	public function viewEditSanitaryPermit(SanitaryPermit $sanitary_permit)
 	{
@@ -152,20 +153,7 @@ class SanitaryPermitController extends Controller
 			$sanitary_permit->expiration_date = $this->request->date_of_expiration;
 			$sanitary_permit->sanitary_inspector = $this->request->sanitary_inspector;
 			$sanitary_permit->is_expired = false;
-
-			$year_now = date('Y', strtotime('now'));
-            $total_registrations_this_year = SanitaryPermit::where('sanitary_permit_number', 'like', "$year_now%")->count();
-            $iteration = 1;
-
-            do
-            {
-            	$registration_number = "$year_now-" . sprintf('%05d', $total_registrations_this_year + $iteration);
-            	++$iteration;
-            }
-
-            while(SanitaryPermit::where('sanitary_permit_number', '=', $registration_number)->count() > 0);
-
-            $sanitary_permit->sanitary_permit_number = $registration_number;
+            $sanitary_permit->sanitary_permit_number = (new RegistrationNumberGenerator)->getRegistrationNumber('App\SanitaryPermit', 'sanitary_permit_number');
 			$sanitary_permit->save();
 		}
 
@@ -183,11 +171,11 @@ class SanitaryPermitController extends Controller
 
 		if($is_create)
         {
-	    	(new PermitFileGenerator($sanitary_permit))->generatePDF();
+	    	//(new PermitFileGenerator($sanitary_permit))->generatePDF();
 	    	return $sanitary_permit->sanitary_permit_id;
         }
 
-        else
-        	(new PermitFileGenerator($sanitary_permit))->updatePDF();
+        /*else
+        	(new PermitFileGenerator($sanitary_permit))->updatePDF();*/
 	}
 }

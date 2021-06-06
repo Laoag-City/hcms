@@ -61,11 +61,9 @@ Route::group(['middleware' => 'auth'], function(){
 	//Route::match(['get', 'post'], 'applicant/bulk_print', 'ApplicantController@bulkPrintCertificates');
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	Route::match(['get', 'post'], 'applicant/{applicant}/sanitary_permit/create', 'SanitaryPermitController@createSanitaryPermitExistingApplicant');
-
-	Route::get('applicant/{applicant}/sanitary_permit', 'SanitaryPermitController@sanitaryPermits');
-
 	Route::match(['get', 'post'], 'sanitary_permit', 'SanitaryPermitController@createSanitaryPermit');
+	
+	Route::match(['get', 'post'], 'sanitary_permit/existing', 'SanitaryPermitController@createSanitaryPermitExistingApplicant');
 
 	Route::match(['get', 'put'], 'sanitary_permit/{sanitary_permit}', 'SanitaryPermitController@viewEditSanitaryPermit');
 
