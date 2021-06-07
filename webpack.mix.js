@@ -36,4 +36,6 @@ mix.js('resources/assets/js/app.js', 'public/js')
 
 	.scripts(['resources/assets/js/custom/renew_health_certificate.js'], 'public/js/renew_health_certificate.js')
 
+	.scripts(['resources/assets/js/custom/new_sanitary_permit.js'], 'public/js/new_sanitary_permit.js')
+
 	.version();

@@ -17,28 +17,48 @@
 					<br>
 
 					<div class="fields">
+						<div class="four wide field"></div>
+
+						<div class="four wide inline field">
+							<div class="ui toggle checkbox">
+								<label><b>Individual Client</b></label>
+								<input type="radio" name="permit_type" value="individual" {{ old('permit_type') == 'individual' ? 'checked' : '' }}>
+							</div>
+						</div>
+
+						<div class="four wide inline field">
+							<div class="ui toggle checkbox">
+								<label><b>Business</b></label>
+								<input type="radio" name="permit_type" value="business" {{ old('permit_type') == 'businesses' ? 'checked' : '' }}>
+							</div>
+						</div>
+					</div>
+
+					<br>
+
+					<div class="fields field_individual">
 						<div class="six wide field
 						{!! !$errors->has('first_name') ? '"' : ' error" data-content="' . $errors->first('first_name') . '" data-position="top center"' !!}>
 				    		<label>First Name:</label>
-				    		<input type="text" name="first_name" value="{{ old('first_name') }}" class="dynamic_on_search dynamic_input" placeholder="First Name">
+				    		<input type="text" name="first_name" value="{{ old('first_name') }}" class="field_individual" placeholder="First Name">
 				    	</div>
 
 				    	<div class="four wide field
 				    	{!! !$errors->has('middle_name') ? '"' : ' error" data-content="' . $errors->first('middle_name') . '" data-position="top center"' !!}>
 				    		<label>Middle Name:</label>
-				    		<input type="text" name="middle_name" value="{{ old('middle_name') }}" class="dynamic_on_search dynamic_input" placeholder="Middle Name">
+				    		<input type="text" name="middle_name" value="{{ old('middle_name') }}" class="field_individual" placeholder="Middle Name">
 				    	</div>
 
 				    	<div class="four wide field
 				    	{!! !$errors->has('last_name') ? '"' : ' error" data-content="' . $errors->first('last_name') . '" data-position="top center"' !!}>
 				    		<label>Last Name:</label>
-				    		<input type="text" name="last_name" value="{{ old('last_name') }}" class="dynamic_on_search dynamic_input" placeholder="Last Name">
+				    		<input type="text" name="last_name" value="{{ old('last_name') }}" class="field_individual" placeholder="Last Name">
 				    	</div>
 
 				    	<div class="two wide field
 				    	{!! !$errors->has('suffix_name') ? '"' : ' error" data-content="' . $errors->first('suffix_name') . '" data-position="top center"' !!}>
 				    		<label>Suffix:</label>
-				    		<select name="suffix_name" class="dynamic_on_search dynamic_select">
+				    		<select name="suffix_name" class="field_individual">
 								<option value=""></option>
 								<option value="Jr." {{ old('suffix_name') != 'Jr.' ?: 'selected' }}>Jr.</option>
 								<option value="Sr." {{ old('suffix_name') != 'Sr.' ?: 'selected' }}>Sr.</option>
@@ -56,26 +76,41 @@
 				    	</div>
 					</div>
 
-					<br>
+					<div class="fields field_business">
+						<div class="four wide field"></div>
 
-					<div class="fields">
-						<div class="two wide field"></div>
+						<div class="eight wide field
+						{!! !$errors->has('business_name') ? '"' : ' error" data-content="' . $errors->first('business_name') . '" data-position="top center"' !!}>
+				    		<label>Business Name:</label>
+				    		<input type="text" name="business_name" value="{{ old('business_name') }}" class="field_business" placeholder="Business Name">
+				    	</div>
+					</div>
 
-						<div class="two wide field
+
+					<div class="fields field_individual">
+						<div class="five wide field"></div>
+
+						<div class="field_individual three wide field
 						{!! !$errors->has('age') ? '"' : ' error" data-content="' . $errors->first('age') . '" data-position="top center"' !!}>
 							<label>Age:</label>
-							<input type="number" name="age" value="{{ old('age') }}" min="">
+							<input type="number" name="age" class="field_individual" value="{{ old('age') }}" min="">
 						</div>
 						
-						<div class="two wide field
+						<div class="field_individual three wide field
 						{!! !$errors->has('gender') ? '"' : ' error" data-content="' . $errors->first('gender') . '" data-position="top center"' !!}>
 							<label>Gender:</label>
-							<select name="gender" class="dynamic_on_search dynamic_select">
+							<select name="gender" class="field_individual">
 								<option value=""></option>
 								<option value="1" {{ (string)old('gender') != '1' ?: 'selected' }}>Male</option>
 								<option value="0" {{ (string)old('gender') != '0' ?: 'selected' }}>Female</option>
 							</select>
 						</div>
+					</div>
+
+					<br>
+
+					<div class="fields">
+						<div class="four wide field"></div>
 
 						<div class="eight wide field
 						{!! !$errors->has('establishment_type') ? '"' : ' error" data-content="' . $errors->first('establishment_type') . '" data-position="top center"' !!}>
@@ -129,10 +164,5 @@
 @endsection
 
 @section('sub_custom_js')
-	<script>
-		$(document).ready(function(){
-			$('.field').popup();
-			$('.ui.checkbox').checkbox();
-		});
-	</script>
+	<script src="{{ mix('/js/new_sanitary_permit.js') }}"></script>
 @endsection
