@@ -19,17 +19,17 @@
 					<div class="fields">
 						<div class="four wide field"></div>
 
-						<div class="four wide inline field">
+						<div class="four wide inline field{!! !$errors->has('permit_type') ? '"' : ' error" data-content="' . $errors->first('permit_type') . '" data-position="top center"' !!}>
 							<div class="ui toggle checkbox">
 								<label><b>Individual Client</b></label>
 								<input type="radio" name="permit_type" value="individual" {{ old('permit_type') == 'individual' ? 'checked' : '' }}>
 							</div>
 						</div>
 
-						<div class="four wide inline field">
+						<div class="four wide inline field{!! !$errors->has('permit_type') ? '"' : ' error" data-content="' . $errors->first('permit_type') . '" data-position="top center"' !!}>
 							<div class="ui toggle checkbox">
 								<label><b>Business</b></label>
-								<input type="radio" name="permit_type" value="business" {{ old('permit_type') == 'businesses' ? 'checked' : '' }}>
+								<input type="radio" name="permit_type" value="business" {{ old('permit_type') == 'business' ? 'checked' : '' }}>
 							</div>
 						</div>
 					</div>

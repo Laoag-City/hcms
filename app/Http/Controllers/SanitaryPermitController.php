@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use App\Applicant;
+use App\Business;
 use App\SanitaryPermit;
 use App\Custom\PermitFileGenerator;
 use App\Custom\RegistrationNumberGenerator;
@@ -30,7 +31,7 @@ class SanitaryPermitController extends Controller
 
     	elseif($this->request->isMethod('post'))
     	{
-            $id = $this->create_edit_logic(true);
+            $id = $this->create_edit_logic('new');
 
             return redirect("sanitary_permit/$id/preview");
     	}
@@ -90,25 +91,27 @@ class SanitaryPermitController extends Controller
         ]);
 	}
 
-	private function create_edit_logic($is_create, Applicant $applicant = null, SanitaryPermit $sanitary_permit = null)
+	private function create_edit_logic($mode, SanitaryPermit $sanitary_permit = null)
 	{
-		if($is_create)
+		if($mode == 'new')
 		{
-			if($applicant != null)
-				$rules = [
-					'date_of_issuance' => 'bail|required|date|before_or_equal:today',
-				];
+			$rules = [
+				'business_name' => 'bail|required_if:permit_type,business|alpha_spaces|max:100',
 
-			else
-				$rules = [
-					'first_name' => 'bail|required|alpha_spaces|max:40',
-	                'middle_name' => 'nullable|bail|alpha_spaces|max:30',
-	                'last_name' => 'bail|required|alpha_spaces|max:30',
-	                'suffix_name' => 'nullable|bail|in:Jr.,Sr.,I,II,III,IV,V,VI,VII,VIII,IX,X',
-	                'age' => 'bail|required|integer|min:0|max:120',
-	                'gender' => 'bail|required|in:0,1',
-					'date_of_issuance' => 'bail|required|date|before_or_equal:today',
-				];
+				'first_name' => 'bail|required_if:permit_type,individual|alpha_spaces|max:40',
+                'middle_name' => 'nullable|bail|alpha_spaces|max:30',
+                'last_name' => 'bail|required_if:permit_type,individual|alpha_spaces|max:30',
+                'suffix_name' => 'nullable|bail|in:Jr.,Sr.,I,II,III,IV,V,VI,VII,VIII,IX,X',
+                'age' => 'bail|required_if:permit_type,individual|integer|min:0|max:120',
+                'gender' => 'bail|required_if:permit_type,individual|in:0,1',
+
+				'date_of_issuance' => 'bail|required|date|before_or_equal:today',
+			];
+		}
+
+		elseif($mode == 'add')
+		{
+
 		}
 
 		else
@@ -132,22 +135,38 @@ class SanitaryPermitController extends Controller
 			'sanitary_inspector' => 'bail|required|string|alpha_spaces|max:100'
 		]))->validate();
 
-		if($is_create)
+		if($mode == 'new' || $mode == 'add')
 		{
-			if($applicant == null)
+			if($mode == 'new')
 			{
-				$applicant = new Applicant;
-	            $applicant->first_name = $this->request->first_name;
-	            $applicant->middle_name = $this->request->middle_name == null ? null : $this->request->middle_name;
-	            $applicant->last_name = $this->request->last_name;
-	            $applicant->suffix_name = $this->request->suffix_name == null ? null : $this->request->suffix_name;
-	            $applicant->age = $this->request->age;
-	            $applicant->gender = $this->request->gender;
-	            $applicant->save();
+				if($this->request->permit_type == 'individual')
+				{
+					$permit_holder = new Applicant;
+		            $permit_holder->first_name = $this->request->first_name;
+		            $permit_holder->middle_name = $this->request->middle_name == null ? null : $this->request->middle_name;
+		            $permit_holder->last_name = $this->request->last_name;
+		            $permit_holder->suffix_name = $this->request->suffix_name == null ? null : $this->request->suffix_name;
+		            $permit_holder->age = $this->request->age;
+		            $permit_holder->gender = $this->request->gender;
+		            $permit_holder->save();
+	        	}
+
+	        	else
+	        	{
+	        		$permit_holder = new Business;
+	        		$permit_holder->business_name = $this->request->business_name;
+	        		$permit_holder->save();
+	        	}
 			}
 
 			$sanitary_permit = new SanitaryPermit;
-			$sanitary_permit->applicant_id = $applicant->applicant_id;
+
+			if($permit_holder instanceof Applicant)
+				$sanitary_permit->applicant_id = $permit_holder->applicant_id;
+
+			else
+				$sanitary_permit->business_id = $permit_holder->business_id;
+
 			$sanitary_permit->establishment_type = $this->request->establishment_type;
 			$sanitary_permit->address = $this->request->address;
 			$sanitary_permit->issuance_date = $this->request->date_of_issuance;
@@ -170,7 +189,7 @@ class SanitaryPermitController extends Controller
 			$sanitary_permit->checkIfExpired();
 		}
 
-		if($is_create)
+		if($mode != 'edit')
         {
 	    	//(new PermitFileGenerator($sanitary_permit))->generatePDF();
 	    	return $sanitary_permit->sanitary_permit_id;
