@@ -27,7 +27,7 @@
 									<i class="list icon"></i>
 									<i class="dropdown icon"></i>
 									<div class="menu">
-										<a href="{{ url("applicant/$business->business_id") }}" class="item">View Business</a>
+										<a href="{{ url("business/$business->business_id") }}" class="item">View Business</a>
 									</div>
 								</div>
 							</div>

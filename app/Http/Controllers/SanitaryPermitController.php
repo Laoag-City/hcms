@@ -83,6 +83,23 @@ class SanitaryPermitController extends Controller
     	}
 	}
 
+	public function deletePermit(SanitaryPermit $sanitary_permit)
+    {
+        $validator = Validator::make($this->request->all(), [
+            'password' => 'bail|required'
+        ]);
+
+        $validator->after(function ($validator){
+            if(!app('hash')->check($this->request->password, $this->request->user()->password))
+                $validator->errors()->add('password', 'Incorrect password.');
+        });
+
+        $validator->validate();
+
+        $sanitary_permit->delete();
+        return redirect(explode('?', url()->previous())[0]);
+    }
+
 	public function printPreview(SanitaryPermit $sanitary_permit)
 	{
 		return view('sanitary_permit.print', [
@@ -111,7 +128,17 @@ class SanitaryPermitController extends Controller
 
 		elseif($mode == 'add')
 		{
+			$exist_rule = '';
 
+			if($this->request->permit_type == 'individual')
+				$exist_rule = '|exists:applicants,applicant_id';
+
+			elseif($this->request->permit_type == 'business')
+				$exist_rule = '|exists:businesses,business_id';
+
+			$rules = [
+				'id' => 'bail|required' . $exist_rule;
+			];
 		}
 
 		else

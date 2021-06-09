@@ -67,6 +67,8 @@ Route::group(['middleware' => 'auth'], function(){
 
 	Route::match(['get', 'put'], 'sanitary_permit/{sanitary_permit}', 'SanitaryPermitController@viewEditSanitaryPermit');
 
+	Route::delete('sanitary_permit/{sanitary_permit}', 'SanitaryPermitController@deletePermit');
+
 	Route::get('sanitary_permit/{sanitary_permit}/preview', 'SanitaryPermitController@printPreview');
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -224,9 +224,9 @@
 						@endphp
 
 						<tr class="center aligned">
-							<td>{{ $sc->registration_number }}</td>
-							<td>{{ $sc->work_type }}</td>
-							<td>{{ $sc->establishment }}</td>
+							<td>{{ $sc->sanitary_permit_number }}</td>
+							<td>{{ $sc->establishment_type }}</td>
+							<td>{{ $sc->address }}</td>
 							@if($expired)
 								<td class="error">Yes</td>
 							@else
@@ -240,8 +240,8 @@
 										<i class="options icon"></i>
 										<i class="dropdown icon"></i>
 										<div class="menu">
-											<a class="item" href="{{ url("health_certificate/$sc->health_certificate_id") }}">Health Certificate Info</a>
-											<a class="item" href="{{ url("health_certificate/$sc->health_certificate_id/preview") }}" target="_blank">Print Preview</a>
+											<a class="item" href="{{ url("sanitary_permit/$sc->sanitary_permit_id") }}">Sanitary Permit Info</a>
+											<a class="item" href="{{ url("sanitary_permit/$sc->sanitary_permit_id/preview") }}" target="_blank">Print Preview</a>
 											<button type="button" class="item delete_button" data-type="sp" data-id="{{ $sc->sanitary_permit_id }}">Remove</button>
 										</div>
 									</div>

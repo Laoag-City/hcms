@@ -35,7 +35,7 @@ class ApplicantController extends Controller
     			'applicant' => $applicant,
                 'health_certificates' => $applicant->health_certificates,
                 'sanitary_permits' => $applicant->sanitary_permits,
-                'picture_url' => $applicant->health_certificates ? (new CertificateFileGenerator($applicant->health_certificates->first()))->getPicturePathAndURL()['url'] : null
+                'picture_url' => $applicant->health_certificates->isNotEmpty() ? (new CertificateFileGenerator($applicant->health_certificates->first()))->getPicturePathAndURL()['url'] : null
     		]);
     	}
 
