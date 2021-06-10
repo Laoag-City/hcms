@@ -11,7 +11,7 @@
 	<div class="ui attached segment">
 		<div class="ui stackable centered grid">
 			<div class="fourteen wide column center aligned">
-				<form id="health_certificate_form" method="POST" action="{{ url()->current() }}" class="ui form {{ $errors->any() ? 'error' : 'success' }}">
+				<form id="sanitary_permit_form" method="POST" action="{{ url()->current() }}" class="ui form {{ $errors->any() ? 'error' : 'success' }}">
 					{{ csrf_field() }}
 					
 					<br>

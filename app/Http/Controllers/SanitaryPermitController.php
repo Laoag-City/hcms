@@ -37,13 +37,12 @@ class SanitaryPermitController extends Controller
     	}
 	}
 
-	public function createSanitaryPermitExistingApplicant(Applicant $applicant)
+	public function createSanitaryPermitExistingApplicantBusiness(Applicant $applicant)
 	{
 		if($this->request->isMethod('get'))
     	{
     		return view('sanitary_permit.existing_applicant_create', [
-                'title' => 'Add Sanitary Permit',
-                'applicant' => $applicant
+                'title' => 'Add Sanitary Permit To Existing Client/Business',
             ]);
     	}
 
@@ -137,7 +136,7 @@ class SanitaryPermitController extends Controller
 				$exist_rule = '|exists:businesses,business_id';
 
 			$rules = [
-				'id' => 'bail|required' . $exist_rule;
+				'id' => 'bail|required' . $exist_rule
 			];
 		}
 
