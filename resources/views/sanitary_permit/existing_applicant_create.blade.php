@@ -36,6 +36,24 @@
 
 					<br>
 
+					<br>
+
+					<div class="fields">
+						<div class="three wide field"></div>
+
+						<div id="searchPermitOwner" style="display: none" class="ten wide field ui fluid search{!! !$errors->has('permit_owner') 
+							? '" data-content="Type a client\'s name and choose from the suggestions below."' 
+							: ' error" data-content="' . $errors->first('permit_owner') . '"' !!} 
+							data-position="top center">
+								<label>Search Sanitary Permit Owner:</label>
+								<input class="prompt" type="text" name="permit_owner" value="{{ old('permit_owner') }}" placeholder="Search Sanitary Permit Owner" required="">
+								<div class="results"></div>
+						</div>
+					</div>
+
+					<br>
+					<br>
+
 					<div class="fields field_individual">
 						<div class="six wide field
 						{!! !$errors->has('first_name') ? '"' : ' error" data-content="' . $errors->first('first_name') . '" data-position="top center"' !!}>

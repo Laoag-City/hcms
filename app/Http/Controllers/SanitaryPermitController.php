@@ -37,7 +37,7 @@ class SanitaryPermitController extends Controller
     	}
 	}
 
-	public function createSanitaryPermitExistingApplicantBusiness(Applicant $applicant)
+	public function createSanitaryPermitExistingApplicantBusiness()
 	{
 		if($this->request->isMethod('get'))
     	{
@@ -48,7 +48,7 @@ class SanitaryPermitController extends Controller
 
     	elseif($this->request->isMethod('post'))
     	{
-            $id = $this->create_edit_logic(true, $applicant);
+            $id = $this->create_edit_logic('add');
 
             return redirect("sanitary_permit/$id/preview");
     	}
@@ -76,7 +76,7 @@ class SanitaryPermitController extends Controller
 
     	elseif($this->request->isMethod('put'))
     	{
-            $this->create_edit_logic(false, $sanitary_permit->applicant, $sanitary_permit);
+            $this->create_edit_logic('edit');
 
             return redirect("sanitary_permit/$sanitary_permit->sanitary_permit_id/preview");
     	}
@@ -109,7 +109,7 @@ class SanitaryPermitController extends Controller
 
 	private function create_edit_logic($mode, SanitaryPermit $sanitary_permit = null)
 	{
-		if($mode == 'new')
+		if($mode == 'new' || $mode == 'add')
 		{
 			$rules = [
 				'business_name' => 'bail|required_if:permit_type,business|alpha_spaces|max:100',
@@ -123,21 +123,24 @@ class SanitaryPermitController extends Controller
 
 				'date_of_issuance' => 'bail|required|date|before_or_equal:today',
 			];
-		}
 
-		elseif($mode == 'add')
-		{
-			$exist_rule = '';
+			if($mode == 'add')
+			{
+				$exist_rule = '';
 
-			if($this->request->permit_type == 'individual')
-				$exist_rule = '|exists:applicants,applicant_id';
+				if($this->request->permit_type == 'individual')
+					$exist_rule = '|exists:applicants,applicant_id';
 
-			elseif($this->request->permit_type == 'business')
-				$exist_rule = '|exists:businesses,business_id';
+				elseif($this->request->permit_type == 'business')
+					$exist_rule = '|exists:businesses,business_id';
 
-			$rules = [
-				'id' => 'bail|required' . $exist_rule
-			];
+				$add_rules = [
+					'whole_name' => 'bail|required|max:107',
+					'id' => 'bail|required' . $exist_rule,
+				];
+
+				$rules = array_merge($rules, $add_rules);
+			}
 		}
 
 		else
@@ -185,6 +188,15 @@ class SanitaryPermitController extends Controller
 	        	}
 			}
 
+			else
+			{
+				if($this->request->permit_type == 'individual')
+					$permit_holder = Applicant::find($this->request->id);
+
+				else
+					$permit_holder = Business::find($this->request->id);
+			}
+
 			$sanitary_permit = new SanitaryPermit;
 
 			if($permit_holder instanceof Applicant)
@@ -210,6 +222,14 @@ class SanitaryPermitController extends Controller
 			$sanitary_permit->issuance_date = $this->request->date_of_issuance;
 			$sanitary_permit->expiration_date = $this->request->date_of_expiration;
 			$sanitary_permit->sanitary_inspector = $this->request->sanitary_inspector;
+
+			//if renewing and it's already next year, update sanitary permit number
+            if($mode == 'renew')
+            {   
+                if((int)explode('-', $sanitary_permit->sanitary_permit_number)[0] < (int)date('Y', strtotime('now')))
+                    $sanitary_permit->sanitary_permit_number = (new RegistrationNumberGenerator)->getRegistrationNumber('App\SanitaryPermit', 'sanitary_permit_number');
+            }
+
 			$sanitary_permit->save();
 
 			$sanitary_permit->checkIfExpired();

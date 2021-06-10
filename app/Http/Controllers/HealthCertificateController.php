@@ -661,6 +661,14 @@ class HealthCertificateController extends Controller
             $health_certificate->expiration_date = $this->request->date_of_expiration;//$this->getExpirationDate($this->request->date_of_issuance, $this->request->certificate_type);
             $health_certificate->work_type = $this->request->type_of_work;
             $health_certificate->establishment = $this->request->name_of_establishment;
+
+            //if renewing and it's already next year, update registration number
+            if($mode == 'renew')
+            {   
+                if((int)explode('-', $health_certificate->registration_number)[0] < (int)date('Y', strtotime('now')))
+                    $health_certificate->registration_number = (new RegistrationNumberGenerator)->getRegistrationNumber('App\HealthCertificate', 'registration_number');
+            }
+
             $health_certificate->save();
 
             $health_certificate->checkIfExpired();
