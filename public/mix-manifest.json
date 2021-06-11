@@ -1,5 +1,5 @@
 {
-    "/js/app.js": "/js/app.js?id=2e8e28ea10c125ea3e43",
+    "/js/app.js": "/js/app.js?id=29ffeabb7d73f7d84dcf",
     "/css/global_style.css": "/css/global_style.css?id=01fb3b4bba5ea8db2dd7",
     "/css/create_health_certificate.css": "/css/create_health_certificate.css?id=7e3ce95520c1cc9ec3d9",
     "/css/camera.css": "/css/camera.css?id=41af3dfd3bee4f209112",
@@ -8,9 +8,9 @@
     "/js/health_certificate_information.js": "/js/health_certificate_information.js?id=553a14d4e19e27b6bc9f",
     "/js/camera.js": "/js/camera.js?id=3073ba00899020e6d8ee",
     "/js/values_only_camera.js": "/js/values_only_camera.js?id=695c2f853ca3b9d07e74",
-    "/js/create_health_certificate.js": "/js/create_health_certificate.js?id=d833bb3bb1922189f4b9",
+    "/js/create_health_certificate.js": "/js/create_health_certificate.js?id=388b4d3f6da91b1bc002",
     "/js/applicant_information.js": "/js/applicant_information.js?id=c03df809839ca085b619",
     "/js/bulk_print.js": "/js/bulk_print.js?id=dc9be94c9a88ec403505",
     "/js/renew_health_certificate.js": "/js/renew_health_certificate.js?id=ff8e54d9e335eb0b0cb7",
-    "/js/new_sanitary_permit.js": "/js/new_sanitary_permit.js?id=ae445d9e7caa9ff59f45"
+    "/js/new_sanitary_permit.js": "/js/new_sanitary_permit.js?id=883b20100bf0c6e07912"
 }

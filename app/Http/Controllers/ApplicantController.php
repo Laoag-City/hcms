@@ -116,7 +116,7 @@ class ApplicantController extends Controller
     }
     */
 
-    public function searchApplicantsForHealthCertificate()
+    public function searchApplicantsForCertificateOrPermitForm()
     {
     	return collect(['results' => Applicant::search($this->request->q)
                         ->with('health_certificates')

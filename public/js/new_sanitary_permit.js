@@ -10,9 +10,12 @@ $('input[name=permit_type]').change(function(){
 //search logic
 $('.ui.search').search({
 	apiSettings: {
-		url: '/applicant_search?q={query}',
-
 		beforeSend: function(settings){
+			if($('input[name=permit_type]:checked').val() == 'individual')
+				settings.url = '/applicant_search?q={query}';
+			else
+				settings.url = '/business_search?q={query}';
+
 			settings.data = {
 				permit_owner_type: $('input[name=permit_type]:checked').val()
 			};

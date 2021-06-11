@@ -51,8 +51,8 @@ Route::group(['middleware' => 'auth'], function(){
 	//view or edit an applicant
 	Route::match(['get', 'put'], 'applicant/{applicant}', 'ApplicantController@viewEditApplicant');
 
-	//returns applicants that match the search word in create health certificate page's whole name field
-	Route::get('applicant_search', 'ApplicantController@searchApplicantsForHealthCertificate');
+	//returns applicants that match the search word in create health certificate and sanitary permit page's whole name field
+	Route::get('applicant_search', 'ApplicantController@searchApplicantsForCertificateOrPermitForm');
 
 	//searches applicants
 	Route::get('search', 'ApplicantController@searchApplicants');
@@ -74,6 +74,9 @@ Route::group(['middleware' => 'auth'], function(){
 
 	//shows business list
 	Route::get('businesses', 'BusinessController@getBusinesses');
+
+	//returns businesses that match the search word in create sanitary permit page's whole name field
+	Route::get('business_search', 'BusinessController@searchBusinessesForPermitForm');
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
