@@ -26,23 +26,16 @@ class BusinessController extends Controller
     public function searchBusinessesForPermitForm()
     {
         return collect(['results' => Business::search($this->request->q)
-                        ->with('health_certificates')
+                        ->with('sanitary_permits')
                         ->get()
                         ->transform(function($item, $key){
                             return collect([
-                                'id' => $item->applicant_id,
-                                'first_name' => $item->first_name,
-                                'middle_name' => $item->middle_name,
-                                'last_name' => $item->last_name,
-                                'suffix_name' => $item->suffix_name,
-                                'age' => $item->age,
-                                'gender' => $item->gender,
-                                'whole_name' => $item->formatName(), 
-                                'basic_info' => "{$item->getGender()}, $item->age / " . 
-                                                    $item->health_certificates->sortByDesc('health_certificate_id')
-                                                        ->take(3)->pluck('establishment')
+                                'id' => $item->business_id,
+                                'whole_name' => $item->business_name, 
+                                'basic_info' => $item->sanitary_permits->sortByDesc('sanitary_permit_id')
+                                                        ->take(3)->pluck('establishment_type')
                                                         ->implode(', ') . 
-                                                        ($item->health_certificates->count() > 3 ? ', etc.' : '')
+                                                        ($item->sanitary_permits->count() > 3 ? ', etc.' : '')
                             ]); 
                         })
                     ]);

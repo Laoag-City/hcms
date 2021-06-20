@@ -56,11 +56,11 @@ class ApplicantController extends Controller
                 $old_applicant_certificate_folder = $old_certificate_file_generator->getHealthCertificateFolder()['applicant_folder'];
             }
 
-            if($applicant->sanitary_permits->isNotEmpty())
+            /*if($applicant->sanitary_permits->isNotEmpty())
             {
                 $old_permit_file_generator = new PermitFileGenerator($applicant->sanitary_permits->first());
                 $old_applicant_permit_folder = $old_permit_file_generator->getSanitaryPermitFolder()['applicant_folder'];
-            }
+            }*/
 
     		$applicant->first_name = $this->request->first_name;
     		$applicant->middle_name = $this->request->middle_name == null ? null : $this->request->middle_name;
@@ -79,14 +79,14 @@ class ApplicantController extends Controller
                     $new_certificate_file_generator->updateApplicantFolder($old_applicant_certificate_folder);
             }
 
-            if($applicant->sanitary_permits->isNotEmpty())
+            /*if($applicant->sanitary_permits->isNotEmpty())
             {
                 $new_permit_file_generator = new PermitFileGenerator($applicant->sanitary_permits->first()->refresh());
                 $new_applicant_permit_folder = $new_permit_file_generator->getSanitaryPermitFolder()['applicant_folder'];
 
                 if($old_applicant_permit_folder != $new_applicant_permit_folder)
                     $new_permit_file_generator->updateApplicantFolder($old_applicant_permit_folder);
-            }
+            }*/
 
     		return back()->with('success', ['header' => 'Applicant updated successfully!', 'message' => null]);
     	}

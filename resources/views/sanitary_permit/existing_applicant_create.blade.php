@@ -13,6 +13,8 @@
 			<div class="fourteen wide column center aligned">
 				<form id="sanitary_permit_form" method="POST" action="{{ url()->current() }}" class="ui form {{ $errors->any() ? 'error' : 'success' }}">
 					{{ csrf_field() }}
+
+					<input type="hidden" name="id" class="dynamic_on_search" value="{{ old('id') }}">
 					
 					<br>
 
@@ -76,21 +78,7 @@
 				    	<div class="two wide field
 				    	{!! !$errors->has('suffix_name') ? '"' : ' error" data-content="' . $errors->first('suffix_name') . '" data-position="top center"' !!}>
 				    		<label>Suffix:</label>
-				    		<select name="suffix_name" class="dynamic_select" disabled="">
-								<option value=""></option>
-								<option value="Jr." {{ old('suffix_name') != 'Jr.' ?: 'selected' }}>Jr.</option>
-								<option value="Sr." {{ old('suffix_name') != 'Sr.' ?: 'selected' }}>Sr.</option>
-								<option value="I" {{ old('suffix_name') != 'I' ?: 'selected' }}>I</option>
-								<option value="II" {{ old('suffix_name') != 'II' ?: 'selected' }}>II</option>
-								<option value="III" {{ old('suffix_name') != 'III' ?: 'selected' }}>III</option>
-								<option value="IV" {{ old('suffix_name') != 'IV' ?: 'selected' }}>IV</option>
-								<option value="V" {{ old('suffix_name') != 'V' ?: 'selected' }}>V</option>
-								<option value="VI" {{ old('suffix_name') != 'VI' ?: 'selected' }}>VI</option>
-								<option value="VII" {{ old('suffix_name') != 'VII' ?: 'selected' }}>VII</option>
-								<option value="VIII" {{ old('suffix_name') != 'VIII' ?: 'selected' }}>VIII</option>
-								<option value="IX" {{ old('suffix_name') != 'IX' ?: 'selected' }}>IX</option>
-								<option value="X" {{ old('suffix_name') != 'X' ?: 'selected' }}>X</option>
-							</select>
+				    		<input type="text" name="suffix_name" value="{{ old('suffix_name') }}" class="field_individual" placeholder="Suffix Name" readonly="">
 				    	</div>
 					</div>
 
@@ -117,11 +105,7 @@
 						<div class="field_individual three wide field
 						{!! !$errors->has('gender') ? '"' : ' error" data-content="' . $errors->first('gender') . '" data-position="top center"' !!}>
 							<label>Gender:</label>
-							<select name="gender" class="dynamic_select" disabled="">
-								<option value=""></option>
-								<option value="1" {{ (string)old('gender') != '1' ?: 'selected' }}>Male</option>
-								<option value="0" {{ (string)old('gender') != '0' ?: 'selected' }}>Female</option>
-							</select>
+							<input type="text" name="gender" value="{{ old('gender') }}" class="field_individual" placeholder="Gender" readonly="">
 						</div>
 					</div>
 
@@ -183,13 +167,4 @@
 
 @section('sub_custom_js')
 	<script src="{{ mix('/js/new_sanitary_permit.js') }}"></script>
-
-	<script>
-		//submit logic
-		$('#submit_sanitary_permit').click(function(event){
-			event.preventDefault();
-			$('.dynamic_select').removeAttr('disabled');
-			$('#sanitary_permit_form').submit();
-		});
-	</script>
 @endsection

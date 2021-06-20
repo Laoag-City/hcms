@@ -97,15 +97,33 @@
 
 			@if($health_certificate && $immunization && $stool_and_others && $xray_sputum)
 				<div class="fourteen wide column center aligned">
+					<h3 class="ui header">
+						Renew Health Certificate Form
+					</h3>
+
+					<br>
+
+					<div style="overflow: auto;">
+						<div style="float: left;"><!--nested columns-->
+							<h4>
+								<i class="caret right icon"></i>
+								<span style="font-weight: normal;">Name:</span> 
+								<u>{{ $health_certificate->applicant->formatName() }}</u>
+							</h4>
+						</div>
+
+						<div style="float: right;">
+							<h4>
+								<i class="caret right icon"></i>
+								<span style="font-weight: normal;">Certificate Registration Number:</span> 
+								<u>{{ $health_certificate->registration_number }}</u>
+							</h4>
+						</div>
+					</div>
+
 					<br>
 
 					<form method="POST" action="{{ url()->full() }}" class="ui form text_center {{ $errors->any() ? 'error' : 'success' }}">
-						<h3 class="ui header">
-							Renew Health Certificate Form
-						</h3>
-
-						<br>
-
 						{{ csrf_field() }}
 						{{ method_field('PUT') }}
 

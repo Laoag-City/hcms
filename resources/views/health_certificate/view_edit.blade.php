@@ -70,7 +70,7 @@
 
 				<form method="POST" action="{{ url()->current() }}" class="ui form text_center {{ $errors->any() ? 'error' : 'success' }}">
 					<h3 class="ui header">
-						Edit Health Certificate
+						Health Certificate
 					</h3>
 
 					<br>

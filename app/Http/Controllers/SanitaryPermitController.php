@@ -25,19 +25,19 @@ class SanitaryPermitController extends Controller
 		if($this->request->isMethod('get'))
     	{
     		return view('sanitary_permit.create', [
-                'title' => 'New Sanitary Permit'
+                'title' => 'Add Sanitary Permit Form'
             ]);
     	}
 
     	elseif($this->request->isMethod('post'))
     	{
-            $id = $this->create_edit_logic('new');
+            $id = $this->create_edit_logic('add');
 
             return redirect("sanitary_permit/$id/preview");
     	}
 	}
 
-	public function createSanitaryPermitExistingApplicantBusiness()
+	/*public function createSanitaryPermitExistingApplicantBusiness()
 	{
 		if($this->request->isMethod('get'))
     	{
@@ -52,7 +52,7 @@ class SanitaryPermitController extends Controller
 
             return redirect("sanitary_permit/$id/preview");
     	}
-	}
+	}*/
 
 	/*public function sanitaryPermits(Applicant $applicant)
 	{
@@ -68,7 +68,7 @@ class SanitaryPermitController extends Controller
 		if($this->request->isMethod('get'))
     	{
     		return view('sanitary_permit.edit', [
-                'title' => 'Update/Renew Sanitary Permit',
+                'title' => 'Sanitary Permit Information',
                 'applicant' => $sanitary_permit->applicant,
                 'permit' => $sanitary_permit
             ]);
@@ -76,7 +76,7 @@ class SanitaryPermitController extends Controller
 
     	elseif($this->request->isMethod('put'))
     	{
-            $this->create_edit_logic('edit');
+            $this->create_edit_logic('edit', $sanitary_permit);
 
             return redirect("sanitary_permit/$sanitary_permit->sanitary_permit_id/preview");
     	}
@@ -109,22 +109,26 @@ class SanitaryPermitController extends Controller
 
 	private function create_edit_logic($mode, SanitaryPermit $sanitary_permit = null)
 	{
-		if($mode == 'new' || $mode == 'add')
+		$permit_owner_rules = [
+			'business_name' => 'bail|required_if:permit_type,business|alpha_spaces|max:100',
+
+			'first_name' => 'bail|required_if:permit_type,individual|alpha_spaces|max:40',
+            'middle_name' => 'nullable|bail|alpha_spaces|max:30',
+            'last_name' => 'bail|required_if:permit_type,individual|alpha_spaces|max:30',
+            'suffix_name' => 'nullable|bail|in:Jr.,Sr.,I,II,III,IV,V,VI,VII,VIII,IX,X',
+            'age' => 'bail|required_if:permit_type,individual|integer|min:0|max:120',
+            'gender' => 'bail|required_if:permit_type,individual|in:0,1',
+		];
+
+		if($mode == 'add')
 		{
-			$rules = [
-				'business_name' => 'bail|required_if:permit_type,business|alpha_spaces|max:100',
-
-				'first_name' => 'bail|required_if:permit_type,individual|alpha_spaces|max:40',
-                'middle_name' => 'nullable|bail|alpha_spaces|max:30',
-                'last_name' => 'bail|required_if:permit_type,individual|alpha_spaces|max:30',
-                'suffix_name' => 'nullable|bail|in:Jr.,Sr.,I,II,III,IV,V,VI,VII,VIII,IX,X',
-                'age' => 'bail|required_if:permit_type,individual|integer|min:0|max:120',
-                'gender' => 'bail|required_if:permit_type,individual|in:0,1',
-
+			$specific_rules = [
+				'permit_type' => 'bail|required|in:individual,business',
+				'existing_owner' => 'bail|sometimes|required|in:on',
 				'date_of_issuance' => 'bail|required|date|before_or_equal:today',
 			];
 
-			if($mode == 'add')
+			if($this->request->existing_owner != null)
 			{
 				$exist_rule = '';
 
@@ -135,38 +139,43 @@ class SanitaryPermitController extends Controller
 					$exist_rule = '|exists:businesses,business_id';
 
 				$add_rules = [
-					'whole_name' => 'bail|required|max:107',
+					'permit_owner' => 'bail|required|max:107',
 					'id' => 'bail|required' . $exist_rule,
 				];
 
-				$rules = array_merge($rules, $add_rules);
+				$specific_rules = array_merge($specific_rules, $add_rules);
 			}
 		}
 
 		else
 		{
-			if($this->request->update_mode != null && $this->request->update_mode == 'edit_renew')
+			if($this->request->update_mode == 'renew')
                 $date_of_issuance_rule = "bail|required|date|before_or_equal:today|after:{$sanitary_permit->dateToInput('issuance_date')}";
             else
                 $date_of_issuance_rule = 'bail|required|date|before_or_equal:today';
 
-            $rules = [
-                'update_mode' => 'bail|required|in:edit,edit_renew',
+            if($sanitary_permit->applicant_id != null)
+            	$in_rule = 'business';
+            else
+            	$in_rule = 'individual';
+
+            $specific_rules = [
+            	'permit_type' => 'bail|nullable|in:' . $in_rule,
+                'update_mode' => 'bail|required|accepted',
                 'date_of_issuance' => $date_of_issuance_rule
             ];
 		}
 
-		Validator::make($this->request->all(), array_merge($rules, [
-			'permit_type' => 'bail|required|in:individual,business',
+		Validator::make($this->request->all(), array_merge($specific_rules, $permit_owner_rules, [
 			'establishment_type' => 'bail|required|string|max:100',
 			'date_of_expiration' => 'bail|required|date|after:date_of_issuance',
 			'address' => 'bail|required|string|max:150',
 			'sanitary_inspector' => 'bail|required|string|alpha_spaces|max:100'
 		]))->validate();
 
-		if($mode == 'new' || $mode == 'add')
+		if($mode == 'add')
 		{
-			if($mode == 'new')
+			if($this->request->id == null)
 			{
 				if($this->request->permit_type == 'individual')
 				{
@@ -191,7 +200,11 @@ class SanitaryPermitController extends Controller
 			else
 			{
 				if($this->request->permit_type == 'individual')
+				{
 					$permit_holder = Applicant::find($this->request->id);
+					$permit_holder->age = $this->request->age;
+					$permit_holder->save();
+				}
 
 				else
 					$permit_holder = Business::find($this->request->id);
@@ -217,6 +230,34 @@ class SanitaryPermitController extends Controller
 
 		else
 		{
+			if($this->request->permit_type != null)
+			{
+				if($this->request->permit_type == 'individual')
+				{
+					$permit_holder = new Applicant;
+		            $permit_holder->first_name = $this->request->first_name;
+		            $permit_holder->middle_name = $this->request->middle_name == null ? null : $this->request->middle_name;
+		            $permit_holder->last_name = $this->request->last_name;
+		            $permit_holder->suffix_name = $this->request->suffix_name == null ? null : $this->request->suffix_name;
+		            $permit_holder->age = $this->request->age;
+		            $permit_holder->gender = $this->request->gender;
+		            $permit_holder->save();
+
+		            $sanitary_permit->applicant_id = $permit_holder->applicant_id;
+		            $sanitary_permit->business_id = null;
+	        	}
+
+	        	else
+	        	{
+	        		$permit_holder = new Business;
+	        		$permit_holder->business_name = $this->request->business_name;
+	        		$permit_holder->save();
+
+	        		$sanitary_permit->applicant_id = null;
+	        		$sanitary_permit->business_id = $permit_holder->business_id;
+	        	}
+			}
+
 			$sanitary_permit->establishment_type = $this->request->establishment_type;
 			$sanitary_permit->address = $this->request->address;
 			$sanitary_permit->issuance_date = $this->request->date_of_issuance;

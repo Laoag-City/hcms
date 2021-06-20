@@ -156,11 +156,7 @@ body
 				<div class="auto_flow">
 					<span class="pull_left" style="margin-top: 4pt;">Issued to</span>
 					<span class="pull_right text-center values" style="width: 415pt; font-size: 14pt;">
-						@if($permit->applicant != null)
-							<b>{{ strtoupper($permit->applicant->formatName()) }}</b>
-						@else
-							<b>{{ strtoupper($permit->business->business_name) }}</b>
-						@endif
+						<b>{{ strtoupper($permit->getRegisteredName()) }}</b>
 					</span>
 					<i style="display: block;" class="text-center">(Registered Name)</i>
 				</div>

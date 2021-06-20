@@ -37,6 +37,16 @@ class SanitaryPermit extends Model
         return $this->convertDateForInputField($this->attributes[$attribute]);
     }
 
+    public function getRegisteredName()
+    {
+        if($this->applicant != null)
+            return $this->applicant->formatName();
+        elseif($this->business != null)
+            return $this->business->business_name;
+        else
+            return '';
+    }
+
     public function checkIfExpired()
     {
         if(strtotime('now') >= strtotime($this->attributes['expiration_date']))

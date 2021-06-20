@@ -1,5 +1,12 @@
 @extends('layouts.authenticated')
 
+@section('sub_custom_css')
+
+<!--borrowed from health certificate-->
+<link rel="stylesheet" href="{{ mix('/css/create_health_certificate.css') }}">
+
+@endsection
+
 @section('sub_content')
 <div class="sixteen wide column center aligned">
 	<div class="ui attached message">
@@ -15,6 +22,8 @@
 					{{ csrf_field() }}
 					
 					<br>
+
+					<input type="hidden" name="id" value="{{ old('id') }}">
 
 					<div class="fields">
 						<div class="four wide field"></div>
@@ -36,29 +45,48 @@
 
 					<br>
 
+					<div class="fields">
+						<div class="two wide field"></div>
+
+						<div class="three wide field field_existing">
+							<div class="ui check checkbox">
+								<label><b>Add Health Certificate to Existing Client</b></label>
+								<input type="checkbox" name="existing_owner" class="field_existing" {{ old('existing_owner') == null ?: 'checked' }}>
+							</div>
+						</div>
+
+						<div id="searchPermitOwner" class="six wide field field_existing ui fluid search{!! !$errors->has('permit_owner') 
+							? '" data-content="Type a client\'s name and choose from the suggestions below."' 
+							: ' error" data-content="' . $errors->first('permit_owner') . '"' !!} data-position="top center">
+								<label>Permit Owner:</label>
+								<input class="prompt field_existing" type="text" name="permit_owner" value="{{ old('permit_owner') }}" placeholder="Permit Owner">
+								<div class="results"></div>
+						</div>
+					</div>
+
 					<div class="fields field_individual">
 						<div class="six wide field
 						{!! !$errors->has('first_name') ? '"' : ' error" data-content="' . $errors->first('first_name') . '" data-position="top center"' !!}>
 				    		<label>First Name:</label>
-				    		<input type="text" name="first_name" value="{{ old('first_name') }}" class="field_individual" placeholder="First Name">
+				    		<input type="text" name="first_name" value="{{ old('first_name') }}" class="field_individual dynamic_input" placeholder="First Name">
 				    	</div>
 
 				    	<div class="four wide field
 				    	{!! !$errors->has('middle_name') ? '"' : ' error" data-content="' . $errors->first('middle_name') . '" data-position="top center"' !!}>
 				    		<label>Middle Name:</label>
-				    		<input type="text" name="middle_name" value="{{ old('middle_name') }}" class="field_individual" placeholder="Middle Name">
+				    		<input type="text" name="middle_name" value="{{ old('middle_name') }}" class="field_individual dynamic_input" placeholder="Middle Name">
 				    	</div>
 
 				    	<div class="four wide field
 				    	{!! !$errors->has('last_name') ? '"' : ' error" data-content="' . $errors->first('last_name') . '" data-position="top center"' !!}>
 				    		<label>Last Name:</label>
-				    		<input type="text" name="last_name" value="{{ old('last_name') }}" class="field_individual" placeholder="Last Name">
+				    		<input type="text" name="last_name" value="{{ old('last_name') }}" class="field_individual dynamic_input" placeholder="Last Name">
 				    	</div>
 
 				    	<div class="two wide field
 				    	{!! !$errors->has('suffix_name') ? '"' : ' error" data-content="' . $errors->first('suffix_name') . '" data-position="top center"' !!}>
 				    		<label>Suffix:</label>
-				    		<select name="suffix_name" class="field_individual">
+				    		<select name="suffix_name" class="field_individual dynamic_select">
 								<option value=""></option>
 								<option value="Jr." {{ old('suffix_name') != 'Jr.' ?: 'selected' }}>Jr.</option>
 								<option value="Sr." {{ old('suffix_name') != 'Sr.' ?: 'selected' }}>Sr.</option>
@@ -82,7 +110,7 @@
 						<div class="eight wide field
 						{!! !$errors->has('business_name') ? '"' : ' error" data-content="' . $errors->first('business_name') . '" data-position="top center"' !!}>
 				    		<label>Business Name:</label>
-				    		<input type="text" name="business_name" value="{{ old('business_name') }}" class="field_business" placeholder="Business Name">
+				    		<input type="text" name="business_name" value="{{ old('business_name') }}" class="field_business dynamic_input" placeholder="Business Name">
 				    	</div>
 					</div>
 
@@ -99,7 +127,7 @@
 						<div class="field_individual three wide field
 						{!! !$errors->has('gender') ? '"' : ' error" data-content="' . $errors->first('gender') . '" data-position="top center"' !!}>
 							<label>Gender:</label>
-							<select name="gender" class="field_individual">
+							<select name="gender" class="field_individual dynamic_select">
 								<option value=""></option>
 								<option value="1" {{ (string)old('gender') != '1' ?: 'selected' }}>Male</option>
 								<option value="0" {{ (string)old('gender') != '0' ?: 'selected' }}>Female</option>
@@ -153,7 +181,7 @@
 
 					<br>
 
-					<button class="ui fluid inverted blue button">
+					<button id="submit_sanitary_permit" class="ui fluid inverted blue button">
 						Create Sanitary Permit
 					</button>
 				</form>

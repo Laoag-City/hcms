@@ -10,7 +10,7 @@
 <div class="sixteen wide column center aligned">
 	<div class="ui attached message">
 		<h2 class="ui header">
-			New Health Certificate
+			{{ $title }}
 		</h2>
 	</div>
 
@@ -20,6 +20,30 @@
 				<form id="health_certificate_form" method="POST" action="{{ url('/') }}" class="ui form {{ $errors->any() ? 'error' : 'success' }}">
 					{{ csrf_field() }}
 					
+					<br>
+
+					<input type="hidden" name="id" class="dynamic_on_search" value="{{ old('id') }}">
+
+					<div class="fields">
+						<div class="two wide field"></div>
+
+						<div class="three wide field">
+							<div class="ui check checkbox">
+								<label><b>Add Health Certificate to Existing Client</b></label>
+								<input type="checkbox" name="existing_client" {{ old('existing_client') == null ?: 'checked' }}>
+							</div>
+						</div>
+
+						<div id="searchApplicant" class="six wide field ui fluid search{!! !$errors->has('whole_name') 
+							? '" data-content="Type a client\'s name and choose from the suggestions below."' 
+							: ' error" data-content="' . $errors->first('whole_name') . '"' !!} 
+							style="visibility: {{ old('existing_client') == null ? 'hidden' : 'visible' }}" data-position="top center">
+								<label>Whole Name:</label>
+								<input class="prompt" type="text" name="whole_name" value="{{ old('whole_name') }}" placeholder="Whole Name" {{ old('existing_client') == null ? 'disabled' : 'required' }}>
+								<div class="results"></div>
+						</div>
+					</div>
+
 					<br>
 
 					<div class="fields">
