@@ -43,6 +43,8 @@ Route::group(['middleware' => 'auth'], function(){
 
 	//show bulk print preview
 	//Route::get('health_certificate/bulk_print_preview', 'HealthCertificateController@bulkPrintPreview');
+
+	Route::get('duplicates', 'HealthCertificateController@removeDuplicateCertificates');
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	//shows applicant list

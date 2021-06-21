@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Custom\CertificateFileGenerator;
 use App\Custom\RegistrationNumberGenerator;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class HealthCertificateController extends Controller
 {
@@ -483,11 +484,36 @@ class HealthCertificateController extends Controller
         4. save the duplicates' data, delete them, then update total record value
         */
 
-        $total_records = Applicant::count() - 1;
+        //dd(Applicant::with('health_certificates')->get()->pluck('health_certificates')->flatten());
 
-        for($i = 0; $i < $total_records; $i++)
+        $all_applicant_ids = DB::table('applicants')->select('applicant_id')->get();
+
+        for($i = 0; $i < $all_applicant_ids->count() - 1; $i++)
         {
+            $current_record = Applicant::find($all_applicant_ids[$i]->applicant_id);
 
+            $duplicates = Applicant::where([
+                ['applicant_id', '<>', $current_record->applicant_id],
+                ['first_name', '=', $current_record->first_name],
+                ['middle_name', '=', $current_record->middle_name],
+                ['last_name', '=', $current_record->last_name],
+                ['suffix_name', '=', $current_record->suffix_name],
+                ['age', '=', $current_record->age],
+                ['gender', '=', $current_record->gender]
+            ])->with(['health_certificates', 'sanitary_permits'])->get();
+
+            if($duplicates->isNotEmpty())
+            {
+                $duplicate_ids = $duplicates->pluck('applicant_id');
+                $health_certificates = $duplicates->pluck('health_certificates')->flatten();
+                $sanitary_permits = $duplicates->pluck('sanitary_permits')->flatten();
+
+                HealthCertificate::whereIn('applicant_id', $duplicate_ids)->update(['applicant_id', $current_record->applicant_id]);
+                SanitaryPermit::whereIn('applicant_id', $duplicate_ids)->update(['applicant_id', $current_record->applicant_id]);
+                Applicant::whereIn('applicant_id', $duplicate_ids)->delete();
+
+                $all_applicant_ids = $all_applicant_ids->whereNotIn('applicant_id', $duplicate_ids)->values();
+            }
         }
     }
 
