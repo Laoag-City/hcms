@@ -40,4 +40,6 @@ mix.js('resources/assets/js/app.js', 'public/js')
 
 	.scripts(['resources/assets/js/custom/sanitary_permit_information.js'], 'public/js/sanitary_permit_information.js')
 
+	.scripts(['resources/assets/js/custom/renew_sanitary_permit.js'], 'public/js/renew_sanitary_permit.js')
+
 	.version();

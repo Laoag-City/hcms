@@ -44,9 +44,15 @@ class SanitaryPermitController extends Controller
 
         if($this->request->search)
         {
-            $searches = Applicant::search($this->request->search)
+        	$applicants = Applicant::search($this->request->search)
                                     ->with('sanitary_permits')
                                     ->get();
+
+            $businesses = Business::search($this->request->search)
+                                    ->with('sanitary_permits')
+                                    ->get();
+
+            $searches = $applicants->concat($businesses);
         }
 
         if($this->request->id)
@@ -187,21 +193,27 @@ class SanitaryPermitController extends Controller
 
 		else
 		{
-			if($this->request->update_mode == 'renew')
-                $date_of_issuance_rule = "bail|required|date|before_or_equal:today|after:{$sanitary_permit->dateToInput('issuance_date')}";
-            else
-                $date_of_issuance_rule = 'bail|required|date|before_or_equal:today';
-
-            if($sanitary_permit->applicant_id != null)
+			if($sanitary_permit->applicant_id != null)
             	$in_rule = 'business';
             else
             	$in_rule = 'individual';
 
-            $specific_rules = [
-            	'permit_type' => 'bail|nullable|in:' . $in_rule,
-                'update_mode' => 'bail|required|accepted',
-                'date_of_issuance' => $date_of_issuance_rule
-            ];
+			if($this->request->update_mode == 'renew')
+			{
+                $specific_rules = [
+            		'permit_type' => 'bail|nullable|in:' . $in_rule,
+                	'date_of_issuance' => "bail|required|date|before_or_equal:today|after:{$sanitary_permit->dateToInput('issuance_date')}"
+            	];
+			}
+
+            else
+            {
+                $specific_rules = [
+            		'permit_type' => 'bail|nullable|in:' . $in_rule,
+                	'update_mode' => 'bail|required|accepted',
+                	'date_of_issuance' => 'bail|required|date|before_or_equal:today'
+            	];
+            }
 		}
 
 		Validator::make($this->request->all(), array_merge($specific_rules, $permit_owner_rules, [

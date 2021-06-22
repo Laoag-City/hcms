@@ -13,5 +13,6 @@
     "/js/bulk_print.js": "/js/bulk_print.js?id=dc9be94c9a88ec403505",
     "/js/renew_health_certificate.js": "/js/renew_health_certificate.js?id=ff8e54d9e335eb0b0cb7",
     "/js/new_sanitary_permit.js": "/js/new_sanitary_permit.js?id=d5814747c80d65f3a43a",
-    "/js/sanitary_permit_information.js": "/js/sanitary_permit_information.js?id=f53de1e94e178c616ff2"
+    "/js/sanitary_permit_information.js": "/js/sanitary_permit_information.js?id=fc3fff6d7e49f42787ae",
+    "/js/renew_sanitary_permit.js": "/js/renew_sanitary_permit.js?id=4b002b18173cce4d022b"
 }

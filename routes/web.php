@@ -64,6 +64,8 @@ Route::group(['middleware' => 'auth'], function(){
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	Route::match(['get', 'post'], 'sanitary_permit', 'SanitaryPermitController@createSanitaryPermit');
+
+	Route::match(['get', 'put'], 'sanitary_permit/renew', 'SanitaryPermitController@renewPermit');
 	
 	//Route::match(['get', 'post'], 'sanitary_permit/existing', 'SanitaryPermitController@createSanitaryPermitExistingApplicantBusiness');
 
@@ -72,8 +74,6 @@ Route::group(['middleware' => 'auth'], function(){
 	Route::delete('sanitary_permit/{sanitary_permit}', 'SanitaryPermitController@deletePermit');
 
 	Route::get('sanitary_permit/{sanitary_permit}/preview', 'SanitaryPermitController@printPreview');
-
-	Route::match(['get', 'put'], 'sanitary_permit/renew', 'SanitaryPermitController@renewPermit');
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	//shows business list
