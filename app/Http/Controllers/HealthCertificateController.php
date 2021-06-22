@@ -486,12 +486,15 @@ class HealthCertificateController extends Controller
 
         //dd(Applicant::with('health_certificates')->get()->pluck('health_certificates')->flatten());
 
+        //get all applicant ids
         $all_applicant_ids = DB::table('applicants')->select('applicant_id')->get();
 
         for($i = 0; $i < $all_applicant_ids->count() - 1; $i++)
         {
+            //get current applicant being checked
             $current_record = Applicant::find($all_applicant_ids[$i]->applicant_id);
 
+            //get all duplicates
             $duplicates = Applicant::where([
                 ['applicant_id', '<>', $current_record->applicant_id],
                 ['first_name', '=', $current_record->first_name],
@@ -504,14 +507,17 @@ class HealthCertificateController extends Controller
 
             if($duplicates->isNotEmpty())
             {
+                //get all duplicates' related ids
                 $duplicate_ids = $duplicates->pluck('applicant_id');
                 $health_certificates = $duplicates->pluck('health_certificates')->flatten();
                 $sanitary_permits = $duplicates->pluck('sanitary_permits')->flatten();
 
+                //transfer all duplicates' records to the original applicant and remove all duplicates
                 HealthCertificate::whereIn('applicant_id', $duplicate_ids)->update(['applicant_id', $current_record->applicant_id]);
                 SanitaryPermit::whereIn('applicant_id', $duplicate_ids)->update(['applicant_id', $current_record->applicant_id]);
                 Applicant::whereIn('applicant_id', $duplicate_ids)->delete();
 
+                //remove duplicates' ids in the ids array
                 $all_applicant_ids = $all_applicant_ids->whereNotIn('applicant_id', $duplicate_ids)->values();
             }
         }

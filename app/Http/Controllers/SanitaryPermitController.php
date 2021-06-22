@@ -37,6 +37,44 @@ class SanitaryPermitController extends Controller
     	}
 	}
 
+	public function renewPermit()
+    {
+        $searches = null;
+        $sanitary_permit = null;
+
+        if($this->request->search)
+        {
+            $searches = Applicant::search($this->request->search)
+                                    ->with('sanitary_permits')
+                                    ->get();
+        }
+
+        if($this->request->id)
+        {
+            Validator::make($this->request->all(), [
+                'id' => 'bail|required|exists:sanitary_permits,sanitary_permit_id'
+            ])->validate();
+
+            $sanitary_permit = SanitaryPermit::find($this->request->id);
+        }
+
+        if($this->request->isMethod('get'))
+        {
+            return view('sanitary_permit.renew', [
+                'title' => "Renew A Sanitary Permit",
+                'searches' => $searches,
+                'sanitary_permit' => $sanitary_permit,
+            ]);
+        }
+
+        elseif($this->request->isMethod('put'))
+        {
+            $id = $this->create_edit_logic('renew', $sanitary_permit);
+
+            return redirect("sanitary_permit/{$id}/preview");
+        }
+    }
+
 	/*public function createSanitaryPermitExistingApplicantBusiness()
 	{
 		if($this->request->isMethod('get'))
