@@ -153,7 +153,9 @@ class SanitaryPermitController extends Controller
 
 	private function create_edit_logic($mode, SanitaryPermit $sanitary_permit = null)
 	{
-		$permit_owner_rules = [
+		if($mode == 'add')
+		{
+			$permit_owner_rules = [
 			'business_name' => 'bail|required_if:permit_type,business|alpha_spaces|max:100',
 
 			'first_name' => 'bail|required_if:permit_type,individual|alpha_spaces|max:40',
@@ -164,8 +166,6 @@ class SanitaryPermitController extends Controller
             'gender' => 'bail|required_if:permit_type,individual|in:0,1',
 		];
 
-		if($mode == 'add')
-		{
 			$specific_rules = [
 				'permit_type' => 'bail|required|in:individual,business',
 				'existing_owner' => 'bail|sometimes|required|in:on',
@@ -194,9 +194,26 @@ class SanitaryPermitController extends Controller
 		else
 		{
 			if($sanitary_permit->applicant_id != null)
+			{
+				$permit_owner_rules = [
+					'business_name' => 'bail|nullable|required_with:permit_type|alpha_spaces|max:100',
+				];
+
             	$in_rule = 'business';
+			}
             else
+            {
+            	$permit_owner_rules = [
+					'first_name' => 'bail|nullable|required_with:permit_type|alpha_spaces|max:40',
+            		'middle_name' => 'nullable|bail|alpha_spaces|max:30',
+            		'last_name' => 'bail|nullable|required_with:permit_type|alpha_spaces|max:30',
+            		'suffix_name' => 'nullable|bail|in:Jr.,Sr.,I,II,III,IV,V,VI,VII,VIII,IX,X',
+            		'age' => 'bail|nullable|required_if:permit_type,individual|integer|min:0|max:120',
+            		'gender' => 'bail|nullable|required_with:permit_type|in:0,1',
+				];
+
             	$in_rule = 'individual';
+            }
 
 			if($this->request->update_mode == 'renew')
 			{
