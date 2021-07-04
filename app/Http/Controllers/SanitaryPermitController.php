@@ -53,15 +53,16 @@ class SanitaryPermitController extends Controller
                                     ->get();
 
             $searches = $applicants->concat($businesses);
-        }
 
-        if($this->request->id)
-        {
-            Validator::make($this->request->all(), [
-                'id' => 'bail|required|exists:sanitary_permits,sanitary_permit_id'
-            ])->validate();
+            //if id is present in the request and in the searches
+            if($this->request->id && $searches->pluck('sanitary_permits')->flatten()->where('sanitary_permit_id', $this->request->id)->isNotEmpty())
+	        {
+	            Validator::make($this->request->all(), [
+	                'id' => 'bail|required|exists:sanitary_permits,sanitary_permit_id'
+	            ])->validate();
 
-            $sanitary_permit = SanitaryPermit::find($this->request->id);
+	            $sanitary_permit = SanitaryPermit::find($this->request->id);
+	        }
         }
 
         if($this->request->isMethod('get'))
@@ -156,23 +157,23 @@ class SanitaryPermitController extends Controller
 		if($mode == 'add')
 		{
 			$permit_owner_rules = [
-			'business_name' => 'bail|required_if:permit_type,business|alpha_spaces|max:100',
+				'business_name' => 'bail|required_if:permit_type,business|alpha_spaces|max:100',
 
-			'first_name' => 'bail|required_if:permit_type,individual|alpha_spaces|max:40',
-            'middle_name' => 'nullable|bail|alpha_spaces|max:30',
-            'last_name' => 'bail|required_if:permit_type,individual|alpha_spaces|max:30',
-            'suffix_name' => 'nullable|bail|in:Jr.,Sr.,I,II,III,IV,V,VI,VII,VIII,IX,X',
-            'age' => 'bail|required_if:permit_type,individual|integer|min:0|max:120',
-            'gender' => 'bail|required_if:permit_type,individual|in:0,1',
-		];
+				'first_name' => 'bail|required_if:permit_type,individual|alpha_spaces|max:40',
+	            'middle_name' => 'nullable|bail|alpha_spaces|max:30',
+	            'last_name' => 'bail|required_if:permit_type,individual|alpha_spaces|max:30',
+	            'suffix_name' => 'nullable|bail|in:Jr.,Sr.,I,II,III,IV,V,VI,VII,VIII,IX,X',
+	            'age' => 'bail|required_if:permit_type,individual|integer|min:0|max:120',
+	            'gender' => 'bail|required_if:permit_type,individual|in:0,1',
+			];
 
 			$specific_rules = [
 				'permit_type' => 'bail|required|in:individual,business',
-				'existing_owner' => 'bail|sometimes|required|in:on',
+				'has_existing_registered_name' => 'bail|sometimes|required|in:on',
 				'date_of_issuance' => 'bail|required|date|before_or_equal:today',
 			];
 
-			if($this->request->existing_owner != null)
+			if($this->request->has_existing_registered_name != null)
 			{
 				$exist_rule = '';
 
@@ -183,7 +184,7 @@ class SanitaryPermitController extends Controller
 					$exist_rule = '|exists:businesses,business_id';
 
 				$add_rules = [
-					'permit_owner' => 'bail|required|max:107',
+					'existing_registered_name' => 'bail|required|max:107',
 					'id' => 'bail|required' . $exist_rule,
 				];
 
@@ -193,6 +194,7 @@ class SanitaryPermitController extends Controller
 
 		else
 		{
+			//if else block here are rules when changing permit owner type
 			if($sanitary_permit->applicant_id != null)
 			{
 				$permit_owner_rules = [
@@ -201,6 +203,7 @@ class SanitaryPermitController extends Controller
 
             	$in_rule = 'business';
 			}
+
             else
             {
             	$permit_owner_rules = [
@@ -215,10 +218,10 @@ class SanitaryPermitController extends Controller
             	$in_rule = 'individual';
             }
 
-			if($this->request->update_mode == 'renew')
+			if($mode == 'renew')
 			{
                 $specific_rules = [
-            		'permit_type' => 'bail|nullable|in:' . $in_rule,
+            		'permit_type' => 'bail|sometimes|in:' . $in_rule,
                 	'date_of_issuance' => "bail|required|date|before_or_equal:today|after:{$sanitary_permit->dateToInput('issuance_date')}"
             	];
 			}
@@ -226,7 +229,7 @@ class SanitaryPermitController extends Controller
             else
             {
                 $specific_rules = [
-            		'permit_type' => 'bail|nullable|in:' . $in_rule,
+            		'permit_type' => 'bail|sometimes|in:' . $in_rule,
                 	'update_mode' => 'bail|required|accepted',
                 	'date_of_issuance' => 'bail|required|date|before_or_equal:today'
             	];
@@ -297,6 +300,7 @@ class SanitaryPermitController extends Controller
 
 		else
 		{
+			//if changing permit owner type
 			if($this->request->permit_type != null)
 			{
 				if($this->request->permit_type == 'individual')

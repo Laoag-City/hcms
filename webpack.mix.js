@@ -42,4 +42,8 @@ mix.js('resources/assets/js/app.js', 'public/js')
 
 	.scripts(['resources/assets/js/custom/renew_sanitary_permit.js'], 'public/js/renew_sanitary_permit.js')
 
+	.scripts(['resources/assets/js/custom/business_information.js'], 'public/js/business_information.js')
+
+	.scripts(['resources/assets/js/custom/search_results.js'], 'public/js/search_results.js')
+
 	.version();

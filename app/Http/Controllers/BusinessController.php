@@ -23,6 +23,30 @@ class BusinessController extends Controller
         ]);
     }
 
+    public function viewEditBusiness(Business $business)
+    {
+        if($this->request->isMethod('get'))
+        {
+            return view('business.view_edit', [
+                'title' => $business->business_name,
+                'business' => $business,
+                'sanitary_permits' => $business->sanitary_permits,
+            ]);
+        }
+
+        elseif($this->request->isMethod('put'))
+        {
+            $this->validate($this->request, [
+                'business_name' => 'bail|required_if:permit_type,business|alpha_spaces|max:100',
+            ]);
+
+            $business->business_name = $this->request->business_name;
+            $business->save();
+
+            return back()->with('success', ['header' => 'Business updated successfully!', 'message' => null]);
+        }
+    }
+
     public function searchBusinessesForPermitForm()
     {
         return collect(['results' => Business::search($this->request->q)

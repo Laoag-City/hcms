@@ -50,16 +50,16 @@
 
 						<div class="three wide field field_existing">
 							<div class="ui check checkbox">
-								<label><b>Add Health Certificate to Existing Client</b></label>
-								<input type="checkbox" name="existing_owner" class="field_existing" {{ old('existing_owner') == null ?: 'checked' }}>
+								<label><b>Issue Sanitary Permit to an existing Client or Business</b></label>
+								<input type="checkbox" name="has_existing_registered_name" class="field_existing" {{ old('has_existing_registered_name') == null ?: 'checked' }}>
 							</div>
 						</div>
 
-						<div id="searchPermitOwner" class="six wide field field_existing ui fluid search{!! !$errors->has('permit_owner') 
+						<div id="searchPermitOwner" class="six wide field field_existing ui fluid search{!! !$errors->has('existing_registered_name') 
 							? '" data-content="Type a client\'s name and choose from the suggestions below."' 
-							: ' error" data-content="' . $errors->first('permit_owner') . '"' !!} data-position="top center">
-								<label>Permit Owner:</label>
-								<input class="prompt field_existing" type="text" name="permit_owner" value="{{ old('permit_owner') }}" placeholder="Permit Owner">
+							: ' error" data-content="' . $errors->first('existing_registered_name') . '"' !!} data-position="top center">
+								<label>Existing Registered Name:</label>
+								<input class="prompt field_existing" type="text" name="existing_registered_name" value="{{ old('existing_registered_name') }}" placeholder="Existing Registered Name">
 								<div class="results"></div>
 						</div>
 					</div>

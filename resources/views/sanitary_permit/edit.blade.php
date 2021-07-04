@@ -29,7 +29,7 @@
 						<div class="ten wide column"><!--nested columns-->
 							<h3>
 								<i class="caret right icon"></i>
-								<span style="font-weight: normal;">Registerd Name:</span> 
+								<span style="font-weight: normal;">Registered Name:</span> 
 								<u>{{ $permit->getRegisteredName() }}</u>
 							</h3>
 						</div>
@@ -101,7 +101,7 @@
 
 							else
 							{
-								$switch_to_label = 'Change to individual Client';
+								$switch_to_label = 'Change to Individual Client';
 								$switch_value = 'individual';
 							}
 						@endphp

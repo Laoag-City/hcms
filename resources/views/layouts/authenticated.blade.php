@@ -54,7 +54,19 @@
 			<div class="right menu">
 				<form action="{{ url('search') }}" class="item">
 					<div class="ui action input">
-						<input type="text" name="q" placeholder="Search Clients">
+						<input type="text" name="q" placeholder="Search" required="">
+
+						<select class="ui compact selection dropdown" name="c" required="">
+							<option value="">-- Choose Criteria --</option>
+							<option value="Client Name">Client Name</option>
+							<option value="Business Name">Business Name</option>
+							<option value="HC Reg. No.">HC Reg. No.</option>
+							<option value="SP Number">SP Number</option>
+							<option value="Work Type">Work Type</option>
+							<option value="Establ. Name (HC)">Establ. Name (HC)</option>
+							<option value="Establ. Type (SP)">Establ. Type (SP)</option>
+						</select>
+
 						<button class="ui icon button">
     						<i class="search icon"></i>
   						</button>

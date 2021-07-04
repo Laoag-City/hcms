@@ -57,7 +57,7 @@ Route::group(['middleware' => 'auth'], function(){
 	Route::get('applicant_search', 'ApplicantController@searchApplicantsForCertificateOrPermitForm');
 
 	//searches applicants
-	Route::get('search', 'ApplicantController@searchApplicants');
+	Route::get('search', 'SearchController@viewSearches');
 
 	//bulk-print health certificates
 	//Route::match(['get', 'post'], 'applicant/bulk_print', 'ApplicantController@bulkPrintCertificates');
@@ -78,6 +78,9 @@ Route::group(['middleware' => 'auth'], function(){
 
 	//shows business list
 	Route::get('businesses', 'BusinessController@getBusinesses');
+
+	//view or edit an applicant
+	Route::match(['get', 'put'], 'business/{business}', 'BusinessController@viewEditBusiness');
 
 	//returns businesses that match the search word in create sanitary permit page's whole name field
 	Route::get('business_search', 'BusinessController@searchBusinessesForPermitForm');

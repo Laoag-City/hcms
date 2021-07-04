@@ -11,8 +11,8 @@ $('input[name=permit_type]').change(function(){
 });
 
 //checkbox logic
-$('input[name="existing_owner"]').change(function(){
-	$('.field_individual, .field_business, input[name="id"], input[name="permit_owner"]').val('');
+$('input[name="has_existing_registered_name"]').change(function(){
+	$('.field_individual, .field_business, input[name="id"], input[name="existing_registered_name"]').val('');
 	togglePermitOwner();
 });
 
@@ -25,9 +25,9 @@ $('.ui.search').search({
 			else
 				settings.url = '/business_search?q={query}';
 
-			settings.data = {
-				permit_owner_type: $('input[name=permit_type]:checked').val()
-			};
+			/*settings.data = {
+				existing_registered_name_type: $('input[name=permit_type]:checked').val()
+			};*/
 
 			return settings;
 		}
@@ -42,6 +42,8 @@ $('.ui.search').search({
 	duration: 100,
 
 	searchDelay: 200,
+
+	cache: false,
 
 	fields: {
 		title: 'whole_name',
@@ -83,8 +85,8 @@ function alterFormState(reset_owner_fields = false)
 {
 	if(reset_owner_fields)
 	{
-		$('input[name="id"], input[name=permit_owner], .field_individual, .field_business').val('');
-		$('input[name=existing_owner]').prop('checked', false);
+		$('input[name="id"], input[name=existing_registered_name], .field_individual, .field_business').val('');
+		$('input[name=has_existing_registered_name]').prop('checked', false);
 		togglePermitOwner();
 	}
 
@@ -108,7 +110,7 @@ function alterFormState(reset_owner_fields = false)
 
 function togglePermitOwner()
 {
-	if($('input[name="existing_owner"]').is(':checked'))
+	if($('input[name="has_existing_registered_name"]').is(':checked'))
 	{
 		var class_name = ['fadeIn', 'fadeOut'];
 		var state = ['required', 'disabled'];
@@ -123,7 +125,7 @@ function togglePermitOwner()
 	}
 
 	$('#searchPermitOwner').removeAttr('style').removeClass(class_name[1]).addClass(class_name[0]);
-	$('input[name="permit_owner"').removeAttr(state[1]).attr(state[0], true);
+	$('input[name="existing_registered_name"').removeAttr(state[1]).attr(state[0], true);
 	$('.dynamic_input').attr('readonly', field_state);
 	$('.dynamic_select').attr('disabled', field_state);
 }

@@ -109,10 +109,7 @@
 								<i class="caret right icon"></i>
 								<span style="font-weight: normal;">Name:</span> 
 								<u>
-									{{	$sanitary_permit instanceof App\Applicant 
-											? $sanitary_permit->applicant->formatName()
-											: $sanitary_permit->business->business_name 
-									}}
+									{{	$sanitary_permit->getRegisteredName() }}
 								</u>
 							</h4>
 						</div>
@@ -154,7 +151,7 @@
 
 								else
 								{
-									$switch_to_label = 'Change to individual Client';
+									$switch_to_label = 'Change to Individual Client';
 									$switch_value = 'individual';
 								}
 							@endphp

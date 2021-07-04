@@ -6,14 +6,28 @@ $('input[name=id]').change(function(){
 });
 
 $('.delete.button').click(function(){
-	$('.delete_modal_name').text('Health Certificate');
-	$('#delete_form').attr('action', '/health_certificate' + '/' + $(this).attr('data-id'));
+	$('.delete_modal_name').text('Sanitary Permit');
+	$('#delete_form').attr('action', '/sanitary_permit' + '/' + $(this).attr('data-id'));
 	$('#delete_form').modal('show');
 });
 
 $('input[name=permit_type]').change(function(){
 	switchPermitOwnerType();
 });
+
+if($('input[name=permit_type]').attr('value') == 'individual')
+{
+	$('input.field_individual').attr('readonly', false);
+	$('select.field_individual').attr('disabled', false);
+	$('.field_business').attr('readonly', true);
+}
+
+else
+{
+	$('.field_business').attr('readonly', false);
+	$('input.field_individual').attr('readonly', true);
+	$('select.field_individual').attr('disabled', true);
+}
 
 switchPermitOwnerType();
 

@@ -1,9 +1,10 @@
-let cert_type_duration = {
+/*let cert_type_duration = {
 	years: 0,
 	months: 0,
 	days: 0
-};
+};*/
 
+let certificate_type = "";
 let issuance_date = "";
 
 $(document).ready(function(){
@@ -61,10 +62,12 @@ $('.ui.search').search({
 
 //certificate type logic
 $('select[name=certificate_type]').change(function(){
-	cert_type_duration.years = Number($('option[value="' + this.value + '"]').attr('data-years'));
+	certificate_type = this.value;
+console.log(this.value);
+	/*cert_type_duration.years = Number($('option[value="' + this.value + '"]').attr('data-years'));
 	cert_type_duration.months = Number($('option[value="' + this.value + '"]').attr('data-months'));
 	cert_type_duration.days = Number($('option[value="' + this.value + '"]').attr('data-days'));
-	//getExpirationDate();
+	getExpirationDate();*/
 });
 
 //issuance date logic
@@ -104,7 +107,7 @@ function toggleWholeName()
 
 function getExpirationDate()
 {
-	if($('select[name=certificate_type]').val() != "" && issuance_date != "")
+	/*if($('select[name=certificate_type]').val() != "" && issuance_date != "")
 	{
 		let expiration_date = dayjs(new Date(issuance_date))
 								.add(cert_type_duration.years, 'y')
@@ -116,5 +119,9 @@ function getExpirationDate()
 	}
 
 	else
-		$('input[name=date_of_expiration]').val("");
+		$('input[name=date_of_expiration]').val("");*/
 }
+
+/*
+Commented out expiration-date-related codes are left so because they may be needed in the future.
+*/

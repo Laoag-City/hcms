@@ -140,13 +140,4 @@ class ApplicantController extends Controller
 				    	})
 				   	]);
     }
-
-    public function searchApplicants()
-    {
-    	return view('applicant.search', [
-            'title' => 'Search Results',
-            'keyword' => $this->request->q,
-            'applicants' => Applicant::search($this->request->q)->paginate(150)
-        ]);
-    }
 }

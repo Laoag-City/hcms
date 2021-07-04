@@ -4,10 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Custom\DateToInputFormatter;
+use Sofa\Eloquence\Eloquence;
 
 class HealthCertificate extends Model
 {
     use DateToInputFormatter;
+    use Eloquence;
 
     protected $primaryKey = 'health_certificate_id';
     public const DATES_FORMAT = 'M d, Y';

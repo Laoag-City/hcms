@@ -310,20 +310,21 @@ class HealthCertificateController extends Controller
             $searches = Applicant::search($this->request->search)
                                     ->with('health_certificates')
                                     ->get();
-        }
 
-        if($this->request->id)
-        {
-            Validator::make($this->request->all(), [
-                'id' => 'bail|required|exists:health_certificates,health_certificate_id'
-            ])->validate();
+            //if id is present in the request and in the searches
+            if($this->request->id && $searches->pluck('health_certificates')->flatten()->where('health_certificate_id', $this->request->id)->isNotEmpty())
+            {
+                Validator::make($this->request->all(), [
+                    'id' => 'bail|required|exists:health_certificates,health_certificate_id'
+                ])->validate();
 
-            $health_certificate = HealthCertificate::with(['immunizations', 'stool_and_others', 'xray_sputums'])
-                                                    ->find($this->request->id);
+                $health_certificate = HealthCertificate::with(['immunizations', 'stool_and_others', 'xray_sputums'])
+                                                        ->find($this->request->id);
 
-            $immunization = $health_certificate->immunizations->sortBy('row_number');
-            $stool_and_others = $health_certificate->stool_and_others->sortBy('row_number');
-            $xray_sputum = $health_certificate->xray_sputums->sortBy('row_number');
+                $immunization = $health_certificate->immunizations->sortBy('row_number');
+                $stool_and_others = $health_certificate->stool_and_others->sortBy('row_number');
+                $xray_sputum = $health_certificate->xray_sputums->sortBy('row_number');
+            }
         }
 
         if($this->request->isMethod('get'))
