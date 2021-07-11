@@ -63,16 +63,17 @@ $('.ui.search').search({
 //certificate type logic
 $('select[name=certificate_type]').change(function(){
 	certificate_type = this.value;
+console.log(this.value);
 	/*cert_type_duration.years = Number($('option[value="' + this.value + '"]').attr('data-years'));
 	cert_type_duration.months = Number($('option[value="' + this.value + '"]').attr('data-months'));
-	cert_type_duration.days = Number($('option[value="' + this.value + '"]').attr('data-days'));*/
-	getExpirationDate();
+	cert_type_duration.days = Number($('option[value="' + this.value + '"]').attr('data-days'));
+	getExpirationDate();*/
 });
 
 //issuance date logic
 $('input[name=date_of_issuance]').change(function(){
 	issuance_date = this.value;
-	getExpirationDate();
+	//getExpirationDate();
 });
 
 //submit logic
@@ -106,21 +107,6 @@ function toggleWholeName()
 
 function getExpirationDate()
 {
-	if(certificate_type != "" && issuance_date != "")
-	{
-		var month = dayjs(new Date(issuance_date)).month();
-
-		if(certificate_type == '1 year')
-		{
-
-		}
-
-		else if(certificate_type == '6 months')
-		{
-			if(month <)
-		}
-	}
-
 	/*if($('select[name=certificate_type]').val() != "" && issuance_date != "")
 	{
 		let expiration_date = dayjs(new Date(issuance_date))
