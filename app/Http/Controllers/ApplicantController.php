@@ -92,30 +92,6 @@ class ApplicantController extends Controller
     	}
 	}
 
-    /*Commented out because end users do not need it yet. If they'll need it, update its logic because it is outdated
-    public function bulkPrintCertificates()
-    {
-        if($this->request->isMethod('get'))
-        {
-            return view('applicant.bulk_print', [
-                'title' => 'Bulk Print Health Certificates'
-            ]);
-        }
-
-        elseif($this->request->isMethod('post'))
-        {
-            Validator::make($this->request->all(), [
-                'ids' => 'required|array',
-                'ids.*' => 'distinct|exists:applicants,applicant_id'
-            ])->validate();
-
-            $this->request->session()->flash('print_ids', $this->request->ids);
-
-            return redirect('health_certificate/bulk_print_preview');
-        }
-    }
-    */
-
     public function searchApplicantsForCertificateOrPermitForm()
     {
     	return collect(['results' => Applicant::search($this->request->q)

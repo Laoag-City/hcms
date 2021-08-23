@@ -18,7 +18,7 @@
 						<div class="sixteen wide column">
 							<div class="ui two buttons">
 								<a href="{{ url()->previous() }}" class="ui inverted blue button">Back</a>
-								<a href="{{ url("health_certificate/$health_certificate->health_certificate_id/preview") }}" target="_blank" class="ui inverted green button">Print Preview</a>
+								<a href="{{ url("health_certificate/$health_certificate->health_certificate_id/preview") }}" class="ui inverted green button">Print Preview</a>
 							</div>
 						</div>
 					</div>

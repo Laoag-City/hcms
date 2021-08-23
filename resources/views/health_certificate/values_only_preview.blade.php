@@ -15,10 +15,23 @@
 <body>
 	<div class="no-print">
 		<br>
-		<button onclick="window.location.replace('{{ url('/') }}')">GO BACK</button>
-		<button onclick="window.location.replace('{{ url("applicant/{$health_certificate->applicant->applicant_id}/sanitary_permit/create") }}')">
+		<button onclick="window.location.replace('{{ url()->previous() }}')">GO BACK</button>
+		<button onclick="window.location.replace('{{ url('/') }}')">ADD HEALTH CERTIFICATE</button>
+		<button onclick="window.location.replace('{{ url("/sanitary_permit") }}')">
 			ADD SANITARY PERMIT
 		</button>
+
+		@if(!collect(session()->get('print_ids'))->contains($health_certificate->health_certificate_id))
+			<button onclick="event.preventDefault(); document.getElementById('add_to_bulk_print_form').submit();">
+				ADD TO BULK PRINT LIST
+			</button>
+
+			<form id="add_to_bulk_print_form" action="{{ url('health_certificate/bulk_print_add') }}" method="POST" style="display: none;">
+				{{ csrf_field() }}
+				<input type="hidden" name="id" value="{{ $health_certificate->health_certificate_id }}">
+			</form>
+		@endif
+
 		<button id="print_back" class="pull_right print" style="margin-left: 10px;">PRINT (BACK)</button>
 		<button id="print_front" class="pull_right print">PRINT (FRONT)</button>
 		<br>

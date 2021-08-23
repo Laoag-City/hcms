@@ -191,7 +191,7 @@
 										<i class="dropdown icon"></i>
 										<div class="menu">
 											<a class="item" href="{{ url("health_certificate/$hc->health_certificate_id") }}">Health Certificate Info</a>
-											<a class="item" href="{{ url("health_certificate/$hc->health_certificate_id/preview") }}" target="_blank">Print Preview</a>
+											<a class="item" href="{{ url("health_certificate/$hc->health_certificate_id/preview") }}">Print Preview</a>
 											<button type="button" class="item delete_button" data-type="hc" data-id="{{ $hc->health_certificate_id }}">Remove</button>
 										</div>
 									</div>
@@ -241,7 +241,7 @@
 										<i class="dropdown icon"></i>
 										<div class="menu">
 											<a class="item" href="{{ url("sanitary_permit/$sc->sanitary_permit_id") }}">Sanitary Permit Info</a>
-											<a class="item" href="{{ url("sanitary_permit/$sc->sanitary_permit_id/preview") }}" target="_blank">Print Preview</a>
+											<a class="item" href="{{ url("sanitary_permit/$sc->sanitary_permit_id/preview") }}">Print Preview</a>
 											<button type="button" class="item delete_button" data-type="sp" data-id="{{ $sc->sanitary_permit_id }}">Remove</button>
 										</div>
 									</div>

@@ -27,6 +27,7 @@
 					<a href="{{ url('/') }}" class="item">Add Health Certificate</a>
 					<!--<a href="{{ url('health_certificate/existing_applicant') }}" class="item">Add Health Certificate To Existing Client</a>-->
 					<a href="{{ url('health_certificate/renew') }}" class="item">Renew A Health Certificate</a>
+					<a href="{{ url('health_certificate/bulk_print') }}" class="item">Bulk Print Health Certificates</a>
 				</div>
 			</div>
 
@@ -35,7 +36,7 @@
 				<i class="dropdown icon"></i>
 
 				<div class="menu">
-					<a href="{{ url('sanitary_permit') }}" class="item">New Sanitary Permit</a>
+					<a href="{{ url('sanitary_permit') }}" class="item">Add Sanitary Permit</a>
 					<!--<a href="{{ url('sanitary_permit/existing') }}" class="item">Add Sanitary Permit To Existing Client/Business</a>-->
 					<a href="{{ url('sanitary_permit/renew') }}" class="item">Renew A Sanitary Permit</a>
 				</div>

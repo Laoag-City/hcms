@@ -378,14 +378,95 @@ class HealthCertificateController extends Controller
         ]);
     }
 
-    /*Commented out because end users do not need it yet. If they'll need it, update its logic because it is outdated
+    //Commented out because end users do not need it yet. If they'll need it, update its logic because it is outdated
+    public function bulkPrintCertificates()
+    {
+        if($this->request->isMethod('get'))
+        {
+            $hc_on_bulk_print_list = null;
+
+            if(session()->has('print_ids'))
+                $hc_on_bulk_print_list = HealthCertificate::whereIn('health_certificate_id', session()->get('print_ids'))
+                                            ->with('applicant')
+                                            ->get();
+
+            return view('applicant.bulk_print', [
+                'title' => 'Bulk Print Health Certificates',
+                'health_certificates' => $hc_on_bulk_print_list
+            ]);
+        }
+
+        elseif($this->request->isMethod('post'))
+        {
+            Validator::make($this->request->all(), [
+                'ids' => 'required|array',
+                'ids.*' => 'distinct|exists:health_certificates,health_certificate_id'
+            ])->validate();
+
+            $ids = [];
+
+            foreach($this->request->ids as $id)
+                $ids[] = (int)$id;
+
+            $this->request->session()->forget('print_ids');
+            $this->request->session()->put('print_ids', $ids);
+
+            return redirect('health_certificate/bulk_print_preview');
+        }
+
+        elseif($this->request->isMethod('delete'))
+        {
+            $this->request->session()->forget('print_ids');
+            return back();
+        }
+    }
+
+    public function searchHealthCertificates()
+    {
+        return collect(['results' => Applicant::search($this->request->q)
+                        ->join('health_certificates', 'applicants.applicant_id', '=', 'health_certificates.applicant_id')
+                        ->get()
+                        ->transform(function($item, $key){
+                            return collect([
+                                'id' => $item->health_certificate_id,
+                                'label' => $item->registration_number . ' / ' . $item->formatName(),
+                                'whole_name' => $item->formatName(),
+                                'hc_no' => $item->registration_number,
+                                'basic_info' => "{$item->work_type}, {$item->establishment}"
+                            ]); 
+                        })
+                    ]);
+    }
+
+    public function bulkPrintClear()
+    {
+         $this->request->session()->forget('print_ids');
+         return back();
+    }
+
+    public function bulkPrintAdd()
+    {
+         Validator::make($this->request->all(), [
+            'id' => 'required|exists:health_certificates,health_certificate_id'
+        ])->validate();
+
+        if(session()->has('print_ids'))
+            session()->push('print_ids', (int)$this->request->id);
+
+        else
+            session()->put('print_ids', [(int)$this->request->id]);
+
+        return back();
+    }
+
+    //Commented out because end users do not need it yet. If they'll need it, update its logic because it is outdated
     public function bulkPrintPreview()
     {
         if(session()->has('print_ids'))
         {   //to use the view for printing side-by-side, remove values_only_
             return view('health_certificate.values_only_bulk_print_preview', [
                 'logo' => '/doh_logo.png',
-                'health_certificates' => HealthCertificate::whereIn('applicant_id', session()->get('print_ids'))
+                'health_certificates' => HealthCertificate::whereIn('health_certificate_id', session()->get('print_ids'))
                                             ->with(['applicant', 'immunizations', 'stool_and_others', 'xray_sputums'])
                                             ->get()
             ]);
@@ -394,7 +475,6 @@ class HealthCertificateController extends Controller
         else
             return redirect('/');
     }
-    */
 
     public function savePicture(HealthCertificate $health_certificate)
     {

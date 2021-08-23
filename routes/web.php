@@ -20,6 +20,21 @@ Route::group(['middleware' => 'auth'], function(){
 	//adds another health certificate to an existing applicant
 	//Route::match(['get', 'post'], 'health_certificate/existing_applicant', 'HealthCertificateController@createHealthCertificateExistingApplicant');
 
+	//bulk-print health certificates
+	Route::match(['get', 'post', 'delete'], 'health_certificate/bulk_print', 'HealthCertificateController@bulkPrintCertificates');
+
+	//show bulk print preview
+	Route::get('health_certificate/bulk_print_preview', 'HealthCertificateController@bulkPrintPreview');
+
+	//clear bulk print ids in session
+	Route::post('health_certificate/bulk_print_clear', 'HealthCertificateController@bulkPrintClear');
+
+	//add a single certificate to bulk print list
+	Route::post('health_certificate/bulk_print_add', 'HealthCertificateController@bulkPrintAdd');
+
+	//for bulk print page search input
+	Route::get('health_certificate/search', 'HealthCertificateController@searchHealthCertificates');
+
 	//views and edits a health certificate
 	Route::match(['get', 'put'], 'health_certificate/renew', 'HealthCertificateController@renewCertificate');
 
@@ -41,10 +56,8 @@ Route::group(['middleware' => 'auth'], function(){
 	//shows health certificate list
 	//Route::get('health_certificate', 'HealthCertificateController@getHealthCertificates');
 
-	//show bulk print preview
-	//Route::get('health_certificate/bulk_print_preview', 'HealthCertificateController@bulkPrintPreview');
-
 	Route::get('duplicates', 'HealthCertificateController@removeDuplicateCertificates');
+
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	//shows applicant list
@@ -56,11 +69,6 @@ Route::group(['middleware' => 'auth'], function(){
 	//returns applicants that match the search word in create health certificate and sanitary permit page's whole name field
 	Route::get('applicant_search', 'ApplicantController@searchApplicantsForCertificateOrPermitForm');
 
-	//searches applicants
-	Route::get('search', 'SearchController@viewSearches');
-
-	//bulk-print health certificates
-	//Route::match(['get', 'post'], 'applicant/bulk_print', 'ApplicantController@bulkPrintCertificates');
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	Route::match(['get', 'post'], 'sanitary_permit', 'SanitaryPermitController@createSanitaryPermit');
@@ -74,6 +82,7 @@ Route::group(['middleware' => 'auth'], function(){
 	Route::delete('sanitary_permit/{sanitary_permit}', 'SanitaryPermitController@deletePermit');
 
 	Route::get('sanitary_permit/{sanitary_permit}/preview', 'SanitaryPermitController@printPreview');
+
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	//shows business list
@@ -86,6 +95,11 @@ Route::group(['middleware' => 'auth'], function(){
 	Route::get('business_search', 'BusinessController@searchBusinessesForPermitForm');
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	//searches applicants
+	Route::get('search', 'SearchController@viewSearches');
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	//user administration
 	Route::group(['middleware' => 'can:is-admin'], function(){

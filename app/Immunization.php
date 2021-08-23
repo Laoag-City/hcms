@@ -18,12 +18,12 @@ class Immunization extends Model
 
     public function getDateAttribute($value)
     {
-        return date('M. d, Y', strtotime($value));
+        return date('M d, Y', strtotime($value));
     }
 
     public function getExpirationDateAttribute($value)
     {
-        return date('M. d, Y', strtotime($value));
+        return date('M d, Y', strtotime($value));
     }
 
     public function dateToInput($attribute)
