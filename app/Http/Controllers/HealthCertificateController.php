@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Validator;
 use App\Applicant;
 use App\HealthCertificate;
+use App\SanitaryPermit;
 use App\Immunization;
 use App\XRaySputum;
 use App\StoolAndOther;
@@ -569,6 +570,7 @@ class HealthCertificateController extends Controller
 
         //get all applicant ids
         $all_applicant_ids = DB::table('applicants')->select('applicant_id')->get();
+        $removed_ids = collect([]);
 
         for($i = 0; $i < $all_applicant_ids->count() - 1; $i++)
         {
@@ -584,24 +586,27 @@ class HealthCertificateController extends Controller
                 ['suffix_name', '=', $current_record->suffix_name],
                 ['age', '=', $current_record->age],
                 ['gender', '=', $current_record->gender]
-            ])->with(['health_certificates', 'sanitary_permits'])->get();
+            ])->get();
 
             if($duplicates->isNotEmpty())
             {
                 //get all duplicates' related ids
                 $duplicate_ids = $duplicates->pluck('applicant_id');
-                $health_certificates = $duplicates->pluck('health_certificates')->flatten();
-                $sanitary_permits = $duplicates->pluck('sanitary_permits')->flatten();
 
                 //transfer all duplicates' records to the original applicant and remove all duplicates
-                HealthCertificate::whereIn('applicant_id', $duplicate_ids)->update(['applicant_id', $current_record->applicant_id]);
-                SanitaryPermit::whereIn('applicant_id', $duplicate_ids)->update(['applicant_id', $current_record->applicant_id]);
-                Applicant::whereIn('applicant_id', $duplicate_ids)->delete();
+                HealthCertificate::whereIn('applicant_id', $duplicate_ids->toArray())->update(['applicant_id' => $current_record->applicant_id]);
+                SanitaryPermit::whereIn('applicant_id', $duplicate_ids->toArray())->update(['applicant_id' => $current_record->applicant_id]);
+                Applicant::whereIn('applicant_id', $duplicate_ids->toArray())->delete();
+
+                $removed_ids->push($duplicate_ids);
 
                 //remove duplicates' ids in the ids array
                 $all_applicant_ids = $all_applicant_ids->whereNotIn('applicant_id', $duplicate_ids)->values();
             }
         }
+
+        dd($removed_ids);
+        //The algorithm works. Now integrate it to the system and not only to a test route.
     }
 
     private function create_edit_logic($mode, HealthCertificate $health_certificate = null)
