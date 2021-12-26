@@ -584,7 +584,7 @@ class HealthCertificateController extends Controller
                 ['middle_name', '=', $current_record->middle_name],
                 ['last_name', '=', $current_record->last_name],
                 ['suffix_name', '=', $current_record->suffix_name],
-                ['age', '=', $current_record->age],
+                //['age', '=', $current_record->age],
                 ['gender', '=', $current_record->gender]
             ])->get();
 
@@ -598,14 +598,36 @@ class HealthCertificateController extends Controller
                 SanitaryPermit::whereIn('applicant_id', $duplicate_ids->toArray())->update(['applicant_id' => $current_record->applicant_id]);
                 Applicant::whereIn('applicant_id', $duplicate_ids->toArray())->delete();
 
-                $removed_ids->push($duplicate_ids);
+                $removed_ids->push($duplicates);
 
                 //remove duplicates' ids in the ids array
                 $all_applicant_ids = $all_applicant_ids->whereNotIn('applicant_id', $duplicate_ids)->values();
             }
         }
 
-        dd($removed_ids);
+        if($removed_ids->isNotEmpty())
+        {
+            $removed_ids = $removed_ids->flatten(1);
+            $date = date('M-d-Y_h-i-s', strtotime('now'));
+            $file = fopen(storage_path("app\\removed_duplicates_$date.csv"), 'w');
+
+            foreach($removed_ids as $applicant)
+            {
+                fputcsv($file, [
+                    $applicant->applicant_id,
+                    $applicant->first_name,
+                    $applicant->middle_name,
+                    $applicant->last_name,
+                    $applicant->suffix_name,
+                    $applicant->age,
+                    $applicant->gender,
+                    $applicant->created_at,
+                    $applicant->updated_at
+                ]);
+            }
+
+            fclose($file);
+        }
         //The algorithm works. Now integrate it to the system and not only to a test route.
     }
 
