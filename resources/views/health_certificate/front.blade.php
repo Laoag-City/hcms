@@ -51,8 +51,8 @@
 					</div>
 
 					<div class="pull_right" style="margin-top: 9pt;">
-						<b class="label standard_font text-center" style="display: block; width: 110pt;">RENATO R. MATEO, M.D.</b>
-						<div class="label standard_font text-center" style="display: block;">City Health Officer</div>
+						<b class="label standard_font text-center" style="display: block; width: 110pt;">JOSEPH D. ADAYA, M.D.</b>
+						<div class="label standard_font text-center" style="display: block;">OIC - City Health Officer</div>
 					</div>
 				</div>
 

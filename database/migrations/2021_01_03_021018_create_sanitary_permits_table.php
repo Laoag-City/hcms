@@ -20,7 +20,7 @@ class CreateSanitaryPermitsTable extends Migration
             $table->string('establishment_type');
             $table->smallInteger('total_employees')->unsigned()->nullable();
             $table->string('brgy', 40)->nullable();
-            $table->string('address');
+            $table->string('street')->nullable();
             $table->string('sanitary_permit_number', 11)->unique();
             $table->date('issuance_date');
             $table->date('expiration_date');

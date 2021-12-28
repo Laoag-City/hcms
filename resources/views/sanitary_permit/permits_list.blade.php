@@ -11,7 +11,6 @@
 	<div class="ui attached segment">
 		<div class="ui stackable centered grid">
 			<div class="sixteen wide column center aligned">
-				<h3 class="ui left aligned header">{{ $applicant->formatName() }}</h3>
 
 				<table class="ui center aligned striped celled table">
 					<thead>

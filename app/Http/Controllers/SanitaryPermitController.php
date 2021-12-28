@@ -82,6 +82,21 @@ class SanitaryPermitController extends Controller
         }
     }
 
+    public function SanitaryPermitsList()
+    {
+    	$sanitary_permits = null;
+
+    	if($this->request->brgy)
+    		$sanitary_permits = SanitaryPermit::where('brgy', 'like', "%{$this->request->brgy}%")
+    										->orWhere('street', 'like', "%{$this->request->brgy}%")
+    										->paginate(150);
+
+    	return view('sanitary_permit.permits_list', [
+			'title' => "Sanitary Permits List",
+			'sanitary_permits' => $sanitary_permits
+		]);
+    }
+
 	/*public function createSanitaryPermitExistingApplicantBusiness()
 	{
 		if($this->request->isMethod('get'))
@@ -241,7 +256,7 @@ class SanitaryPermitController extends Controller
 			'date_of_expiration' => 'bail|required|date|after:date_of_issuance',
 			'total_employees' => 'bail|required|integer|min:1',
 			'brgy' => 'bail|required|string',
-			'address' => 'bail|required|string|max:150',
+			'street' => 'bail|nullable|string|max:150',
 			'sanitary_inspector' => 'bail|required|string|alpha_spaces|max:100'
 		]))->validate();
 
@@ -293,7 +308,7 @@ class SanitaryPermitController extends Controller
 			$sanitary_permit->establishment_type = $this->request->establishment_type;
 			$sanitary_permit->total_employees = $this->request->total_employees;
 			$sanitary_permit->brgy = $this->request->brgy;
-			$sanitary_permit->address = $this->request->address;
+			$sanitary_permit->street = $this->request->street;
 			$sanitary_permit->issuance_date = $this->request->date_of_issuance;
 			$sanitary_permit->expiration_date = $this->request->date_of_expiration;
 			$sanitary_permit->sanitary_inspector = $this->request->sanitary_inspector;
@@ -336,7 +351,7 @@ class SanitaryPermitController extends Controller
 			$sanitary_permit->establishment_type = $this->request->establishment_type;
 			$sanitary_permit->total_employees = $this->request->total_employees;
 			$sanitary_permit->brgy = $this->request->brgy;
-			$sanitary_permit->address = $this->request->address;
+			$sanitary_permit->street = $this->request->street;
 			$sanitary_permit->issuance_date = $this->request->date_of_issuance;
 			$sanitary_permit->expiration_date = $this->request->date_of_expiration;
 			$sanitary_permit->sanitary_inspector = $this->request->sanitary_inspector;

@@ -24,6 +24,11 @@ class SanitaryPermit extends Model
         return $this->belongsTo('App\Business', 'business_id', 'business_id');
     }
 
+    public function getAddressAttribute()
+    {
+        return "{$this->brgy} {$this->street}";
+    }
+
     public function getIssuanceDateAttribute($value)
     {
         return date(self::DATES_FORMAT, strtotime($value));

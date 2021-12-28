@@ -74,6 +74,8 @@ Route::group(['middleware' => 'auth'], function(){
 	Route::match(['get', 'post'], 'sanitary_permit', 'SanitaryPermitController@createSanitaryPermit');
 
 	Route::match(['get', 'put'], 'sanitary_permit/renew', 'SanitaryPermitController@renewPermit');
+
+	Route::get('sanitary_permit/list', 'SanitaryPermitController@SanitaryPermitsList');
 	
 	//Route::match(['get', 'post'], 'sanitary_permit/existing', 'SanitaryPermitController@createSanitaryPermitExistingApplicantBusiness');
 
