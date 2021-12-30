@@ -100,7 +100,7 @@ class Kernel extends ConsoleKernel
 
                 fclose($file);
 
-                Log::info('Successfully saved the removed applicant duplicates at ' . storage_path("app\\removed_duplicates_$date.csv");
+                Log::info('Successfully saved the removed applicant duplicates at ' . storage_path("app\\removed_duplicates_$date.csv"));
             }
         })->weekly()->mondays()->at('08:00');
     }

@@ -44,53 +44,55 @@
 
 						<h3 style="text-align: left;">Search results for <u>{{ Request::input('search') }}</u></h3>
 
-						<table class="ui striped selectable center aligned structured celled padded table">
-							<thead>
-								<tr>
-									<th>Name</th>
-									<th class="collapsing">Registration No.</th>
-									<th>Work Type</th>
-									<th>Establishment</th>
-									<th class="collapsing">Expired</th>
-									<th class="collapsing">Issuance Date</th>
-									<th class="collapsing">Expiration Date</th>
-									<th class="collapsing">Renew</th>
-									<th class="collapsing">Delete</th>
-								</tr>
-							</thead>
+						<div style="max-height: 600px; overflow: auto;">
+							<table class="ui striped selectable center aligned structured celled padded table">
+								<thead>
+									<tr>
+										<th>Name</th>
+										<th class="collapsing">Registration No.</th>
+										<th>Work Type</th>
+										<th>Establishment</th>
+										<th class="collapsing">Expired</th>
+										<th class="collapsing">Issuance Date</th>
+										<th class="collapsing">Expiration Date</th>
+										<th class="collapsing">Renew</th>
+										<th class="collapsing">Delete</th>
+									</tr>
+								</thead>
 
-							<tbody>
-								@foreach($searches as $search)
-									@foreach($search->health_certificates as $hc)
-										@php
-											$expired = $hc->checkIfExpired();
-										@endphp
+								<tbody>
+									@foreach($searches as $search)
+										@foreach($search->health_certificates as $hc)
+											@php
+												$expired = $hc->checkIfExpired();
+											@endphp
 
-										<tr>
-											<td>{{ $search->formatName() }}</td>
-											<td>{{ $hc->registration_number }}</td>
-											<td>{{ $hc->work_type }}</td>
-											<td>{{ $hc->establishment }}</td>
-											@if($expired)
-												<td class="error">Yes</td>
-											@else
-												<td>No</td>
-											@endif
-											<td>{{ $hc->issuance_date }}</td>
-											<td>{{ $hc->expiration_date }}</td>
+											<tr>
+												<td>{{ $search->formatName() }}</td>
+												<td>{{ $hc->registration_number }}</td>
+												<td>{{ $hc->work_type }}</td>
+												<td>{{ $hc->establishment }}</td>
+												@if($expired)
+													<td class="error">Yes</td>
+												@else
+													<td>No</td>
+												@endif
+												<td>{{ $hc->issuance_date }}</td>
+												<td>{{ $hc->expiration_date }}</td>
 
-											<td>
-												<input type="radio" name="id" value="{{ $hc->health_certificate_id }}" {{ Request::input('id') != $hc->health_certificate_id ?: 'checked'}}>
-											</td>
+												<td>
+													<input type="radio" name="id" value="{{ $hc->health_certificate_id }}" {{ Request::input('id') != $hc->health_certificate_id ?: 'checked'}}>
+												</td>
 
-											<td>
-												<button type="button" class="ui mini red delete button" data-id="{{ $hc->health_certificate_id }}">Remove</button>
-											</td>
-										</tr>
+												<td>
+													<button type="button" class="ui mini red delete button" data-id="{{ $hc->health_certificate_id }}">Remove</button>
+												</td>
+											</tr>
+										@endforeach
 									@endforeach
-								@endforeach
-							</tbody>
-						</table>
+								</tbody>
+							</table>
+						</div>
 					@endif
 				</form>
 			</div>

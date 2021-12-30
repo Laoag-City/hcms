@@ -84,12 +84,26 @@ class SanitaryPermitController extends Controller
 
     public function SanitaryPermitsList()
     {
-    	$sanitary_permits = null;
+    	$sanitary_permits = [];
 
     	if($this->request->brgy)
-    		$sanitary_permits = SanitaryPermit::where('brgy', 'like', "%{$this->request->brgy}%")
-    										->orWhere('street', 'like', "%{$this->request->brgy}%")
-    										->paginate(150);
+    	{
+    		$alternate_brgy_number = null;
+
+    		if(str_contains($this->request->brgy, '-'))
+    			$alternate_brgy_number = str_replace('-', '', $this->request->brgy);
+
+    		if($alternate_brgy_number == null)
+	    		$sanitary_permits = SanitaryPermit::where('brgy', 'like', "%{$this->request->brgy}%")
+	    										->orWhere('street', 'like', "%{$this->request->brgy}%");
+
+	    	else
+	    		$sanitary_permits = SanitaryPermit::where('brgy', 'like', "%{$this->request->brgy}%")
+	    										->orWhere('street', 'like', "%{$this->request->brgy}%")
+	    										->orWhere('street', 'like', "%$alternate_brgy_number%");
+
+	    	$sanitary_permits = $sanitary_permits->paginate(150);
+    	}
 
     	return view('sanitary_permit.permits_list', [
 			'title' => "Sanitary Permits List",

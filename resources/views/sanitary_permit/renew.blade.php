@@ -44,53 +44,55 @@
 
 						<h3 style="text-align: left;">Search results for <u>{{ Request::input('search') }}</u></h3>
 
-						<table class="ui striped selectable center aligned structured celled padded table">
-							<thead>
-								<tr>
-									<th>Name</th>
-									<th class="collapsing">Sanitary Permit No.</th>
-									<th>Establishment Type</th>
-									<th>Address</th>
-									<th class="collapsing">Expired</th>
-									<th class="collapsing">Issuance Date</th>
-									<th class="collapsing">Expiration Date</th>
-									<th class="collapsing">Renew</th>
-									<th class="collapsing">Delete</th>
-								</tr>
-							</thead>
+						<div style="max-height: 600px; overflow: auto;">
+							<table class="ui striped selectable center aligned structured celled padded table">
+								<thead>
+									<tr>
+										<th>Name</th>
+										<th class="collapsing">Sanitary Permit No.</th>
+										<th>Establishment Type</th>
+										<th>Address</th>
+										<th class="collapsing">Expired</th>
+										<th class="collapsing">Issuance Date</th>
+										<th class="collapsing">Expiration Date</th>
+										<th class="collapsing">Renew</th>
+										<th class="collapsing">Delete</th>
+									</tr>
+								</thead>
 
-							<tbody>
-								@foreach($searches as $search)
-									@foreach($search->sanitary_permits as $sp)
-										@php
-											$expired = $sp->checkIfExpired();
-										@endphp
+								<tbody>
+									@foreach($searches as $search)
+										@foreach($search->sanitary_permits as $sp)
+											@php
+												$expired = $sp->checkIfExpired();
+											@endphp
 
-										<tr>
-											<td>{{ $search instanceof App\Applicant ? $search->formatName() : $search->business_name }}</td>
-											<td>{{ $sp->sanitary_permit_number }}</td>
-											<td>{{ $sp->establishment_type }}</td>
-											<td>{{ $sp->address }}</td>
-											@if($expired)
-												<td class="error">Yes</td>
-											@else
-												<td>No</td>
-											@endif
-											<td>{{ $sp->issuance_date }}</td>
-											<td>{{ $sp->expiration_date }}</td>
+											<tr>
+												<td>{{ $search instanceof App\Applicant ? $search->formatName() : $search->business_name }}</td>
+												<td>{{ $sp->sanitary_permit_number }}</td>
+												<td>{{ $sp->establishment_type }}</td>
+												<td>{{ $sp->address }}</td>
+												@if($expired)
+													<td class="error">Yes</td>
+												@else
+													<td>No</td>
+												@endif
+												<td>{{ $sp->issuance_date }}</td>
+												<td>{{ $sp->expiration_date }}</td>
 
-											<td>
-												<input type="radio" name="id" value="{{ $sp->sanitary_permit_id }}" {{ Request::input('id') != $sp->sanitary_permit_id ?: 'checked'}}>
-											</td>
+												<td>
+													<input type="radio" name="id" value="{{ $sp->sanitary_permit_id }}" {{ Request::input('id') != $sp->sanitary_permit_id ?: 'checked'}}>
+												</td>
 
-											<td>
-												<button type="button" class="ui mini red delete button" data-id="{{ $sp->sanitary_permit_id }}">Remove</button>
-											</td>
-										</tr>
+												<td>
+													<button type="button" class="ui mini red delete button" data-id="{{ $sp->sanitary_permit_id }}">Remove</button>
+												</td>
+											</tr>
+										@endforeach
 									@endforeach
-								@endforeach
-							</tbody>
-						</table>
+								</tbody>
+							</table>
+						</div>
 					@endif
 				</form>
 			</div>
