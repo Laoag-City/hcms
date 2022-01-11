@@ -7,15 +7,15 @@
 				</div>
 
 				<div>
-					<p class="text-center standard_font no_margin" style="margin-top: 13.5pt;">
+					<p class="text-center smaller_font no_margin" style="margin-top: 13.5pt;">
 						THIS HEALTH CERTIFICATE IS NON-TRANSFERABLE. ALWAYS WEAR YOUR CERTIFICATE IN THE UPPER LEFT SIDE FRONT PORTION OF YOUR GARMENT WHILE WORKING. VALID ONLY UNTIL THE NEXT DATE OF EXAMINATION, AS INDICATED BELOW.
 					</p>
 				</div>
 
 				<div class="text-center">
 					<div style="display: inline-block;">
-						<div class="field standard_font dates" style="margin-top: 15pt;">
-							{{ $health_certificate->issuance_date }}
+						<div class="field standard_font dates" style="margin-top: 10pt;">
+							<b>{{ $health_certificate->issuance_date }}</b>
 						</div>
 
 						<div class="standard_font">
@@ -25,8 +25,8 @@
 					
 
 					<div style="display: inline-block;">
-						<div class="field standard_font dates" style="margin-top: 15pt;">
-							{{ $health_certificate->expiration_date }}
+						<div class="field standard_font dates" style="margin-top: 10pt;">
+							<b>{{ $health_certificate->expiration_date }}</b>
 						</div>
 
 						<div class="standard_font">

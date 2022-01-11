@@ -149,7 +149,7 @@
 				    	<div class="two wide field
 						{!! !$errors->has('total_employees') ? '"' : ' error" data-content="' . $errors->first('total_employees') . '" data-position="top center"' !!}>
 				    		<label>Total Employees:</label>
-				    		<input type="number" min="1" name="total_employees" value="{{ old('total_employees') }}">
+				    		<input type="number" name="total_employees" value="{{ old('total_employees') }}">
 				    	</div>
 					</div>
 

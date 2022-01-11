@@ -16,7 +16,9 @@ mix.js('resources/assets/js/app.js', 'public/js')
 
 	.styles(['resources/assets/css/create_health_certificate.css'], 'public/css/create_health_certificate.css')
 
-	.styles(['resources/assets/css/camera.css'], 'public/css/camera.css')
+	.styles(['resources/assets/css/print_health_certificate_values_only.css'], 'public/css/print_health_certificate_values_only.css')
+
+	.styles(['resources/assets/css/print_health_certificate.css'], 'public/css/print_health_certificate.css')
 
 	.scripts(['resources/assets/js/custom/authenticated.js'], 'public/js/authenticated.js')
 

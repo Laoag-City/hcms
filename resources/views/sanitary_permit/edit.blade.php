@@ -230,7 +230,7 @@
 				    	<div class="two wide field
 						{!! !$errors->has('total_employees') ? '"' : ' error" data-content="' . $errors->first('total_employees') . '" data-position="top center"' !!}>
 				    		<label>Total Employees:</label>
-				    		<input type="number" min="1" name="total_employees" value="{{ old('total_employees') ? old('total_employees') : $permit->total_employees }}">
+				    		<input type="number" name="total_employees" value="{{ old('total_employees') ? old('total_employees') : $permit->total_employees }}">
 				    	</div>
 					</div>
 
@@ -338,7 +338,7 @@
 
 				    	<div class="three wide field{!! !$errors->has('date_of_expiration') ? '"' : ' error" data-content="' . $errors->first('date_of_expiration') . '" data-position="top center"' !!}>
 				    		<label>Date of Expiration:</label>
-				    		<input type="date" name="date_of_expiration" value="{{ $permit->dateToInput('expiration_date') }}" class="dynamic_input" readonly="true">
+				    		<input type="date" name="date_of_expiration" value="{{ old('date_of_expiration') ? old('date_of_expiration') : $permit->dateToInput('expiration_date') }}" class="dynamic_input">
 				    	</div>
 					</div>
 

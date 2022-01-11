@@ -95,12 +95,12 @@ class SanitaryPermitController extends Controller
 
     		if($alternate_brgy_number == null)
 	    		$sanitary_permits = SanitaryPermit::where('brgy', 'like', "%{$this->request->brgy}%")
-	    										->orWhere('street', 'like', "%{$this->request->brgy}%");
+	    										->orWhere('street', 'like', "% {$this->request->brgy} %");
 
 	    	else
 	    		$sanitary_permits = SanitaryPermit::where('brgy', 'like', "%{$this->request->brgy}%")
-	    										->orWhere('street', 'like', "%{$this->request->brgy}%")
-	    										->orWhere('street', 'like', "%$alternate_brgy_number%");
+	    										->orWhere('street', 'like', "% {$this->request->brgy} %")
+	    										->orWhere('street', 'like', "% $alternate_brgy_number %");
 
 	    	$sanitary_permits = $sanitary_permits->paginate(150);
     	}
@@ -186,7 +186,7 @@ class SanitaryPermitController extends Controller
 		if($mode == 'add')
 		{
 			$permit_owner_rules = [
-				'business_name' => 'bail|required_if:permit_type,business|alpha_spaces|max:100',
+				'business_name' => 'bail|required_if:permit_type,business|max:100',
 
 				'first_name' => 'bail|required_if:permit_type,individual|alpha_spaces|max:40',
 	            'middle_name' => 'nullable|bail|alpha_spaces|max:30',
@@ -227,7 +227,7 @@ class SanitaryPermitController extends Controller
 			if($sanitary_permit->applicant_id != null)
 			{
 				$permit_owner_rules = [
-					'business_name' => 'bail|nullable|required_with:permit_type|alpha_spaces|max:100',
+					'business_name' => 'bail|nullable|required_with:permit_type|max:100',
 				];
 
             	$in_rule = 'business';
@@ -268,7 +268,7 @@ class SanitaryPermitController extends Controller
 		Validator::make($this->request->all(), array_merge($specific_rules, $permit_owner_rules, [
 			'establishment_type' => 'bail|required|string|max:100',
 			'date_of_expiration' => 'bail|required|date|after:date_of_issuance',
-			'total_employees' => 'bail|required|integer|min:1',
+			'total_employees' => 'bail|required|integer|min:0',
 			'brgy' => 'bail|required|string',
 			'street' => 'bail|nullable|string|max:150',
 			'sanitary_inspector' => 'bail|required|string|alpha_spaces|max:100'

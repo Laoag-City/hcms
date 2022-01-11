@@ -10,7 +10,7 @@
     <script>window.Laravel = {!! json_encode(['csrfToken' => csrf_token(), ]) !!};</script>
 	<title>Health Certificate</title>
 
-	<link rel="stylesheet" href="{{ mix('/css/camera.css') }}">
+	<link rel="stylesheet" href="{{ mix('/css/print_health_certificate.css') }}">
 </head>
 <body>
 	<div class="no-print">
