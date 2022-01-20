@@ -646,7 +646,7 @@ class HealthCertificateController extends Controller
                 'middle_name' => 'nullable|bail|alpha_spaces|max:30',
                 'last_name' => 'bail|required|alpha_spaces|max:30',
                 'suffix_name' => 'nullable|bail|in:Jr.,Sr.,I,II,III,IV,V,VI,VII,VIII,IX,X',
-                'age' => 'bail|required|integer|min:15|max:65',
+                'age' => 'bail|required|integer|min:15|max:100',
                 'gender' => 'bail|required|in:0,1',
 
                 'date_of_issuance' => 'bail|required|date|before_or_equal:today',
@@ -692,7 +692,7 @@ class HealthCertificateController extends Controller
             }
 
             $create_or_edit_rules = array_merge($specific_rules, [
-                'age' => 'bail|required|integer|min:15|max:65'
+                'age' => 'bail|required|integer|min:15|max:100'
 
             ]);
             /*$old_health_certificate = $health_certificate->replicate();

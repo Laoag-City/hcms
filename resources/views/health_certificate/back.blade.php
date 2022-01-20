@@ -7,7 +7,7 @@
 				</div>
 
 				<div>
-					<p class="text-center smaller_font no_margin" style="margin-top: 13.5pt;">
+					<p class="text-center no_margin" style="margin-top: 14pt; font-size: 10pt;">
 						THIS HEALTH CERTIFICATE IS NON-TRANSFERABLE. ALWAYS WEAR YOUR CERTIFICATE IN THE UPPER LEFT SIDE FRONT PORTION OF YOUR GARMENT WHILE WORKING. VALID ONLY UNTIL THE NEXT DATE OF EXAMINATION, AS INDICATED BELOW.
 					</p>
 				</div>

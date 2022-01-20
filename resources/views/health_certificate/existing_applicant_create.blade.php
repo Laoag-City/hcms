@@ -86,7 +86,7 @@
 						<div class="two wide field
 						{!! !$errors->has('age') ? '"' : ' error" data-content="' . $errors->first('age') . '" data-position="top center"' !!}>
 							<label>Age:</label>
-							<input type="number" name="age" value="{{ old('age') }}" min="15" max="65">
+							<input type="number" name="age" value="{{ old('age') }}" min="15" max="100">
 						</div>
 						
 						<div class="two wide field

@@ -175,12 +175,19 @@ td:nth-child(3), th:nth-child(3)
 	float: left;
 }
 
+#front_preview
+{
+	margin-left: 6pt !important;
+	margin-right: 3pt !important;
+}
+
 #outer_border
 {
 	/*margin: 18pt;*/
+	margin-top: 6pt;
 	border: 2.25pt solid black;
-	width: 298pt;
-	height: 285.75pt;
+	width: 292pt;
+	height: 298pt;
 	
 }
 
@@ -188,12 +195,12 @@ td:nth-child(3), th:nth-child(3)
 {
 	margin: 2.25pt;
 	border: 1.125pt solid black;
-	height: 279pt;
+	height: 291pt;
 }
 
 #contents
 {
-	margin: 6.75pt 10.5pt 6.75pt 10.5pt;
+	margin: 6.75pt 7.5pt 6.75pt 7.5pt;
 	overflow: hidden;
 }
 
@@ -213,11 +220,12 @@ td:nth-child(3), th:nth-child(3)
 	width: 49.5pt;
 }
 
-/*#header_2
+#header_2
 {
-	margin-right: 10pt;
-	margin-left: 10pt;
-}*/
+	/*margin-right: 10pt;
+	margin-left: 10pt;*/
+	margin-top: 8pt;
+}
 
 #reg_number
 {
