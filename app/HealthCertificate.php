@@ -4,14 +4,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Custom\DateToInputFormatter;
+use Sofa\Eloquence\Eloquence;
 
 class HealthCertificate extends Model
 {
     use DateToInputFormatter;
+    use Eloquence;
 
-    protected $primaryKey = 'applicant_id';
-    public $incrementing = false;
-    public const DATES_FORMAT = 'M. d, Y';
+    protected $primaryKey = 'health_certificate_id';
+    public const DATES_FORMAT = 'M d, Y';
     public const CERTIFICATE_TYPES = [
         'Yellow' => [
             'string' => '6 months',
@@ -34,17 +35,17 @@ class HealthCertificate extends Model
 
     public function immunizations()
     {
-    	return $this->hasMany('App\Immunization', 'applicant_id', 'applicant_id');
+    	return $this->hasMany('App\Immunization', 'health_certificate_id', 'health_certificate_id');
     }
 
     public function stool_and_others()
     {
-    	return $this->hasMany('App\StoolAndOther', 'applicant_id', 'applicant_id');
+    	return $this->hasMany('App\StoolAndOther', 'health_certificate_id', 'health_certificate_id');
     }
 
     public function xray_sputums()
     {
-    	return $this->hasMany('App\XRaySputum', 'applicant_id', 'applicant_id');
+    	return $this->hasMany('App\XRaySputum', 'health_certificate_id', 'health_certificate_id');
     }
 
     public function getIssuanceDateAttribute($value)

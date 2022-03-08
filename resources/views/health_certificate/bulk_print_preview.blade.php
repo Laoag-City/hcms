@@ -10,12 +10,12 @@
     <script>window.Laravel = {!! json_encode(['csrfToken' => csrf_token(), ]) !!};</script>
 	<title>Print Selected Health Certificates</title>
 
-	<link rel="stylesheet" href="{{ mix('/css/camera.css') }}">
+	<link rel="stylesheet" href="{{ mix('/css/print_health_certificate.css') }}">
 </head>
 <body>
 	<div class="no-print">
 		<br>
-		<button onclick="window.location.replace('{{ url('/') }}')">GO BACK</button>
+		<button onclick="window.location.replace('{{ url()->previous() }}')">GO BACK</button>
 		<!--<button id="print_back" class="pull_right print" style="margin-left: 10px;">PRINT (BACK)</button>-->
 		<button onclick="window.print()" class="pull_right print">PRINT</button>
 		<hr>
@@ -42,7 +42,6 @@
 				</div>
 			</div>
 
-			<br>
 			<br>
 		@endforeach
 	</div>

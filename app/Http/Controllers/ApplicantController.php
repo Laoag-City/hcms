@@ -20,19 +20,9 @@ class ApplicantController extends Controller
 
 	public function getApplicants()
 	{
-        $applicants = Applicant::with('health_certificate')->orderBy('last_name', 'asc')->paginate(150);
-        $not_yet_expired = $applicants->pluck('health_certificate')->where('is_expired', false);
-
-        if($not_yet_expired->isNotEmpty())
-        {
-            foreach($not_yet_expired as $certificate)
-                if($certificate != null)
-                    $certificate->checkIfExpired();
-        }
-
 		return view('applicant.index', [
     		'title' => 'Clients',
-    		'applicants' => $applicants
+    		'applicants' => Applicant::orderBy('updated_at', 'desc')->paginate(150)
     	]);
 	}
 
@@ -43,7 +33,9 @@ class ApplicantController extends Controller
     		return view('applicant.view_edit', [
     			'title' => $applicant->formatName(),
     			'applicant' => $applicant,
-                'picture_url' => $applicant->health_certificate ? (new CertificateFileGenerator($applicant->health_certificate))->getPicturePathAndURL()['url'] : null
+                'health_certificates' => $applicant->health_certificates,
+                'sanitary_permits' => $applicant->sanitary_permits,
+                'picture_url' => $applicant->health_certificates->isNotEmpty() ? (new CertificateFileGenerator($applicant->health_certificates->first()))->getPicturePathAndURL()['url'] : null
     		]);
     	}
 
@@ -58,17 +50,17 @@ class ApplicantController extends Controller
     			'gender' => 'bail|required|in:0,1',
     		]);
 
-            if($applicant->health_certificate != null)
+            if($applicant->health_certificates != null)
             {
-                $old_certificate_file_generator = new CertificateFileGenerator($applicant->health_certificate);
+                $old_certificate_file_generator = new CertificateFileGenerator($applicant->health_certificates->first());
                 $old_applicant_certificate_folder = $old_certificate_file_generator->getHealthCertificateFolder()['applicant_folder'];
             }
 
-            if($applicant->sanitary_permits->isNotEmpty())
+            /*if($applicant->sanitary_permits->isNotEmpty())
             {
                 $old_permit_file_generator = new PermitFileGenerator($applicant->sanitary_permits->first());
                 $old_applicant_permit_folder = $old_permit_file_generator->getSanitaryPermitFolder()['applicant_folder'];
-            }
+            }*/
 
     		$applicant->first_name = $this->request->first_name;
     		$applicant->middle_name = $this->request->middle_name == null ? null : $this->request->middle_name;
@@ -78,77 +70,50 @@ class ApplicantController extends Controller
     		$applicant->gender = $this->request->gender;
     		$applicant->save();
 
-            if($applicant->health_certificate != null)
+            if($applicant->health_certificates != null)
             {
-                $new_certificate_file_generator = new CertificateFileGenerator($applicant->health_certificate->refresh());
+                $new_certificate_file_generator = new CertificateFileGenerator($applicant->health_certificates->first()->refresh());
                 $new_applicant_certificate_folder = $new_certificate_file_generator->getHealthCertificateFolder()['applicant_folder'];
 
                 if($old_applicant_certificate_folder != $new_applicant_certificate_folder)
                     $new_certificate_file_generator->updateApplicantFolder($old_applicant_certificate_folder);
             }
 
-            if($applicant->sanitary_permits->isNotEmpty())
+            /*if($applicant->sanitary_permits->isNotEmpty())
             {
                 $new_permit_file_generator = new PermitFileGenerator($applicant->sanitary_permits->first()->refresh());
                 $new_applicant_permit_folder = $new_permit_file_generator->getSanitaryPermitFolder()['applicant_folder'];
 
                 if($old_applicant_permit_folder != $new_applicant_permit_folder)
                     $new_permit_file_generator->updateApplicantFolder($old_applicant_permit_folder);
-            }
+            }*/
 
     		return back()->with('success', ['header' => 'Applicant updated successfully!', 'message' => null]);
     	}
 	}
 
-    public function bulkPrintCertificates()
-    {
-        if($this->request->isMethod('get'))
-        {
-            return view('applicant.bulk_print', [
-                'title' => 'Bulk Print Health Certificates'
-            ]);
-        }
-
-        elseif($this->request->isMethod('post'))
-        {
-            Validator::make($this->request->all(), [
-                'ids' => 'required|array',
-                'ids.*' => 'distinct|exists:applicants,applicant_id'
-            ])->validate();
-
-            $this->request->session()->flash('print_ids', $this->request->ids);
-
-            return redirect('health_certificate/bulk_print_preview');
-        }
-    }
-
-    public function searchApplicantsForHealthCertificate()
+    public function searchApplicantsForCertificateOrPermitForm()
     {
     	return collect(['results' => Applicant::search($this->request->q)
-                        ->join('health_certificates', 'applicants.applicant_id', '=', 'health_certificates.applicant_id')
+                        ->with('health_certificates')
 				    	->get()
 				    	->transform(function($item, $key){
 				    		return collect([
-				    						'id' => $item->applicant_id,
-				    						'first_name' => $item->first_name,
-				    						'middle_name' => $item->middle_name,
-				    						'last_name' => $item->last_name,
-				    						'suffix_name' => $item->suffix_name,
-				    						'age' => $item->age,
-				    						'gender' => $item->gender,
-				    						'whole_name' => $item->formatName(), 
-				    						'basic_info' => "{$item->getGender()} / $item->age yrs. old"
-				    				]); 
+				    			'id' => $item->applicant_id,
+				    			'first_name' => $item->first_name,
+				    			'middle_name' => $item->middle_name,
+				    			'last_name' => $item->last_name,
+				    			'suffix_name' => $item->suffix_name,
+				    			'age' => $item->age,
+				    			'gender' => $item->gender,
+				    			'whole_name' => $item->formatName(), 
+				    			'basic_info' => "{$item->getGender()}, $item->age / " . 
+                                                    $item->health_certificates->sortByDesc('health_certificate_id')
+                                                        ->take(3)->pluck('establishment')
+                                                        ->implode(', ') . 
+                                                        ($item->health_certificates->count() > 3 ? ', etc.' : '')
+				    		]); 
 				    	})
 				   	]);
-    }
-
-    public function searchApplicants()
-    {
-    	return view('applicant.search', [
-            'title' => 'Search Results',
-            'keyword' => $this->request->q,
-            'applicants' => Applicant::search($this->request->q)->paginate(150)
-        ]);
     }
 }

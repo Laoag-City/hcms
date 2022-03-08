@@ -13,12 +13,12 @@ class StoolAndOther extends Model
 
     public function health_certificate()
     {
-    	return $this->belongsTo('App\HealthCertificate', 'applicant_id', 'applicant_id');
+    	return $this->belongsTo('App\HealthCertificate', 'health_certificate_id', 'health_certificate_id');
     }
 
     public function getDateAttribute($value)
     {
-        return date('M. d, Y', strtotime($value));
+        return date('M d, Y', strtotime($value));
     }
 
     public function dateToInput($attribute)

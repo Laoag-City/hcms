@@ -15,12 +15,15 @@ class CreateSanitaryPermitsTable extends Migration
     {
         Schema::create('sanitary_permits', function (Blueprint $table) {
             $table->increments('sanitary_permit_id');
-            $table->integer('applicant_id')->unsigned();
+            $table->integer('applicant_id')->unsigned()->nullable();
+            $table->integer('business_id')->unsigned()->nullable();
             $table->string('establishment_type');
-            $table->string('address');
+            $table->smallInteger('total_employees')->unsigned()->nullable();
+            $table->string('brgy', 40)->nullable();
+            $table->string('street')->nullable();
             $table->string('sanitary_permit_number', 11)->unique();
-            $table->timestamp('issuance_date')->nullable();
-            $table->timestamp('expiration_date')->nullable();
+            $table->date('issuance_date');
+            $table->date('expiration_date');
             $table->string('sanitary_inspector');
             $table->boolean('is_expired');
             $table->timestamps();
@@ -28,6 +31,12 @@ class CreateSanitaryPermitsTable extends Migration
             $table->foreign('applicant_id')
                                     ->references('applicant_id')
                                     ->on('applicants')
+                                    ->onUpdate('cascade')
+                                    ->onDelete('cascade');
+
+            $table->foreign('business_id')
+                                    ->references('business_id')
+                                    ->on('businesses')
                                     ->onUpdate('cascade')
                                     ->onDelete('cascade');
         });

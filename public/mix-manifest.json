@@ -1,14 +1,21 @@
 {
     "/js/app.js": "/js/app.js?id=2e8e28ea10c125ea3e43",
-    "/css/global_style.css": "/css/global_style.css?id=32339db9b6fc03c97c69",
+    "/css/global_style.css": "/css/global_style.css?id=01fb3b4bba5ea8db2dd7",
     "/css/create_health_certificate.css": "/css/create_health_certificate.css?id=7e3ce95520c1cc9ec3d9",
-    "/css/camera.css": "/css/camera.css?id=41af3dfd3bee4f209112",
+    "/css/print_health_certificate_values_only.css": "/css/print_health_certificate_values_only.css?id=41af3dfd3bee4f209112",
+    "/css/print_health_certificate.css": "/css/print_health_certificate.css?id=fb2f54a9470434d9724f",
     "/js/authenticated.js": "/js/authenticated.js?id=4ca781de45cacef2d04f",
     "/js/user_administration.js": "/js/user_administration.js?id=cd97dee89e50fe1cd1a8",
-    "/js/health_certificate_information.js": "/js/health_certificate_information.js?id=0d1eb285b463a6838587",
+    "/js/health_certificate_information.js": "/js/health_certificate_information.js?id=553a14d4e19e27b6bc9f",
     "/js/camera.js": "/js/camera.js?id=3073ba00899020e6d8ee",
     "/js/values_only_camera.js": "/js/values_only_camera.js?id=695c2f853ca3b9d07e74",
-    "/js/create_health_certificate.js": "/js/create_health_certificate.js?id=9621c9eab5bd23cbd041",
-    "/js/applicant_information.js": "/js/applicant_information.js?id=aee0011a27d2f99b104d",
-    "/js/bulk_print.js": "/js/bulk_print.js?id=dc9be94c9a88ec403505"
+    "/js/create_health_certificate.js": "/js/create_health_certificate.js?id=4e67dff57399cfe2e4f6",
+    "/js/applicant_information.js": "/js/applicant_information.js?id=c03df809839ca085b619",
+    "/js/bulk_print.js": "/js/bulk_print.js?id=8595a9d96fe4ef861102",
+    "/js/renew_health_certificate.js": "/js/renew_health_certificate.js?id=ff8e54d9e335eb0b0cb7",
+    "/js/new_sanitary_permit.js": "/js/new_sanitary_permit.js?id=19e9374a4c68abc90d7d",
+    "/js/sanitary_permit_information.js": "/js/sanitary_permit_information.js?id=24845d5debd73080973b",
+    "/js/renew_sanitary_permit.js": "/js/renew_sanitary_permit.js?id=16d2a80bfb5fa0f83dd1",
+    "/js/business_information.js": "/js/business_information.js?id=b4e8a4f053f85c257ce5",
+    "/js/search_results.js": "/js/search_results.js?id=2d2c00e4ddb21aa66d6b"
 }

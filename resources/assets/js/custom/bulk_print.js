@@ -1,6 +1,5 @@
-let to_print_ids = [];
-
-$('table, #submit_button').hide();
+if(to_print_ids.length == 0)
+	$('table, #submit_button').hide();
 
 function removeRow(id)
 {
@@ -15,7 +14,7 @@ function removeRow(id)
 
 $('.ui.search').search({
 	apiSettings: {
-		url: '/applicant_search?q={query}'
+		url: '/health_certificate/search?q={query}'
 	},
 
 	searchOnFocus: false,
@@ -27,7 +26,7 @@ $('.ui.search').search({
 	duration: 0,
 
 	fields: {
-		title: 'whole_name',
+		title: 'label',
 		description: 'basic_info'
 	},
 
@@ -46,6 +45,8 @@ $('.ui.search').search({
 
 					<td>${result.whole_name}</td>
 
+					<td>${result.hc_no}</td>
+
 					<td>
 						<button type="button" class="ui mini red button remove_button" onclick="removeRow(${result.id})">Remove</button>
 					</td>
@@ -59,4 +60,8 @@ $('.ui.search').search({
 
 	onResultsClose: function(){
 	}
+});
+
+$('#search_applicant').focusin(function(){
+	$(this).val('');
 });

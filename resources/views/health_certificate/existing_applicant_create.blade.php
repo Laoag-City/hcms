@@ -20,29 +20,84 @@
 				<form id="health_certificate_form" method="POST" action="{{ url()->current() }}" class="ui form {{ $errors->any() ? 'error' : 'success' }}">
 					{{ csrf_field() }}
 
+					<input type="hidden" name="id" class="dynamic_on_search" value="{{ old('id') }}">
+
 					<br>
 
 					<div class="fields">
-						<div class="sixteen wide field">
-							<a href="{{ url()->previous() }}" class="ui inverted green fluid button">Back</a>
+						<div class="three wide field"></div>
+
+						<div id="searchApplicant" class="ten wide field ui fluid search{!! !$errors->has('whole_name') 
+							? '" data-content="Type a client\'s name and choose from the suggestions below."' 
+							: ' error" data-content="' . $errors->first('whole_name') . '"' !!} 
+							data-position="top center">
+								<label>Search Whole Name:</label>
+								<input class="prompt" type="text" name="whole_name" value="{{ old('whole_name') }}" placeholder="Search Whole Name" required="">
+								<div class="results"></div>
 						</div>
+					</div>
+
+					<br>
+					<br>
+
+					<div class="fields">
+						<div class="six wide field
+						{!! !$errors->has('first_name') ? '"' : ' error" data-content="' . $errors->first('first_name') . '" data-position="top center"' !!}>
+				    		<label>First Name:</label>
+				    		<input type="text" name="first_name" value="{{ old('first_name') }}" class="dynamic_on_search dynamic_input" placeholder="First Name" readonly="">
+				    	</div>
+
+				    	<div class="four wide field
+				    	{!! !$errors->has('middle_name') ? '"' : ' error" data-content="' . $errors->first('middle_name') . '" data-position="top center"' !!}>
+				    		<label>Middle Name:</label>
+				    		<input type="text" name="middle_name" value="{{ old('middle_name') }}" class="dynamic_on_search dynamic_input" placeholder="Middle Name" readonly="">
+				    	</div>
+
+				    	<div class="four wide field
+				    	{!! !$errors->has('last_name') ? '"' : ' error" data-content="' . $errors->first('last_name') . '" data-position="top center"' !!}>
+				    		<label>Last Name:</label>
+				    		<input type="text" name="last_name" value="{{ old('last_name') }}" class="dynamic_on_search dynamic_input" placeholder="Last Name" readonly="">
+				    	</div>
+
+				    	<div class="two wide field
+				    	{!! !$errors->has('suffix_name') ? '"' : ' error" data-content="' . $errors->first('suffix_name') . '" data-position="top center"' !!}>
+				    		<label>Suffix:</label>
+				    		<select name="suffix_name" class="dynamic_on_search dynamic_select" disabled="">
+								<option value=""></option>
+								<option value="Jr." {{ old('suffix_name') != 'Jr.' ?: 'selected' }}>Jr.</option>
+								<option value="Sr." {{ old('suffix_name') != 'Sr.' ?: 'selected' }}>Sr.</option>
+								<option value="I" {{ old('suffix_name') != 'I' ?: 'selected' }}>I</option>
+								<option value="II" {{ old('suffix_name') != 'II' ?: 'selected' }}>II</option>
+								<option value="III" {{ old('suffix_name') != 'III' ?: 'selected' }}>III</option>
+								<option value="IV" {{ old('suffix_name') != 'IV' ?: 'selected' }}>IV</option>
+								<option value="V" {{ old('suffix_name') != 'V' ?: 'selected' }}>V</option>
+								<option value="VI" {{ old('suffix_name') != 'VI' ?: 'selected' }}>VI</option>
+								<option value="VII" {{ old('suffix_name') != 'VII' ?: 'selected' }}>VII</option>
+								<option value="VIII" {{ old('suffix_name') != 'VIII' ?: 'selected' }}>VIII</option>
+								<option value="IX" {{ old('suffix_name') != 'IX' ?: 'selected' }}>IX</option>
+								<option value="X" {{ old('suffix_name') != 'X' ?: 'selected' }}>X</option>
+							</select>
+				    	</div>
 					</div>
 
 					<br>
 
 					<div class="fields">
-						<div class="five wide field"></div>
-
-						<div class="six wide field">
-							<label>Name:</label>
-					    	<input type="text" value="{{ $applicant->formatName() }}" readonly="">
+						<div class="two wide field
+						{!! !$errors->has('age') ? '"' : ' error" data-content="' . $errors->first('age') . '" data-position="top center"' !!}>
+							<label>Age:</label>
+							<input type="number" name="age" value="{{ old('age') }}" min="15" max="100">
 						</div>
-					</div>
-
-					<br>
-
-					<div class="fields">
-						<div class="two wide field"></div>
+						
+						<div class="two wide field
+						{!! !$errors->has('gender') ? '"' : ' error" data-content="' . $errors->first('gender') . '" data-position="top center"' !!}>
+							<label>Gender:</label>
+							<select name="gender" class="dynamic_on_search dynamic_select" disabled="">
+								<option value=""></option>
+								<option value="1" {{ (string)old('gender') != '1' ?: 'selected' }}>Male</option>
+								<option value="0" {{ (string)old('gender') != '0' ?: 'selected' }}>Female</option>
+							</select>
+						</div>
 
 						<div class="five wide field
 						{!! !$errors->has('type_of_work') ? '"' : ' error" data-content="' . $errors->first('type_of_work') . '" data-position="top center"' !!}>
@@ -264,4 +319,13 @@
 
 @section('sub_custom_js')
 <script src="{{ mix('/js/create_health_certificate.js') }}"></script>
+
+<script>
+//submit logic
+$('#submit_health_certificate').click(function(event){
+	event.preventDefault();
+	$('.dynamic_select').removeAttr('disabled');
+	$('#health_certificate_form').submit();
+});
+</script>
 @endsection

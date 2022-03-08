@@ -14,49 +14,99 @@
 Route::match(['get', 'post'], 'login', 'AuthenticationController@login')->name('login')->middleware('guest');
 
 Route::group(['middleware' => 'auth'], function(){
-	//creates a health certiicate
-	Route::match(['get', 'post'], '/', 'HealthCertificateController@createHealthCertificate');//////////////
-	//returns applicants that match the search word in create health certificate page's whole name field
-	Route::get('applicant_search', 'ApplicantController@searchApplicantsForHealthCertificate');
+	//creates a new health certiicate
+	Route::match(['get', 'post'], '/', 'HealthCertificateController@createHealthCertificate');
 
-	//shows health certificate list
-	//Route::get('health_certificate', 'HealthCertificateController@getHealthCertificates');
-	//shows the preview of the health certificate and the take picture feature
-	Route::get('health_certificate/{health_certificate}/preview', 'HealthCertificateController@printPreview');
-	//ahow bulk print preview
+	//adds another health certificate to an existing applicant
+	//Route::match(['get', 'post'], 'health_certificate/existing_applicant', 'HealthCertificateController@createHealthCertificateExistingApplicant');
+
+	//bulk-print health certificates
+	Route::match(['get', 'post', 'delete'], 'health_certificate/bulk_print', 'HealthCertificateController@bulkPrintCertificates');
+
+	//show bulk print preview
 	Route::get('health_certificate/bulk_print_preview', 'HealthCertificateController@bulkPrintPreview');
-	//ajax for saving the image
-	Route::post('health_certificate/{health_certificate}/picture', 'HealthCertificateController@savePicture');
-	//shows applicant's id picture
-	Route::get('health_certificate/{health_certificate}/picture', 'HealthCertificateController@showPicture');
+
+	//clear bulk print ids in session
+	Route::post('health_certificate/bulk_print_clear', 'HealthCertificateController@bulkPrintClear');
+
+	//add a single certificate to bulk print list
+	Route::post('health_certificate/bulk_print_add', 'HealthCertificateController@bulkPrintAdd');
+
+	//for bulk print page search input
+	Route::get('health_certificate/search', 'HealthCertificateController@searchHealthCertificates');
+
+	//views and edits a health certificate
+	Route::match(['get', 'put'], 'health_certificate/renew', 'HealthCertificateController@renewCertificate');
+
 	//views and edits a health certificate
 	Route::match(['get', 'put'], 'health_certificate/{health_certificate}', 'HealthCertificateController@viewEditCertificate');
 
+	//deletes a health certificate
+	Route::delete('health_certificate/{health_certificate}', 'HealthCertificateController@deleteCertificate');
+
+	//shows the preview of the health certificate and the take picture feature
+	Route::get('health_certificate/{health_certificate}/preview', 'HealthCertificateController@printPreview');
+
+	//ajax for saving the image
+	Route::post('health_certificate/{health_certificate}/picture', 'HealthCertificateController@savePicture');
+
+	//shows applicant's id picture
+	Route::get('health_certificate/{health_certificate}/picture', 'HealthCertificateController@showPicture');
+
+	//shows health certificate list
+	//Route::get('health_certificate', 'HealthCertificateController@getHealthCertificates');
+
+	Route::get('duplicates', 'HealthCertificateController@removeDuplicateCertificates');
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	//shows applicant list
-	Route::get('applicant', 'ApplicantController@getApplicants');
-	//bulk-print health certificates
-	Route::match(['get', 'post'], 'applicant/bulk_print', 'ApplicantController@bulkPrintCertificates');
+	Route::get('applicants', 'ApplicantController@getApplicants');
+
 	//view or edit an applicant
 	Route::match(['get', 'put'], 'applicant/{applicant}', 'ApplicantController@viewEditApplicant');
 
-	Route::match(['get', 'post'], 'applicant/{applicant}/health_certificate/create', 'HealthCertificateController@createHealthCertificateExistingClient')->middleware('for_no_health_certificate');/////
+	//returns applicants that match the search word in create health certificate and sanitary permit page's whole name field
+	Route::get('applicant_search', 'ApplicantController@searchApplicantsForCertificateOrPermitForm');
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	Route::match(['get', 'post'], 'applicant/{applicant}/sanitary_permit/create', 'SanitaryPermitController@createSanitaryPermitExistingClient');/////
+	Route::match(['get', 'post'], 'sanitary_permit', 'SanitaryPermitController@createSanitaryPermit');
 
-	Route::get('applicant/{applicant}/sanitary_permit', 'SanitaryPermitController@sanitaryPermits');
+	Route::match(['get', 'put'], 'sanitary_permit/renew', 'SanitaryPermitController@renewPermit');
 
-	Route::match(['get', 'post'], 'sanitary_permit', 'SanitaryPermitController@createSanitaryPermit');///////
+	Route::get('sanitary_permit/list', 'SanitaryPermitController@SanitaryPermitsList');
+	
+	//Route::match(['get', 'post'], 'sanitary_permit/existing', 'SanitaryPermitController@createSanitaryPermitExistingApplicantBusiness');
 
 	Route::match(['get', 'put'], 'sanitary_permit/{sanitary_permit}', 'SanitaryPermitController@viewEditSanitaryPermit');
 
+	Route::delete('sanitary_permit/{sanitary_permit}', 'SanitaryPermitController@deletePermit');
+
 	Route::get('sanitary_permit/{sanitary_permit}/preview', 'SanitaryPermitController@printPreview');
 
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	//shows business list
+	Route::get('businesses', 'BusinessController@getBusinesses');
+
+	//view or edit an applicant
+	Route::match(['get', 'put'], 'business/{business}', 'BusinessController@viewEditBusiness');
+
+	//returns businesses that match the search word in create sanitary permit page's whole name field
+	Route::get('business_search', 'BusinessController@searchBusinessesForPermitForm');
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	//searches applicants
-	Route::get('search', 'ApplicantController@searchApplicants');
+	Route::get('search', 'SearchController@viewSearches');
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	//user administration
 	Route::group(['middleware' => 'can:is-admin'], function(){
 		Route::match(['get', 'post'], 'users', 'UserController@getOrCreateUser');
+
 		Route::match(['get', 'put', 'delete'], 'users/{user}', 'UserController@editOrDeleteUser');
 
 		//Route::match(['get', 'put'], 'health_certificate_values', 'HealthCertificateController@showEditCertificateValues');

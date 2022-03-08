@@ -16,7 +16,9 @@ mix.js('resources/assets/js/app.js', 'public/js')
 
 	.styles(['resources/assets/css/create_health_certificate.css'], 'public/css/create_health_certificate.css')
 
-	.styles(['resources/assets/css/camera.css'], 'public/css/camera.css')
+	.styles(['resources/assets/css/print_health_certificate_values_only.css'], 'public/css/print_health_certificate_values_only.css')
+
+	.styles(['resources/assets/css/print_health_certificate.css'], 'public/css/print_health_certificate.css')
 
 	.scripts(['resources/assets/js/custom/authenticated.js'], 'public/js/authenticated.js')
 
@@ -33,5 +35,17 @@ mix.js('resources/assets/js/app.js', 'public/js')
 	.scripts(['resources/assets/js/custom/applicant_information.js'], 'public/js/applicant_information.js')
 
 	.scripts(['resources/assets/js/custom/bulk_print.js'], 'public/js/bulk_print.js')
+
+	.scripts(['resources/assets/js/custom/renew_health_certificate.js'], 'public/js/renew_health_certificate.js')
+
+	.scripts(['resources/assets/js/custom/new_sanitary_permit.js'], 'public/js/new_sanitary_permit.js')
+
+	.scripts(['resources/assets/js/custom/sanitary_permit_information.js'], 'public/js/sanitary_permit_information.js')
+
+	.scripts(['resources/assets/js/custom/renew_sanitary_permit.js'], 'public/js/renew_sanitary_permit.js')
+
+	.scripts(['resources/assets/js/custom/business_information.js'], 'public/js/business_information.js')
+
+	.scripts(['resources/assets/js/custom/search_results.js'], 'public/js/search_results.js')
 
 	.version();

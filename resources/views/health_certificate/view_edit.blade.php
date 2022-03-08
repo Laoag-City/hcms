@@ -4,7 +4,7 @@
 <div class="sixteen wide column center aligned">
 	<div class="ui attached message">
 		<h2 class="ui header">
-			Health Certificate Information
+			{{ $title }}
 		</h2>
 	</div>
 
@@ -18,7 +18,7 @@
 						<div class="sixteen wide column">
 							<div class="ui two buttons">
 								<a href="{{ url()->previous() }}" class="ui inverted blue button">Back</a>
-								<a href="{{ url("health_certificate/$health_certificate->applicant_id/preview") }}" target="_blank" class="ui inverted green button">Print Preview</a>
+								<a href="{{ url("health_certificate/$health_certificate->health_certificate_id/preview") }}" class="ui inverted green button">Print Preview</a>
 							</div>
 						</div>
 					</div>
@@ -70,7 +70,7 @@
 
 				<form method="POST" action="{{ url()->current() }}" class="ui form text_center {{ $errors->any() ? 'error' : 'success' }}">
 					<h3 class="ui header">
-						Update Health Certificate
+						Health Certificate
 					</h3>
 
 					<br>
@@ -89,22 +89,10 @@
 					<div class="fields">
 						<div class="five wide field"></div>
 
-						<div class="seven wide field">
-							<div class="inline fields">
-								<label>Update Mode: </label>
-								<div class="field">
-									<div class="ui toggle checkbox">
-										<input type="radio" id="edit_switch" name="update_mode" value="edit" class="update_switches hidden" {{ old('update_mode') != 'edit' ?: 'checked' }}>
-										<label>Edit Only</label>
-									</div>
-								</div>
-
-								<div class="field">
-									<div class="ui toggle checkbox">
-										<input type="radio" id="renew_switch" name="update_mode" value="edit_renew" class="update_switches hidden" {{ old('update_mode') != 'edit_renew' ?: 'checked' }}>
-										<label>Edit and Renew</label>
-									</div>
-								</div>
+						<div class="six wide inline field">
+							<div class="ui toggle checkbox">
+								<label><b>Edit Health Certificate</b></label>
+								<input type="checkbox" name="update_mode" value="on" class="update_switches hidden" {{ !old('update_mode') ?: 'checked' }}>
 							</div>
 						</div>
 					</div>
@@ -168,7 +156,7 @@
 
 				    	<div class="four wide field{!! !$errors->has('date_of_expiration') ? '"' : ' error" data-content="' . $errors->first('date_of_expiration') . '" data-position="top center"' !!}>
 				    		<label>Date of Expiration:</label>
-				    		<input type="date" name="date_of_expiration" value="{{ old('date_of_expiration') != null ? old('date_of_expiration') : $health_certificate->dateToInput('expiration_date') }}" placeholder="Date of Issuance">
+				    		<input type="date" name="date_of_expiration" value="{{ old('date_of_expiration') != null ? old('date_of_expiration') : $health_certificate->dateToInput('expiration_date') }}" placeholder="Date of Issuance" class="dynamic_input">
 				    	</div>
 					</div>
 

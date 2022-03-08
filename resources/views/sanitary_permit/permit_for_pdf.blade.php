@@ -134,14 +134,14 @@ body
 				<div class="auto_flow">
 					<span class="pull_left" style="margin-top: 4pt;">Issued to</span>
 					<span class="pull_right text-center values" style="width: 415pt; font-size: 14pt;">
-						<b>{{ strtoupper($permit->applicant->formatName()) }}</b>
+						<b>{{ $permit->getRegisteredName() }}</b>
 					</span>
 					<i style="display: block;" class="text-center">(Registered Name)</i>
 				</div>
 
 				<div class="auto_flow">
 					<span class="pull_right text-center values" style=" width: 100%; font-size: 14pt;">
-						<b>{{ strtoupper($permit->establishment_type) }}</b>
+						<b>{{ strtoupper($permit->getRegisteredName()) }}</b>
 					</span>
 					<i style="display: block;" class="text-center">(Type of Establishment)</i>
 				</div>
@@ -195,8 +195,8 @@ body
 					<span class="pull_left" style="margin-top: 4pt; width: 88pt; text-align: right;">Approved</span>
 					<span class="pull_right text-center values" style="width: 380pt; font-size: 13pt; margin-top: 40pt">
 					</span>
-					<b style="display: block; float: right; width: 380pt; font-family: serif;" class="text-center">RENATO R. MATEO, M. D.</b>
-					<b style="display: block; float: right; width: 380pt; font-family: serif; font-size: 10.5pt;" class="text-center">CITY HEALTH OFFICER</b>
+					<b style="display: block; float: right; width: 380pt; font-family: serif;" class="text-center">JOSEPH D. ADAYA, M. D.</b>
+					<b style="display: block; float: right; width: 380pt; font-family: serif; font-size: 10.5pt;" class="text-center">OIC - CITY HEALTH OFFICER</b>
 				</div>
 			</div>
 
