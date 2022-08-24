@@ -2,11 +2,11 @@
 {
 	visibility: hidden;
 	opacity: 0;
-	transition: visibility 0s linear 240ms, opacity 240ms;
+	transition: visibility 0s linear 50ms, opacity 50ms;
 }
 .fadeIn 
 {
 	visibility: visible;
 	opacity: 1;
-	transition: visibility 0s linear 0s, opacity 240ms;
+	transition: visibility 0s linear 0s, opacity 50ms;
 }

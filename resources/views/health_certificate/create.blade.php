@@ -37,7 +37,7 @@
 						<div id="searchApplicant" class="six wide field ui fluid search{!! !$errors->has('whole_name') 
 							? '" data-content="Type a client\'s name and choose from the suggestions below."' 
 							: ' error" data-content="' . $errors->first('whole_name') . '"' !!} 
-							style="visibility: {{ old('existing_client') == null ? 'hidden' : 'visible' }}" data-position="top center">
+							data-position="top center">
 								<label>Whole Name:</label>
 								<input class="prompt" type="text" name="whole_name" value="{{ old('whole_name') }}" placeholder="Whole Name" {{ old('existing_client') == null ? 'disabled' : 'required' }}>
 								<div class="results"></div>
@@ -92,7 +92,7 @@
 						<div class="two wide field
 						{!! !$errors->has('age') ? '"' : ' error" data-content="' . $errors->first('age') . '" data-position="top center"' !!}>
 							<label>Age:</label>
-							<input type="number" name="age" value="{{ old('age') }}" min="15" max="100">
+							<input type="number" name="age" class="dynamic_on_search" value="{{ old('age') }}" min="15" max="100">
 						</div>
 						
 						<div class="two wide field

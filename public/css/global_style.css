@@ -37,6 +37,11 @@ body
 	background-color: #efefef;
 }
 
+#pink_card:hover
+{
+	color: deeppink;
+}
+
 @media only screen and (max-width: 768px) 
 {
     #main_container

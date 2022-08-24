@@ -14,8 +14,7 @@ $(document).ready(function(){
 
 //checkbox logic
 $('input[name="existing_client"]').change(function(){
-	$('.dynamic_on_search').val('');
-	$('input[name="whole_name"').val('');
+	$('.dynamic_on_search, input[name="whole_name"]').val('');
 	toggleWholeName();
 });
 
@@ -96,7 +95,7 @@ function toggleWholeName()
 		var field_state = false;
 	}
 
-	$('#searchApplicant').removeAttr('style').removeClass(class_name[1]).addClass(class_name[0]);
+	$('#searchApplicant').removeClass(class_name[1]).addClass(class_name[0]);
 	$('input[name="whole_name"').removeAttr(state[1]).attr(state[0], true);
 	$('.dynamic_input').attr('readonly', field_state);
 	$('.dynamic_select').attr('disabled', field_state);

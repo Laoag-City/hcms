@@ -1,19 +1,19 @@
 $(document).ready(function(){
 	$('.field').popup();
 	$('.ui.checkbox').checkbox();
-	alterFormState();
-	togglePermitOwner();
+	changePermitOwnerType();
+	toggleExistingNameField();
 });
 
 //permit owner type logic
 $('input[name=permit_type]').change(function(){
-	alterFormState(true);
+	changePermitOwnerType(true);
 });
 
 //checkbox logic
 $('input[name="has_existing_registered_name"]').change(function(){
 	$('.field_individual, .field_business, input[name="id"], input[name="existing_registered_name"]').val('');
-	togglePermitOwner();
+	toggleExistingNameField();
 });
 
 //search logic
@@ -81,25 +81,23 @@ $('#submit_sanitary_permit').click(function(event){
 	$('#sanitary_permit_form').submit();
 });
 
-function alterFormState(reset_owner_fields = false)
+function changePermitOwnerType(reset_owner_fields = false)
 {
 	if(reset_owner_fields)
 	{
 		$('input[name="id"], input[name=existing_registered_name], .field_individual, .field_business').val('');
 		$('input[name=has_existing_registered_name]').prop('checked', false);
-		togglePermitOwner();
+		toggleExistingNameField();
 	}
 
 	if($('input[name=permit_type]:checked').val() == 'individual')
 	{
-		$('#searchPermitOwner, .field_existing').show();
 		$('.field_business').attr('disabled', true).hide();
 		$('.field_existing, .field_individual').attr('disabled', false).show();
 	}
 
 	else if($('input[name=permit_type]:checked').val() == 'business')
 	{
-		$('#searchPermitOwner, .field_existing').show();
 		$('.field_individual').attr('disabled', true).hide();
 		$('.field_existing, .field_business').attr('disabled', false).show();
 	}
@@ -108,7 +106,7 @@ function alterFormState(reset_owner_fields = false)
 		$('.field_existing, .field_individual, .field_business').attr('disabled', true).hide();
 }
 
-function togglePermitOwner()
+function toggleExistingNameField()
 {
 	if($('input[name="has_existing_registered_name"]').is(':checked'))
 	{
@@ -124,8 +122,15 @@ function togglePermitOwner()
 		var field_state = false;
 	}
 
-	$('#searchPermitOwner').removeAttr('style').removeClass(class_name[1]).addClass(class_name[0]);
+	$('#searchPermitOwner').removeClass(class_name[1]).addClass(class_name[0]);
 	$('input[name="existing_registered_name"').removeAttr(state[1]).attr(state[0], true);
-	$('.dynamic_input').attr('readonly', field_state);
-	$('.dynamic_select').attr('disabled', field_state);
+
+	if($('input[name=permit_type]:checked').val() == 'individual')
+	{
+		$('.field_individual.dynamic_input').attr('readonly', field_state);
+		$('.field_individual.dynamic_select').attr('disabled', field_state);
+	}
+
+	else if($('input[name=permit_type]:checked').val() == 'business')
+		$('.field_business.dynamic_input').attr('readonly', field_state);
 }
