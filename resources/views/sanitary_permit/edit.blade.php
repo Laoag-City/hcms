@@ -106,10 +106,10 @@
 							}
 						@endphp
 
-						<div id="switch_permit_type_field" class="eight wide inline field{!! !$errors->has('permit_type') ? '"' : ' error" data-content="' . $errors->first('permit_type') . '" data-position="top center"' !!}>
+						<div id="switch_permit_owner_type_field" class="eight wide inline field{!! !$errors->has('permit_owner_type') ? '"' : ' error" data-content="' . $errors->first('permit_owner_type') . '" data-position="top center"' !!}>
 							<div class="ui checkbox">
 								<label><b>{{ $switch_to_label }}</b></label>
-								<input type="checkbox" name="permit_type" value="{{ $switch_value }}" {{ old('permit_type') == $switch_value ? 'checked' : '' }}>
+								<input type="checkbox" name="permit_owner_type" value="{{ $switch_value }}" {{ old('permit_owner_type') == $switch_value ? 'checked' : '' }}>
 							</div>
 						</div>
 					</div>
@@ -230,7 +230,7 @@
 				    	<div class="two wide field
 						{!! !$errors->has('total_employees') ? '"' : ' error" data-content="' . $errors->first('total_employees') . '" data-position="top center"' !!}>
 				    		<label>Total Employees:</label>
-				    		<input type="number" name="total_employees" value="{{ old('total_employees') ? old('total_employees') : $permit->total_employees }}">
+				    		<input type="number" name="total_employees" class="dynamic_input" value="{{ old('total_employees') ? old('total_employees') : $permit->total_employees }}">
 				    	</div>
 					</div>
 
@@ -240,88 +240,88 @@
 						<div class="five wide field
 				    	{!! !$errors->has('brgy') ? '"' : ' error" data-content="' . $errors->first('brgy') . '" data-position="top center"' !!}>
 				    		<label>Brgy:</label>
-				    		<select class="ui search dropdown" name="brgy">
+				    		<select class="ui search dropdown dynamic_select" name="brgy">
 								<option value=""></option>
-								<option value="Brgy. 1" {{ $brgy != 'Brgy. 1' ?: 'selected' }}>1, San Lorenzo</option>
-								<option value="Brgy. 2" {{ $brgy != 'Brgy. 2' ?: 'selected' }}>2, Santa Joaquina</option>
-								<option value="Brgy. 3" {{ $brgy != 'Brgy. 3' ?: 'selected' }}>3, Nuestra Señora del Rosario</option>
-								<option value="Brgy. 4" {{ $brgy != 'Brgy. 4' ?: 'selected' }}>4, San Guillermo</option>
-								<option value="Brgy. 5" {{ $brgy != 'Brgy. 5' ?: 'selected' }}>5, San Pedro</option>
-								<option value="Brgy. 6" {{ $brgy != 'Brgy. 6' ?: 'selected' }}>6, San Agustin</option>
-								<option value="Brgy. 7-A" {{ $brgy != 'Brgy. 7-A' ?: 'selected' }}>7-A, Nuestra Señora del Natividad</option>
-								<option value="Brgy. 7-B" {{ $brgy != 'Brgy. 7-B' ?: 'selected' }}>7-B, Nuestra Señora del Natividad</option>
-								<option value="Brgy. 8" {{ $brgy != 'Brgy. 8' ?: 'selected' }}>8, San Vicente</option>
-								<option value="Brgy. 9" {{ $brgy != 'Brgy. 9' ?: 'selected' }}>9, Santa Angela</option>
-								<option value="Brgy. 10" {{ $brgy != 'Brgy. 10' ?: 'selected' }}>10, San Jose</option>
-								<option value="Brgy. 11" {{ $brgy != 'Brgy. 11' ?: 'selected' }}>11, Santa Balbina</option>
-								<option value="Brgy. 12" {{ $brgy != 'Brgy. 12' ?: 'selected' }}>12, San Isidro</option>
-								<option value="Brgy. 13" {{ $brgy != 'Brgy. 13' ?: 'selected' }}>13, Nuestra Señora de Visitacion</option>
-								<option value="Brgy. 14" {{ $brgy != 'Brgy. 14' ?: 'selected' }}>14, Santo Tomas</option>
-								<option value="Brgy. 15" {{ $brgy != 'Brgy. 15' ?: 'selected' }}>15, San Guillermo</option>
-								<option value="Brgy. 16" {{ $brgy != 'Brgy. 16' ?: 'selected' }}>16, San Jacinto</option>
-								<option value="Brgy. 17" {{ $brgy != 'Brgy. 17' ?: 'selected' }}>17, San Francisco</option>
-								<option value="Brgy. 18" {{ $brgy != 'Brgy. 18' ?: 'selected' }}>18, San Quirino</option>
-								<option value="Brgy. 19" {{ $brgy != 'Brgy. 19' ?: 'selected' }}>19, Santa Marcela</option>
-								<option value="Brgy. 20" {{ $brgy != 'Brgy. 20' ?: 'selected' }}>20, San Miguel</option>
-								<option value="Brgy. 21" {{ $brgy != 'Brgy. 21' ?: 'selected' }}>21, San Pedro</option>
-								<option value="Brgy. 22" {{ $brgy != 'Brgy. 22' ?: 'selected' }}>22, San Andres</option>
-								<option value="Brgy. 23" {{ $brgy != 'Brgy. 23' ?: 'selected' }}>23, San Matias</option>
-								<option value="Brgy. 24" {{ $brgy != 'Brgy. 24' ?: 'selected' }}>24, Nuestra Señora de Consolacion</option>
-								<option value="Brgy. 25" {{ $brgy != 'Brgy. 25' ?: 'selected' }}>25, Santa Cayetana</option>
-								<option value="Brgy. 26" {{ $brgy != 'Brgy. 26' ?: 'selected' }}>26, San Marcelino</option>
-								<option value="Brgy. 27" {{ $brgy != 'Brgy. 27' ?: 'selected' }}>27, Nuestra Señora de Soledad</option>
-								<option value="Brgy. 28" {{ $brgy != 'Brgy. 28' ?: 'selected' }}>28, San Bernardo</option>
-								<option value="Brgy. 29" {{ $brgy != 'Brgy. 29' ?: 'selected' }}>29, Santo Tomas</option>
-								<option value="Brgy. 30-A" {{ $brgy != 'Brgy. 30-A' ?: 'selected' }}>30-A, Suyo</option>
-								<option value="Brgy. 30-B" {{ $brgy != 'Brgy. 30-B' ?: 'selected' }}>30-B, Santa Maria</option>
-								<option value="Brgy. 31" {{ $brgy != 'Brgy. 31' ?: 'selected' }}>31, Talingaan</option>
-								<option value="Brgy. 32-A" {{ $brgy != 'Brgy. 32-A' ?: 'selected' }}>32-A, La Paz East</option>
-								<option value="Brgy. 32-B" {{ $brgy != 'Brgy. 32-B' ?: 'selected' }}>32-B, La Paz West</option>
-								<option value="Brgy. 32-C" {{ $brgy != 'Brgy. 32-C' ?: 'selected' }}>32-C, La Paz East</option>
-								<option value="Brgy. 33-A" {{ $brgy != 'Brgy. 33-A' ?: 'selected' }}>33-A, La Paz Proper</option>
-								<option value="Brgy. 33-B" {{ $brgy != 'Brgy. 33-B' ?: 'selected' }}>33-B, La Paz Proper</option>
-								<option value="Brgy. 34-A" {{ $brgy != 'Brgy. 34-A' ?: 'selected' }}>34-A, Gabu Norte West</option>
-								<option value="Brgy. 34-B" {{ $brgy != 'Brgy. 34-B' ?: 'selected' }}>34-B, Gabu Norte East</option>
-								<option value="Brgy. 35" {{ $brgy != 'Brgy. 35' ?: 'selected' }}>35, Gabu Sur</option>
-								<option value="Brgy. 36" {{ $brgy != 'Brgy. 36' ?: 'selected' }}>36, Araniw</option>
-								<option value="Brgy. 37" {{ $brgy != 'Brgy. 37' ?: 'selected' }}>37, Calayab</option>
-								<option value="Brgy. 38-A" {{ $brgy != 'Brgy. 38-A' ?: 'selected' }}>38-A, Mangato East</option>
-								<option value="Brgy. 38-B" {{ $brgy != 'Brgy. 38-B' ?: 'selected' }}>38-B, Mangato West</option>
-								<option value="Brgy. 39" {{ $brgy != 'Brgy. 39' ?: 'selected' }}>39, Santa Rosa</option>
-								<option value="Brgy. 40" {{ $brgy != 'Brgy. 40' ?: 'selected' }}>40, Balatong</option>
-								<option value="Brgy. 41" {{ $brgy != 'Brgy. 41' ?: 'selected' }}>41, Balacad</option>
-								<option value="Brgy. 42" {{ $brgy != 'Brgy. 42' ?: 'selected' }}>42, Apaya</option>
-								<option value="Brgy. 43" {{ $brgy != 'Brgy. 43' ?: 'selected' }}>43, Cavit</option>
-								<option value="Brgy. 44" {{ $brgy != 'Brgy. 44' ?: 'selected' }}>44, Zamboanga</option>
-								<option value="Brgy. 45" {{ $brgy != 'Brgy. 45' ?: 'selected' }}>45, Tangid</option>
-								<option value="Brgy. 46" {{ $brgy != 'Brgy. 46' ?: 'selected' }}>46, Nalbo</option>
-								<option value="Brgy. 47" {{ $brgy != 'Brgy. 47' ?: 'selected' }}>47, Bengcag</option>
-								<option value="Brgy. 48-A" {{ $brgy != 'Brgy. 48-A' ?: 'selected' }}>48-A, Cabungaan North</option>
-								<option value="Brgy. 48-B" {{ $brgy != 'Brgy. 48-B' ?: 'selected' }}>48-B, Cabungaan South</option>
-								<option value="Brgy. 49-A" {{ $brgy != 'Brgy. 49-A' ?: 'selected' }}>49-A, Darayday</option>
-								<option value="Brgy. 49-B" {{ $brgy != 'Brgy. 49-B' ?: 'selected' }}>49-B, Raraburan</option>
-								<option value="Brgy. 50" {{ $brgy != 'Brgy. 50' ?: 'selected' }}>50, Buttong</option>
-								<option value="Brgy. 51-A" {{ $brgy != 'Brgy. 51-A' ?: 'selected' }}>51-A, Nangalisan East</option>
-								<option value="Brgy. 51-B" {{ $brgy != 'Brgy. 51-B' ?: 'selected' }}>51-B, Nangalisan West</option>
-								<option value="Brgy. 52-A" {{ $brgy != 'Brgy. 52-A' ?: 'selected' }}>52-A, San Mateo</option>
-								<option value="Brgy. 52-B" {{ $brgy != 'Brgy. 52-B' ?: 'selected' }}>52-B, Lataag</option>
-								<option value="Brgy. 53" {{ $brgy != 'Brgy. 53' ?: 'selected' }}>53, Rioeng</option>
-								<option value="Brgy. 54-A" {{ $brgy != 'Brgy. 54-A' ?: 'selected' }}>54-A, Camangaan</option>
-								<option value="Brgy. 54-B" {{ $brgy != 'Brgy. 54-B' ?: 'selected' }}>54-B, Lagui-Sail</option>
-								<option value="Brgy. 55-A" {{ $brgy != 'Brgy. 55-A' ?: 'selected' }}>55-A, Barit-Pandan</option>
-								<option value="Brgy. 55-B" {{ $brgy != 'Brgy. 55-B' ?: 'selected' }}>55-B, Salet-Bulangon</option>
-								<option value="Brgy. 55-C" {{ $brgy != 'Brgy. 55-C' ?: 'selected' }}>55-C, Vira</option>
-								<option value="Brgy. 56-A" {{ $brgy != 'Brgy. 56-A' ?: 'selected' }}>56-A, Bacsil North</option>
-								<option value="Brgy. 56-B" {{ $brgy != 'Brgy. 56-B' ?: 'selected' }}>56-B, Bacsil South</option>
-								<option value="Brgy. 57" {{ $brgy != 'Brgy. 57' ?: 'selected' }}>57, Pila</option>
-								<option value="Brgy. 58" {{ $brgy != 'Brgy. 58' ?: 'selected' }}>58, Casili</option>
-								<option value="Brgy. 59-A" {{ $brgy != 'Brgy. 59-A' ?: 'selected' }}>59-A, Dibua South</option>
-								<option value="Brgy. 59-B" {{ $brgy != 'Brgy. 59-B' ?: 'selected' }}>59-B, Dibua North</option>
-								<option value="Brgy. 60-A" {{ $brgy != 'Brgy. 60-A' ?: 'selected' }}>60-A, Caaoacan</option>
-								<option value="Brgy. 60-B" {{ $brgy != 'Brgy. 60-B' ?: 'selected' }}>60-B, Madiladig</option>
-								<option value="Brgy. 61" {{ $brgy != 'Brgy. 61' ?: 'selected' }}>61, Cataban</option>
-								<option value="Brgy. 62-A" {{ $brgy != 'Brgy. 62-A' ?: 'selected' }}>62-A, Navotas North</option>
-								<option value="Brgy. 62-B" {{ $brgy != 'Brgy. 62-B' ?: 'selected' }}>62-B, Navotas South</option>
+								<option value="1" {{ $brgy != '1' ?: 'selected' }}>1, San Lorenzo</option>
+								<option value="2" {{ $brgy != '2' ?: 'selected' }}>2, Santa Joaquina</option>
+								<option value="3" {{ $brgy != '3' ?: 'selected' }}>3, Nuestra Señora del Rosario</option>
+								<option value="4" {{ $brgy != '4' ?: 'selected' }}>4, San Guillermo</option>
+								<option value="5" {{ $brgy != '5' ?: 'selected' }}>5, San Pedro</option>
+								<option value="6" {{ $brgy != '6' ?: 'selected' }}>6, San Agustin</option>
+								<option value="7-A" {{ $brgy != '7-A' ?: 'selected' }}>7-A, Nuestra Señora del Natividad</option>
+								<option value="7-B" {{ $brgy != '7-B' ?: 'selected' }}>7-B, Nuestra Señora del Natividad</option>
+								<option value="8" {{ $brgy != '8' ?: 'selected' }}>8, San Vicente</option>
+								<option value="9" {{ $brgy != '9' ?: 'selected' }}>9, Santa Angela</option>
+								<option value="10" {{ $brgy != '10' ?: 'selected' }}>10, San Jose</option>
+								<option value="11" {{ $brgy != '11' ?: 'selected' }}>11, Santa Balbina</option>
+								<option value="12" {{ $brgy != '12' ?: 'selected' }}>12, San Isidro</option>
+								<option value="13" {{ $brgy != '13' ?: 'selected' }}>13, Nuestra Señora de Visitacion</option>
+								<option value="14" {{ $brgy != '14' ?: 'selected' }}>14, Santo Tomas</option>
+								<option value="15" {{ $brgy != '15' ?: 'selected' }}>15, San Guillermo</option>
+								<option value="16" {{ $brgy != '16' ?: 'selected' }}>16, San Jacinto</option>
+								<option value="17" {{ $brgy != '17' ?: 'selected' }}>17, San Francisco</option>
+								<option value="18" {{ $brgy != '18' ?: 'selected' }}>18, San Quirino</option>
+								<option value="19" {{ $brgy != '19' ?: 'selected' }}>19, Santa Marcela</option>
+								<option value="20" {{ $brgy != '20' ?: 'selected' }}>20, San Miguel</option>
+								<option value="21" {{ $brgy != '21' ?: 'selected' }}>21, San Pedro</option>
+								<option value="22" {{ $brgy != '22' ?: 'selected' }}>22, San Andres</option>
+								<option value="23" {{ $brgy != '23' ?: 'selected' }}>23, San Matias</option>
+								<option value="24" {{ $brgy != '24' ?: 'selected' }}>24, Nuestra Señora de Consolacion</option>
+								<option value="25" {{ $brgy != '25' ?: 'selected' }}>25, Santa Cayetana</option>
+								<option value="26" {{ $brgy != '26' ?: 'selected' }}>26, San Marcelino</option>
+								<option value="27" {{ $brgy != '27' ?: 'selected' }}>27, Nuestra Señora de Soledad</option>
+								<option value="28" {{ $brgy != '28' ?: 'selected' }}>28, San Bernardo</option>
+								<option value="29" {{ $brgy != '29' ?: 'selected' }}>29, Santo Tomas</option>
+								<option value="30-A" {{ $brgy != '30-A' ?: 'selected' }}>30-A, Suyo</option>
+								<option value="30-B" {{ $brgy != '30-B' ?: 'selected' }}>30-B, Santa Maria</option>
+								<option value="31" {{ $brgy != '31' ?: 'selected' }}>31, Talingaan</option>
+								<option value="32-A" {{ $brgy != '32-A' ?: 'selected' }}>32-A, La Paz East</option>
+								<option value="32-B" {{ $brgy != '32-B' ?: 'selected' }}>32-B, La Paz West</option>
+								<option value="32-C" {{ $brgy != '32-C' ?: 'selected' }}>32-C, La Paz East</option>
+								<option value="33-A" {{ $brgy != '33-A' ?: 'selected' }}>33-A, La Paz Proper</option>
+								<option value="33-B" {{ $brgy != '33-B' ?: 'selected' }}>33-B, La Paz Proper</option>
+								<option value="34-A" {{ $brgy != '34-A' ?: 'selected' }}>34-A, Gabu Norte West</option>
+								<option value="34-B" {{ $brgy != '34-B' ?: 'selected' }}>34-B, Gabu Norte East</option>
+								<option value="35" {{ $brgy != '35' ?: 'selected' }}>35, Gabu Sur</option>
+								<option value="36" {{ $brgy != '36' ?: 'selected' }}>36, Araniw</option>
+								<option value="37" {{ $brgy != '37' ?: 'selected' }}>37, Calayab</option>
+								<option value="38-A" {{ $brgy != '38-A' ?: 'selected' }}>38-A, Mangato East</option>
+								<option value="38-B" {{ $brgy != '38-B' ?: 'selected' }}>38-B, Mangato West</option>
+								<option value="39" {{ $brgy != '39' ?: 'selected' }}>39, Santa Rosa</option>
+								<option value="40" {{ $brgy != '40' ?: 'selected' }}>40, Balatong</option>
+								<option value="41" {{ $brgy != '41' ?: 'selected' }}>41, Balacad</option>
+								<option value="42" {{ $brgy != '42' ?: 'selected' }}>42, Apaya</option>
+								<option value="43" {{ $brgy != '43' ?: 'selected' }}>43, Cavit</option>
+								<option value="44" {{ $brgy != '44' ?: 'selected' }}>44, Zamboanga</option>
+								<option value="45" {{ $brgy != '45' ?: 'selected' }}>45, Tangid</option>
+								<option value="46" {{ $brgy != '46' ?: 'selected' }}>46, Nalbo</option>
+								<option value="47" {{ $brgy != '47' ?: 'selected' }}>47, Bengcag</option>
+								<option value="48-A" {{ $brgy != '48-A' ?: 'selected' }}>48-A, Cabungaan North</option>
+								<option value="48-B" {{ $brgy != '48-B' ?: 'selected' }}>48-B, Cabungaan South</option>
+								<option value="49-A" {{ $brgy != '49-A' ?: 'selected' }}>49-A, Darayday</option>
+								<option value="49-B" {{ $brgy != '49-B' ?: 'selected' }}>49-B, Raraburan</option>
+								<option value="50" {{ $brgy != '50' ?: 'selected' }}>50, Buttong</option>
+								<option value="51-A" {{ $brgy != '51-A' ?: 'selected' }}>51-A, Nangalisan East</option>
+								<option value="51-B" {{ $brgy != '51-B' ?: 'selected' }}>51-B, Nangalisan West</option>
+								<option value="52-A" {{ $brgy != '52-A' ?: 'selected' }}>52-A, San Mateo</option>
+								<option value="52-B" {{ $brgy != '52-B' ?: 'selected' }}>52-B, Lataag</option>
+								<option value="53" {{ $brgy != '53' ?: 'selected' }}>53, Rioeng</option>
+								<option value="54-A" {{ $brgy != '54-A' ?: 'selected' }}>54-A, Camangaan</option>
+								<option value="54-B" {{ $brgy != '54-B' ?: 'selected' }}>54-B, Lagui-Sail</option>
+								<option value="55-A" {{ $brgy != '55-A' ?: 'selected' }}>55-A, Barit-Pandan</option>
+								<option value="55-B" {{ $brgy != '55-B' ?: 'selected' }}>55-B, Salet-Bulangon</option>
+								<option value="55-C" {{ $brgy != '55-C' ?: 'selected' }}>55-C, Vira</option>
+								<option value="56-A" {{ $brgy != '56-A' ?: 'selected' }}>56-A, Bacsil North</option>
+								<option value="56-B" {{ $brgy != '56-B' ?: 'selected' }}>56-B, Bacsil South</option>
+								<option value="57" {{ $brgy != '57' ?: 'selected' }}>57, Pila</option>
+								<option value="58" {{ $brgy != '58' ?: 'selected' }}>58, Casili</option>
+								<option value="59-A" {{ $brgy != '59-A' ?: 'selected' }}>59-A, Dibua South</option>
+								<option value="59-B" {{ $brgy != '59-B' ?: 'selected' }}>59-B, Dibua North</option>
+								<option value="60-A" {{ $brgy != '60-A' ?: 'selected' }}>60-A, Caaoacan</option>
+								<option value="60-B" {{ $brgy != '60-B' ?: 'selected' }}>60-B, Madiladig</option>
+								<option value="61" {{ $brgy != '61' ?: 'selected' }}>61, Cataban</option>
+								<option value="62-A" {{ $brgy != '62-A' ?: 'selected' }}>62-A, Navotas North</option>
+								<option value="62-B" {{ $brgy != '62-B' ?: 'selected' }}>62-B, Navotas South</option>
 							</select>
 				    	</div>
 

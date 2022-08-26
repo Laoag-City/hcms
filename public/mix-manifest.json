@@ -1,7 +1,7 @@
 {
     "/js/app.js": "/js/app.js?id=29ffeabb7d73f7d84dcf",
     "/css/global_style.css": "/css/global_style.css?id=98a512d8fcd7a6858aab",
-    "/css/create_health_certificate.css": "/css/create_health_certificate.css?id=7e3ce95520c1cc9ec3d9",
+    "/css/create_health_certificate.css": "/css/create_health_certificate.css?id=65af333177a301d20f06",
     "/css/print_health_certificate_values_only.css": "/css/print_health_certificate_values_only.css?id=41af3dfd3bee4f209112",
     "/css/print_health_certificate.css": "/css/print_health_certificate.css?id=d9a8c610c6aa1e67b508",
     "/js/authenticated.js": "/js/authenticated.js?id=4ca781de45cacef2d04f",
@@ -9,13 +9,13 @@
     "/js/health_certificate_information.js": "/js/health_certificate_information.js?id=553a14d4e19e27b6bc9f",
     "/js/camera.js": "/js/camera.js?id=3073ba00899020e6d8ee",
     "/js/values_only_camera.js": "/js/values_only_camera.js?id=695c2f853ca3b9d07e74",
-    "/js/create_health_certificate.js": "/js/create_health_certificate.js?id=4e67dff57399cfe2e4f6",
+    "/js/create_health_certificate.js": "/js/create_health_certificate.js?id=ebaf9a0c6e9430244f09",
     "/js/applicant_information.js": "/js/applicant_information.js?id=c03df809839ca085b619",
     "/js/bulk_print.js": "/js/bulk_print.js?id=8595a9d96fe4ef861102",
     "/js/renew_health_certificate.js": "/js/renew_health_certificate.js?id=ff8e54d9e335eb0b0cb7",
-    "/js/new_sanitary_permit.js": "/js/new_sanitary_permit.js?id=4e054f83bba21e1ec041",
-    "/js/sanitary_permit_information.js": "/js/sanitary_permit_information.js?id=24845d5debd73080973b",
-    "/js/renew_sanitary_permit.js": "/js/renew_sanitary_permit.js?id=16d2a80bfb5fa0f83dd1",
+    "/js/new_sanitary_permit.js": "/js/new_sanitary_permit.js?id=826d696057c716f21065",
+    "/js/sanitary_permit_information.js": "/js/sanitary_permit_information.js?id=12f0cdaf081492ed1d8c",
+    "/js/renew_sanitary_permit.js": "/js/renew_sanitary_permit.js?id=13a8dfff83fcbefac124",
     "/js/business_information.js": "/js/business_information.js?id=b4e8a4f053f85c257ce5",
     "/js/search_results.js": "/js/search_results.js?id=2d2c00e4ddb21aa66d6b"
 }

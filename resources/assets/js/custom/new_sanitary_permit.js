@@ -6,7 +6,7 @@ $(document).ready(function(){
 });
 
 //permit owner type logic
-$('input[name=permit_type]').change(function(){
+$('input[name=permit_owner_type]').change(function(){
 	changePermitOwnerType(true);
 });
 
@@ -20,13 +20,13 @@ $('input[name="has_existing_registered_name"]').change(function(){
 $('.ui.search').search({
 	apiSettings: {
 		beforeSend: function(settings){
-			if($('input[name=permit_type]:checked').val() == 'individual')
+			if($('input[name=permit_owner_type]:checked').val() == 'individual')
 				settings.url = '/applicant_search?q={query}';
 			else
 				settings.url = '/business_search?q={query}';
 
 			/*settings.data = {
-				existing_registered_name_type: $('input[name=permit_type]:checked').val()
+				existing_registered_name_type: $('input[name=permit_owner_type]:checked').val()
 			};*/
 
 			return settings;
@@ -74,7 +74,7 @@ $('.ui.search').search({
 //submit logic
 $('#submit_sanitary_permit').click(function(event){
 	event.preventDefault();
-	if($('input[name=permit_type]:checked').val() != 'business')
+	if($('input[name=permit_owner_type]:checked').val() != 'business')
 	{
 		$('.dynamic_select').removeAttr('disabled');
 	}
@@ -90,13 +90,13 @@ function changePermitOwnerType(reset_owner_fields = false)
 		toggleExistingNameField();
 	}
 
-	if($('input[name=permit_type]:checked').val() == 'individual')
+	if($('input[name=permit_owner_type]:checked').val() == 'individual')
 	{
 		$('.field_business').attr('disabled', true).hide();
 		$('.field_existing, .field_individual').attr('disabled', false).show();
 	}
 
-	else if($('input[name=permit_type]:checked').val() == 'business')
+	else if($('input[name=permit_owner_type]:checked').val() == 'business')
 	{
 		$('.field_individual').attr('disabled', true).hide();
 		$('.field_existing, .field_business').attr('disabled', false).show();
@@ -125,12 +125,12 @@ function toggleExistingNameField()
 	$('#searchPermitOwner').removeClass(class_name[1]).addClass(class_name[0]);
 	$('input[name="existing_registered_name"').removeAttr(state[1]).attr(state[0], true);
 
-	if($('input[name=permit_type]:checked').val() == 'individual')
+	if($('input[name=permit_owner_type]:checked').val() == 'individual')
 	{
 		$('.field_individual.dynamic_input').attr('readonly', field_state);
 		$('.field_individual.dynamic_select').attr('disabled', field_state);
 	}
 
-	else if($('input[name=permit_type]:checked').val() == 'business')
+	else if($('input[name=permit_owner_type]:checked').val() == 'business')
 		$('.field_business.dynamic_input').attr('readonly', field_state);
 }
