@@ -19,6 +19,7 @@ class CreateSanitaryPermitsTable extends Migration
             $table->integer('business_id')->unsigned()->nullable();
             $table->string('establishment_type');
             $table->smallInteger('total_employees')->unsigned()->nullable();
+            $table->string('permit_classification', 20)->nullable();
             $table->string('brgy', 40)->nullable();
             $table->string('street')->nullable();
             $table->string('sanitary_permit_number', 11)->unique();

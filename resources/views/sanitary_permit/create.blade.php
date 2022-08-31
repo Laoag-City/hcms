@@ -154,11 +154,11 @@
 
 				    	<div class="four wide field
 						{!! !$errors->has('total_employees') ? '"' : ' error" data-content="' . $errors->first('total_employees') . '" data-position="top center"' !!}>
-				    		<label>Total Employees:</label>
-				    		<select>
-				    			<option></option>
-				    			<option>Food</option>
-				    			<option>Non-Food</option>
+				    		<label>Permit Classification:</label>
+				    		<select name="permit_classification">
+				    			<option value=""></option>
+				    			<option value="Food" {{ old('permit_classification') != 'Food' ?: 'selected'}}>Food</option>
+				    			<option value="Non-food" {{ old('permit_classification') != 'Non-food' ?: 'selected'}}>Non-Food</option>
 				    		</select>
 				    	</div>
 					</div>
@@ -169,7 +169,7 @@
 						<div class="five wide field
 				    	{!! !$errors->has('brgy') ? '"' : ' error" data-content="' . $errors->first('brgy') . '" data-position="top center"' !!}>
 				    		<label>Brgy:</label>
-				    		<select class="ui search dropdown" name="brgy">
+				    		<select name="brgy">
 								<option value=""></option>
 								<option value="1" {{ old('brgy') != '1' ?: 'selected' }}>1, San Lorenzo</option>
 								<option value="2" {{ old('brgy') != '2' ?: 'selected' }}>2, Santa Joaquina</option>

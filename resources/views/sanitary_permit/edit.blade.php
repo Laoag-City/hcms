@@ -141,6 +141,7 @@
 							$business_name = old('business_name') ? old('business_name') : $permit->business->business_name;
 						}
 
+						$permit_classification = old('permit_classification') ? old('permit_classification') : $permit->permit_classification;
 						$brgy = old('brgy') ? old('brgy') : $permit->brgy;
 					@endphp
 
@@ -219,7 +220,7 @@
 					<br>
 
 					<div class="fields">
-						<div class="three wide field"></div>
+						<div class="one wide field"></div>
 
 						<div class="eight wide field
 						{!! !$errors->has('establishment_type') ? '"' : ' error" data-content="' . $errors->first('establishment_type') . '" data-position="top center"' !!}>
@@ -232,6 +233,16 @@
 				    		<label>Total Employees:</label>
 				    		<input type="number" name="total_employees" class="dynamic_input" value="{{ old('total_employees') ? old('total_employees') : $permit->total_employees }}">
 				    	</div>
+
+				    	<div class="four wide field
+						{!! !$errors->has('total_employees') ? '"' : ' error" data-content="' . $errors->first('total_employees') . '" data-position="top center"' !!}>
+				    		<label>Permit Classification:</label>
+				    		<select name="permit_classification">
+				    			<option value=""></option>
+				    			<option value="Food" {{ $permit_classification != 'Food' ?: 'selected'}}>Food</option>
+				    			<option value="Non-food" {{ $permit_classification != 'Non-food' ?: 'selected'}}>Non-Food</option>
+				    		</select>
+				    	</div>
 					</div>
 
 					<br>
@@ -240,7 +251,7 @@
 						<div class="five wide field
 				    	{!! !$errors->has('brgy') ? '"' : ' error" data-content="' . $errors->first('brgy') . '" data-position="top center"' !!}>
 				    		<label>Brgy:</label>
-				    		<select class="ui search dropdown dynamic_select" name="brgy">
+				    		<select class="dynamic_select" name="brgy">
 								<option value=""></option>
 								<option value="1" {{ $brgy != '1' ?: 'selected' }}>1, San Lorenzo</option>
 								<option value="2" {{ $brgy != '2' ?: 'selected' }}>2, Santa Joaquina</option>

@@ -256,6 +256,7 @@ class SanitaryPermitController extends Controller
 			'establishment_type' => 'bail|required|string|max:100',
 			'date_of_expiration' => 'bail|required|date|after:date_of_issuance',
 			'total_employees' => 'bail|required|integer|min:0',
+			'permit_classification' => 'bail|required|in:Food,Non-food',
 			'brgy' => 'bail|required|in:' . implode(',', $this->brgys),
 			'street' => 'bail|nullable|string|max:150',
 			'sanitary_inspector' => 'bail|required|string|alpha_spaces|max:100'
@@ -308,6 +309,7 @@ class SanitaryPermitController extends Controller
 
 			$sanitary_permit->establishment_type = $this->request->establishment_type;
 			$sanitary_permit->total_employees = $this->request->total_employees;
+			$sanitary_permit->permit_classification = $this->request->permit_classification;
 			$sanitary_permit->brgy = $this->request->brgy;
 			$sanitary_permit->street = $this->request->street;
 			$sanitary_permit->issuance_date = $this->request->date_of_issuance;
@@ -351,6 +353,7 @@ class SanitaryPermitController extends Controller
 
 			$sanitary_permit->establishment_type = $this->request->establishment_type;
 			$sanitary_permit->total_employees = $this->request->total_employees;
+			$sanitary_permit->permit_classification = $this->request->permit_classification;
 			$sanitary_permit->brgy = $this->request->brgy;
 			$sanitary_permit->street = $this->request->street;
 			$sanitary_permit->issuance_date = $this->request->date_of_issuance;
