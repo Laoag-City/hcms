@@ -14,6 +14,8 @@
 Route::match(['get', 'post'], 'login', 'AuthenticationController@login')->name('login')->middleware('guest');
 
 Route::group(['middleware' => 'auth'], function(){
+	//Health Certificate routes
+
 	//creates a new health certiicate
 	Route::match(['get', 'post'], '/', 'HealthCertificateController@createHealthCertificate');
 
@@ -59,6 +61,7 @@ Route::group(['middleware' => 'auth'], function(){
 	Route::get('duplicates', 'HealthCertificateController@removeDuplicateCertificates');
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Applicant routes
 
 	//shows applicant list
 	Route::get('applicants', 'ApplicantController@getApplicants');
@@ -70,6 +73,7 @@ Route::group(['middleware' => 'auth'], function(){
 	Route::get('applicant_search', 'ApplicantController@searchApplicantsForCertificateOrPermitForm');
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Sanitary Permit routes
 	
 	Route::match(['get', 'post'], 'sanitary_permit', 'SanitaryPermitController@createSanitaryPermit');
 
@@ -86,6 +90,7 @@ Route::group(['middleware' => 'auth'], function(){
 	Route::get('sanitary_permit/{sanitary_permit}/preview', 'SanitaryPermitController@printPreview');
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Business routes
 
 	//shows business list
 	Route::get('businesses', 'BusinessController@getBusinesses');
@@ -102,6 +107,13 @@ Route::group(['middleware' => 'auth'], function(){
 	Route::get('search', 'SearchController@viewSearches');
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Report route
+
+	//show summary of records
+	Route::get('reports', 'ReportController');
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//User routes
 
 	//user administration
 	Route::group(['middleware' => 'can:is-admin'], function(){

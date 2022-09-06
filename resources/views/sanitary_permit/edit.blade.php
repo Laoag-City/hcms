@@ -239,8 +239,9 @@
 				    		<label>Permit Classification:</label>
 				    		<select name="permit_classification">
 				    			<option value=""></option>
-				    			<option value="Food" {{ $permit_classification != 'Food' ?: 'selected'}}>Food</option>
-				    			<option value="Non-food" {{ $permit_classification != 'Non-food' ?: 'selected'}}>Non-Food</option>
+				    			@foreach(App\SanitaryPermit::PERMIT_CLASSIFICATIONS as $classification)
+				    				<option value="{{ $classification }}" {{ $permit_classification != $classification ?: 'selected'}}>{{ $classification }}</option>
+				    			@endforeach
 				    		</select>
 				    	</div>
 					</div>

@@ -49,6 +49,7 @@
 				<i class="dropdown icon"></i>
 
 				<div class="menu">
+					<a href="{{ url('reports') }}" class="item">Summary of Records</a>
 					<a href="{{ url('applicants') }}" class="item">Clients</a>
 					<a href="{{ url('businesses') }}" class="item">Businesses</a>
 				</div>

@@ -256,7 +256,7 @@ class SanitaryPermitController extends Controller
 			'establishment_type' => 'bail|required|string|max:100',
 			'date_of_expiration' => 'bail|required|date|after:date_of_issuance',
 			'total_employees' => 'bail|required|integer|min:0',
-			'permit_classification' => 'bail|required|in:Food,Non-food',
+			'permit_classification' => 'bail|required|in:'  . implode(',', SanitaryPermit::PERMIT_CLASSIFICATIONS),
 			'brgy' => 'bail|required|in:' . implode(',', $this->brgys),
 			'street' => 'bail|nullable|string|max:150',
 			'sanitary_inspector' => 'bail|required|string|alpha_spaces|max:100'
