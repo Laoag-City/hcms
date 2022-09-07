@@ -5,28 +5,23 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Custom\DateToInputFormatter;
 
-class Immunization extends Model
+class CervicalSmearExamination extends Model
 {
     use DateToInputFormatter;
-    
-    protected $primaryKey = 'immunization_id';
 
-    public function health_certificate()
-    {
-    	return $this->belongsTo('App\HealthCertificate', 'health_certificate_id', 'health_certificate_id');
-    }
+    protected $primaryKey = 'cervical_smear_examination_id';
 
     public function pink_health_certificate()
     {
         return $this->belongsTo('App\PinkHealthCertificate', 'pink_health_certificate_id', 'pink_health_certificate_id');
     }
 
-    public function getDateAttribute($value)
+    public function getDateOfExamAttribute($value)
     {
         return date('M d, Y', strtotime($value));
     }
 
-    public function getExpirationDateAttribute($value)
+    public function getDateOfNextExamAttribute($value)
     {
         return date('M d, Y', strtotime($value));
     }

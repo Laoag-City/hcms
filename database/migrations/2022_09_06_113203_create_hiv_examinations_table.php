@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateStoolAndOthersTable extends Migration
+class CreateHivExaminationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,21 +13,14 @@ class CreateStoolAndOthersTable extends Migration
      */
     public function up()
     {
-        Schema::create('stool_and_others', function (Blueprint $table) {
-            $table->increments('stool_and_other_id');
-            $table->integer('health_certificate_id')->unsigned()->nullable();
-            $tablie->integer('pink_health_certificate_id')->unsigned()->nullable();
-            $table->date('date');
-            $table->string('kind', 20);
+        Schema::create('hiv_examinations', function (Blueprint $table) {
+            $table->increments('hiv_examination_id');
+            $tablie->integer('pink_health_certificate_id')->unsigned();
+            $table->date('date_of_exam');
             $table->string('result', 20);
+            $table->date('date_of_next_exam');
             $table->tinyInteger('row_number')->unsigned();
             $table->timestamps();
-
-            $table->foreign('health_certificate_id')
-                                    ->references('health_certificate_id')
-                                    ->on('health_certificates')
-                                    ->onUpdate('cascade')
-                                    ->onDelete('cascade');
 
             $table->foreign('pink_health_certificate_id')
                                     ->references('pink_health_certificate_id')
@@ -44,6 +37,6 @@ class CreateStoolAndOthersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stool_and_others');
+        Schema::dropIfExists('hiv_examinations');
     }
 }
