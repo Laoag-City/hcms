@@ -106,6 +106,7 @@ class ApplicantController extends Controller
 				    			'suffix_name' => $item->suffix_name,
 				    			'age' => $item->age,
 				    			'gender' => $item->gender,
+				    			'nationality' => $item->nationality,
 				    			'whole_name' => $item->formatName(), 
 				    			'basic_info' => "{$item->getGender()}, $item->age / " . 
                                                     $item->health_certificates->sortByDesc('health_certificate_id')

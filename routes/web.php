@@ -14,6 +14,7 @@
 Route::match(['get', 'post'], 'login', 'AuthenticationController@login')->name('login')->middleware('guest');
 
 Route::group(['middleware' => 'auth'], function(){
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//Health Certificate routes
 
 	//creates a new health certiicate
@@ -100,6 +101,11 @@ Route::group(['middleware' => 'auth'], function(){
 
 	//returns businesses that match the search word in create sanitary permit page's whole name field
 	Route::get('business_search', 'BusinessController@searchBusinessesForPermitForm');
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////Pink Health Certificate routes
+
+	Route::match(['get', 'post'], 'pink_card', 'PinkHealthCertificateController@addPinkHealthCertificate');
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

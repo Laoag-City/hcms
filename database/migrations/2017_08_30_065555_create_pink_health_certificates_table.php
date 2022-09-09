@@ -21,7 +21,6 @@ class CreatePinkHealthCertificatesTable extends Migration
             $table->string('validity_period', 20);
             $table->string('occupation', 40);
             $table->string('place_of_work', 50);
-            $table->string('nationality', 20);
             $table->date('issuance_date');
             $table->date('expiration_date');
             $table->string('community_tax_no', 20);

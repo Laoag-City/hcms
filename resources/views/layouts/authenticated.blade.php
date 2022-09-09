@@ -25,7 +25,7 @@
 
 				<div class="menu">
 					<a href="{{ url('/') }}" class="item">Add Health Certificate</a>
-					<a href="{{ url('/') }}" class="item"><span id="pink_card">Add Pink Card Health Certificate</span></a>
+					<a href="{{ url('pink_card') }}" class="item"><span id="pink_card">Add Pink Card Health Certificate</span></a>
 					<!--<a href="{{ url('health_certificate/existing_applicant') }}" class="item">Add Health Certificate To Existing Client</a>-->
 					<a href="{{ url('health_certificate/renew') }}" class="item">Renew A Health Certificate</a>
 					<a href="{{ url('health_certificate/bulk_print') }}" class="item">Bulk Print Health Certificates</a>

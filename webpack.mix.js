@@ -32,6 +32,8 @@ mix.js('resources/assets/js/app.js', 'public/js')
 
 	.scripts(['resources/assets/js/custom/create_health_certificate.js'], 'public/js/create_health_certificate.js')
 
+	.scripts(['resources/assets/js/custom/create_pink_health_certificate.js'], 'public/js/create_pink_health_certificate.js')
+
 	.scripts(['resources/assets/js/custom/applicant_information.js'], 'public/js/applicant_information.js')
 
 	.scripts(['resources/assets/js/custom/bulk_print.js'], 'public/js/bulk_print.js')

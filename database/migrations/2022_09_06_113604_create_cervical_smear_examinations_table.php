@@ -19,6 +19,7 @@ class CreateCervicalSmearExaminationsTable extends Migration
             $table->date('date_of_exam');
             $table->string('initial', 20);
             $table->date('date_of_next_exam');
+            $table->tinyInteger('row_number')->unsigned();
             $table->timestamps();
 
             $table->foreign('pink_health_certificate_id')
