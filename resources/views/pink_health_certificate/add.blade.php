@@ -144,6 +144,28 @@
 
 					<br>
 
+					<div class="fields">
+						<div class="two wide field"></div>
+
+						<div class="four wide field
+						{!! !$errors->has('community_tax_no') ? '"' : ' error" data-content="' . $errors->first('community_tax_no') . '" data-position="top center"' !!}>
+							<label>Community Tax No:</label>
+							<input type="text" name="community_tax_no" value="{{ old('community_tax_no') }}" placeholder="Community Tax No">
+						</div>
+
+						<div class="four wide field{!! !$errors->has('community_tax_issued_at') ? '"' : ' error" data-content="' . $errors->first('community_tax_issued_at') . '" data-position="top center"' !!}>
+				    		<label>Community Tax Issued At:</label>
+				    		<input type="text" name="community_tax_issued_at" value="{{ old('community_tax_issued_at') ? old('community_tax_issued_at') : 'Laoag City' }}" placeholder="Community Tax Issued At">
+				    	</div>
+
+				    	<div class="four wide field{!! !$errors->has('community_tax_issued_on') ? '"' : ' error" data-content="' . $errors->first('community_tax_issued_on') . '" data-position="top center"' !!}>
+				    		<label>Community Tax Issued On:</label>
+				    		<input type="date" name="community_tax_issued_on" value="{{ old('community_tax_issued_on') }}">
+				    	</div>
+					</div>
+
+					<br>
+
 					@if($errors->has('general_table_error'))
 						<div class="ui error message">
 							<p>{{ $errors->first('general_table_error') }}</p>
@@ -344,7 +366,7 @@
 					<br>
 					<div class="ui horizontal divider">HIV Examination</div>
 
-					<table id="table_1" class="ui center aligned selectable celled definition table">
+					<table id="table_4" class="ui center aligned selectable celled definition table">
 						<thead class="full-width">
 							<tr>
 								<th></th>
@@ -408,7 +430,7 @@
 					<br>
 					<div class="ui horizontal divider">HBsAg Examination</div>
 
-					<table id="table_1" class="ui center aligned selectable celled definition table">
+					<table id="table_5" class="ui center aligned selectable celled definition table">
 						<thead class="full-width">
 							<tr>
 								<th></th>
@@ -472,7 +494,7 @@
 					<br>
 					<div class="ui horizontal divider">VDRL Examination</div>
 
-					<table id="table_1" class="ui center aligned selectable celled definition table">
+					<table id="table_6" class="ui center aligned selectable celled definition table">
 						<thead class="full-width">
 							<tr>
 								<th></th>
@@ -536,67 +558,40 @@
 					<br>
 					<div class="ui horizontal divider">Cervical Smear Examination</div>
 
-					<table id="table_1" class="ui center aligned selectable celled definition table">
-						<thead class="full-width">
-							<tr>
-								<th></th>
-								<th>Date</th>
-								<th>Initial</th>
-								<th>Date of Next Exam</th>
-							</tr>
-						</thead>
+					<div style="max-height: 500px; overflow: scroll;">
+						<table id="table_7" class="ui center aligned selectable celled definition table">
+							<thead class="full-width">
+								<tr>
+									<th></th>
+									<th>Date</th>
+									<th>Initial</th>
+									<th>Date of Next Exam</th>
+								</tr>
+							</thead>
 
-						<tbody>
-							<tr>
-								<td>1</td>
+							<tbody>
+								{{-- Since there are only 69 rows in the pink card for cervical smear records, then only loop for 69 times for each rows --}}
+								@for($i = 1; $i <= 69; $i++)
+									<tr>
+										<td>{{ $i }}</td>
 
-								<td class="field{!! !$errors->has('cervical_smear_date_1') ? '"' : ' error" data-content="' . $errors->first('cervical_smear_date_1') . '" data-position="top center"' !!}>
-									<input type="date" name="cervical_smear_date_1" value="{{ old('cervical_smear_date_1') }}">
-								</td>
+										<td class="field{!! !$errors->has('cervical_smear.' . $i . '.date') ? '"' : ' error" data-content="' . $errors->first('cervical_smear.' . $i . '.date') . '" data-position="top center"' !!}>
+											<input type="date" name="cervical_smear[{{ $i }}][date]" value="{{ old('cervical_smear.' . $i . '.date') }}">
+										</td>
 
-								<td class="field{!! !$errors->has('cervical_smear_kind_1') ? '"' : ' error" data-content="' . $errors->first('cervical_smear_kind_1') . '" data-position="top center"' !!}>
-									<input type="text" name="cervical_smear_kind_1" value="{{ old('cervical_smear_kind_1') }}">
-								</td>
+										<td class="field{!! !$errors->has('cervical_smear.' . $i . '.initial') ? '"' : ' error" data-content="' . $errors->first('cervical_smear.' . $i . '.initial') . '" data-position="top center"' !!}>
+											<input type="text" name="cervical_smear[{{ $i }}][initial]" value="{{ old('cervical_smear.' . $i . '.initial') }}">
+										</td>
 
-								<td class="field{!! !$errors->has('cervical_smear_date_of_next_exam_1')? '"' :' error" data-content="' . $errors->first('cervical_smear_date_of_next_exam_1') . '" data-position="top center"' !!}>
-									<input type="date" name="cervical_smear_date_of_next_exam_1" value="{{ old('cervical_smear_date_of_next_exam_1') }}">
-								</td>
-							</tr>
-
-							<tr>
-								<td>2</td>
-
-								<td class="field{!! !$errors->has('cervical_smear_date_2') ? '"' : ' error" data-content="' . $errors->first('cervical_smear_date_2') . '" data-position="top center"' !!}>
-									<input type="date" name="cervical_smear_date_2" value="{{ old('cervical_smear_date_2') }}">
-								</td>
-
-								<td class="field{!! !$errors->has('cervical_smear_kind_2') ? '"' : ' error" data-content="' . $errors->first('cervical_smear_kind_2') . '" data-position="top center"' !!}>
-									<input type="text" name="cervical_smear_kind_2" value="{{ old('cervical_smear_kind_2') }}">
-								</td>
-
-								<td class="field{!! !$errors->has('cervical_smear_date_of_next_exam_2')? '"' :' error" data-content="' . $errors->first('cervical_smear_date_of_next_exam_2') . '" data-position="top center"' !!}>
-									<input type="date" name="cervical_smear_date_of_next_exam_2" value="{{ old('cervical_smear_date_of_next_exam_2') }}">
-								</td>
-							</tr>
-
-							<tr>
-								<td>3</td>
-
-								<td class="field{!! !$errors->has('cervical_smear_date_3') ? '"' : ' error" data-content="' . $errors->first('cervical_smear_date_3') . '" data-position="top center"' !!}>
-									<input type="date" name="cervical_smear_date_3" value="{{ old('cervical_smear_date_3') }}">
-								</td>
-
-								<td class="field{!! !$errors->has('cervical_smear_kind_3') ? '"' : ' error" data-content="' . $errors->first('cervical_smear_kind_3') . '" data-position="top center"' !!}>
-									<input type="text" name="cervical_smear_kind_3" value="{{ old('cervical_smear_kind_3') }}">
-								</td>
-
-								<td class="field{!! !$errors->has('cervical_smear_date_of_next_exam_3')? '"' :' error" data-content="' . $errors->first('cervical_smear_date_of_next_exam_3') . '" data-position="top center"' !!}>
-									<input type="date" name="cervical_smear_date_of_next_exam_3" value="{{ old('cervical_smear_date_of_next_exam_3') }}">
-								</td>
-							</tr>
-						</tbody>
-					</table>
-
+										<td class="field{!! !$errors->has('cervical_smear.' . $i . '.date_of_next_exam')? '"' :' error" data-content="' . $errors->first('cervical_smear.' . $i . '.date_of_next_exam') . '" data-position="top center"' !!}>
+											<input type="date" name="cervical_smear[{{ $i }}][date_of_next_exam]" value="{{ old('cervical_smear.' . $i . '.date_of_next_exam') }}">
+										</td>
+									</tr>
+								@endfor
+							</tbody>
+						</table>
+					</div>
+					
 					<br>
 
 					<button id="submit_health_certificate" class="ui animated fluid inverted blue fade button" tabindex="0">

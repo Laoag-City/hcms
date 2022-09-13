@@ -24,8 +24,8 @@ class CreatePinkHealthCertificatesTable extends Migration
             $table->date('issuance_date');
             $table->date('expiration_date');
             $table->string('community_tax_no', 20);
-            $table->date('community_tax_issuance_date');
-            $table->string('community_tax_issuance_on', 30);
+            $table->string('community_tax_issued_at', 30);
+            $table->date('community_tax_issued_on');
             $table->boolean('is_expired');
             $table->timestamps();
 

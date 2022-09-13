@@ -32,13 +32,14 @@ class PinkHealthCertificateController extends Controller
         if($this->request->isMethod('get'))
         {
             return view('pink_health_certificate.add', [
-                'title' => 'Add Pink Health Certificate'
+                'title' => 'Add Pink Health Certificate',
+                'validity_period' => PinkHealthCertificate::VALIDITY_PERIOD
             ]);
         }
 
         elseif($this->request->isMethod('post'))
         {
-
+            $this->create_edit_logic('add');
         }
 
         return response()->json([], 405);
@@ -244,26 +245,15 @@ class PinkHealthCertificateController extends Controller
 
             'vdrl_kind_3' => 'nullable|bail|required_with:vdrl_date_3,vdrl_date_of_next_exam_3|max:20',
 
-            'vdrl_date_of_next_exam_3' => 'nullable|bail|required_with:vdrl_date_3,vdrl_kind_3|date|after:vdrl_date_3'
-            //cervical smear exam rules here
+            'vdrl_date_of_next_exam_3' => 'nullable|bail|required_with:vdrl_date_3,vdrl_kind_3|date|after:vdrl_date_3',
+            //////////////////////////
+
+            'cervical_smear.*.date' => 'nullable|bail|required_with:cervical_smear.*.initial,cervical_smear.*.date_of_next_exam|date|before_or_equal:today',
+
+            'cervical_smear.*.initial' => 'nullable|bail|required_with:cervical_smear.*.date,cervical_smear.*.date_of_next_exam|max:20',
+
+            'cervical_smear.*.date_of_next_exam' => 'nullable|bail|required_with:cervical_smear.*.date,cervical_smear.*.initial|date|after:cervical_smear.*.date'
         ]));
-
-        //after validation hook to further add validation rules after the first rules
-        $validator->after(function ($validator) {
-            $input_value_from_tables = collect([
-                    $this->request->immunization_date_1, $this->request->immunization_kind_1, $this->request->immunization_date_of_expiration_1,
-                    $this->request->immunization_date_2, $this->request->immunization_kind_2, $this->request->immunization_date_of_expiration_2,
-
-                    $this->request->input('x-ray_sputum_exam_date_1'), $this->request->input('x-ray_sputum_exam_kind_1'), $this->request->input('x-ray_sputum_exam_result_1'),
-                    $this->request->input('x-ray_sputum_exam_date_2'), $this->request->input('x-ray_sputum_exam_kind_2'), $this->request->input('x-ray_sputum_exam_result_2'),
-
-                    $this->request->stool_and_other_exam_date_1, $this->request->stool_and_other_exam_kind_1, $this->request->stool_and_other_exam_result_1,
-                    $this->request->stool_and_other_exam_date_2, $this->request->stool_and_other_exam_kind_2, $this->request->stool_and_other_exam_result_2
-                ]);
-
-            if($input_value_from_tables->unique()->count() == 1)
-                $validator->errors()->add('general_table_error', 'There must be at least one result for Immunization, X-Ray, Sputum Exam, Stool, or Other Exam.');
-        });
 
         //run the validation process. If there are errors, it will automatically redirect back
         $validator->validate();
@@ -280,6 +270,7 @@ class PinkHealthCertificateController extends Controller
                 $applicant->suffix_name = $this->request->suffix_name == null ? null : $this->request->suffix_name;
                 $applicant->age = $this->request->age;
                 $applicant->gender = $this->request->gender;
+                $applicant->nationality = $this->request->nationality;
                 $applicant->save();
             }
 
@@ -290,15 +281,18 @@ class PinkHealthCertificateController extends Controller
                 $applicant->save();
             }
 
-            $health_certificate = new HealthCertificate;
+            $health_certificate = new PinkHealthCertificate;
             $health_certificate->applicant_id = $applicant->applicant_id;
-            $health_certificate->duration = $this->request->certificate_type;
-            $health_certificate->work_type = $this->request->type_of_work;
-            $health_certificate->establishment = $this->request->name_of_establishment;
+            $health_certificate->registration_number = (new RegistrationNumberGenerator)->getRegistrationNumber('App\PinkHealthCertificate', 'registration_number');
+            $health_certificate->validity_period = 
+            $health_certificate->occupation = $this->request->occupation;
+            $health_certificate->place_of_work = $this->request->place_of_work;
             $health_certificate->issuance_date = $this->request->date_of_issuance;
-            $health_certificate->expiration_date = $this->request->date_of_expiration;//$this->getExpirationDate($this->request->date_of_issuance, $this->request->certificate_type);
+            $health_certificate->expiration_date = $this->request->date_of_expiration;
+            $health_certificate->community_tax_no = $this->request->community_tax_no;
+            $health_certificate->community_tax_issued_at = $this->request->community_tax_issued_at;
+            $health_certificate->community_tax_issued_on = $this->request->community_tax_issued_on;
             $health_certificate->is_expired = false;
-            $health_certificate->registration_number = (new RegistrationNumberGenerator)->getRegistrationNumber('App\HealthCertificate', 'registration_number');
             $health_certificate->save();
 
             $immunization1 = new Immunization;
