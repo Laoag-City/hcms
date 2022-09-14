@@ -85,7 +85,7 @@ function toggleWholeName()
 function getExpirationDate()
 {
 	let expiration_date = dayjs(new Date($('input[name=date_of_issuance]').val()))
-							.add(6, 'M')
+							.add(validity, 'M')
 							.format('YYYY-MM-DD');
 
 	$('input[name=date_of_expiration]').val(expiration_date);

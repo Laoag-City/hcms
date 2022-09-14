@@ -185,53 +185,23 @@
 						</thead>
 
 						<tbody>
-							<tr>
-								<td>1</td>
+							@for($i = 1; $i <= $immunization_rows; $i++)
+								<tr>
+									<td>{{ $i }}</td>
 
-								<td class="field{!! !$errors->has('immunization_date_1') ? '"' : ' error" data-content="' . $errors->first('immunization_date_1') . '" data-position="top center"' !!}>
-									<input type="date" name="immunization_date_1" value="{{ old('immunization_date_1') }}">
-								</td>
+									<td class="field{!! !$errors->has('immunization_date_' . $i) ? '"' : ' error" data-content="' . $errors->first('immunization_date_' . $i) . '" data-position="top center"' !!}>
+										<input type="date" name="immunization_date_{{ $i }}" value="{{ old('immunization_date_' . $i) }}">
+									</td>
 
-								<td class="field{!! !$errors->has('immunization_kind_1') ? '"' : ' error" data-content="' . $errors->first('immunization_kind_1') . '" data-position="top center"' !!}>
-									<input type="text" name="immunization_kind_1" value="{{ old('immunization_kind_1') }}">
-								</td>
+									<td class="field{!! !$errors->has('immunization_kind_' . $i) ? '"' : ' error" data-content="' . $errors->first('immunization_kind_' . $i) . '" data-position="top center"' !!}>
+										<input type="text" name="immunization_kind_{{ $i }}" value="{{ old('immunization_kind_' . $i) }}">
+									</td>
 
-								<td class="field{!! !$errors->has('immunization_date_of_expiration_1')? '"' :' error" data-content="' . $errors->first('immunization_date_of_expiration_1') . '" data-position="top center"' !!}>
-									<input type="date" name="immunization_date_of_expiration_1" value="{{ old('immunization_date_of_expiration_1') }}">
-								</td>
-							</tr>
-
-							<tr>
-								<td>2</td>
-
-								<td class="field{!! !$errors->has('immunization_date_2') ? '"' : ' error" data-content="' . $errors->first('immunization_date_2') . '" data-position="top center"' !!}>
-									<input type="date" name="immunization_date_2" value="{{ old('immunization_date_2') }}">
-								</td>
-
-								<td class="field{!! !$errors->has('immunization_kind_2') ? '"' : ' error" data-content="' . $errors->first('immunization_kind_2') . '" data-position="top center"' !!}>
-									<input type="text" name="immunization_kind_2" value="{{ old('immunization_kind_2') }}">
-								</td>
-
-								<td class="field{!! !$errors->has('immunization_date_of_expiration_2')? '"' :' error" data-content="' . $errors->first('immunization_date_of_expiration_2') . '" data-position="top center"' !!}>
-									<input type="date" name="immunization_date_of_expiration_2" value="{{ old('immunization_date_of_expiration_2') }}">
-								</td>
-							</tr>
-
-							<tr>
-								<td>3</td>
-
-								<td class="field{!! !$errors->has('immunization_date_3') ? '"' : ' error" data-content="' . $errors->first('immunization_date_3') . '" data-position="top center"' !!}>
-									<input type="date" name="immunization_date_3" value="{{ old('immunization_date_3') }}">
-								</td>
-
-								<td class="field{!! !$errors->has('immunization_kind_3') ? '"' : ' error" data-content="' . $errors->first('immunization_kind_3') . '" data-position="top center"' !!}>
-									<input type="text" name="immunization_kind_3" value="{{ old('immunization_kind_3') }}">
-								</td>
-
-								<td class="field{!! !$errors->has('immunization_date_of_expiration_3')? '"' :' error" data-content="' . $errors->first('immunization_date_of_expiration_3') . '" data-position="top center"' !!}>
-									<input type="date" name="immunization_date_of_expiration_3" value="{{ old('immunization_date_of_expiration_3') }}">
-								</td>
-							</tr>
+									<td class="field{!! !$errors->has('immunization_date_of_expiration_' . $i) ? '"' :' error" data-content="' . $errors->first('immunization_date_of_expiration_' . $i) . '" data-position="top center"' !!}>
+										<input type="date" name="immunization_date_of_expiration_{{ $i }}" value="{{ old('immunization_date_of_expiration_' . $i) }}">
+									</td>
+								</tr>
+							@endfor
 						</tbody>
 					</table>
 
@@ -249,53 +219,23 @@
 						</thead>
 
 						<tbody>
-							<tr>
-								<td>1</td>
+							@for($i = 1; $i <= $xray_sputum_rows; $i++)
+								<tr>
+									<td>{{ $i }}</td>
 
-								<td class="field{!! !$errors->has('x-ray_sputum_exam_date_1') ? '"' : ' error" data-content="' . $errors->first('x-ray_sputum_exam_date_1') . '" data-position="top center"' !!}>
-									<input type="date" name="x-ray_sputum_exam_date_1" value="{{ old('x-ray_sputum_exam_date_1') }}">
-								</td>
+									<td class="field{!! !$errors->has('x-ray_sputum_exam_date_' . $i) ? '"' : ' error" data-content="' . $errors->first('x-ray_sputum_exam_date_' . $i) . '" data-position="top center"' !!}>
+										<input type="date" name="x-ray_sputum_exam_date_{{ $i }}" value="{{ old('x-ray_sputum_exam_date_' . $i) }}">
+									</td>
 
-								<td class="field{!! !$errors->has('x-ray_sputum_exam_kind_1') ? '"' : ' error" data-content="' . $errors->first('x-ray_sputum_exam_kind_1') . '" data-position="top center"' !!}>
-									<input type="text" name="x-ray_sputum_exam_kind_1" value="{{ old('x-ray_sputum_exam_kind_1') }}" readonly="">
-								</td>
+									<td class="field{!! !$errors->has('x-ray_sputum_exam_kind_' . $i) ? '"' : ' error" data-content="' . $errors->first('x-ray_sputum_exam_kind_' . $i) . '" data-position="top center"' !!}>
+										<input type="text" name="x-ray_sputum_exam_kind_{{ $i }}" value="{{ old('x-ray_sputum_exam_kind_' . $i) }}">
+									</td>
 
-								<td class="field{!! !$errors->has('x-ray_sputum_exam_result_1') ? '"' : ' error" data-content="' . $errors->first('x-ray_sputum_exam_result_1') . '" data-position="top center"' !!}>
-									<input type="text" name="x-ray_sputum_exam_result_1" value="{{ old('x-ray_sputum_exam_result_1') }}" readonly="">
-								</td>
-							</tr>
-
-							<tr>
-								<td>2</td>
-
-								<td class="field{!! !$errors->has('x-ray_sputum_exam_date_2') ? '"' : ' error" data-content="' . $errors->first('x-ray_sputum_exam_date_2') . '" data-position="top center"' !!}>
-									<input type="date" name="x-ray_sputum_exam_date_2" value="{{ old('x-ray_sputum_exam_date_2') }}">
-								</td>
-
-								<td class="field{!! !$errors->has('x-ray_sputum_exam_kind_2') ? '"' : ' error" data-content="' . $errors->first('x-ray_sputum_exam_kind_2') . '" data-position="top center"' !!}>
-									<input type="text" name="x-ray_sputum_exam_kind_2" value="{{ old('x-ray_sputum_exam_kind_2') }}">
-								</td>
-
-								<td class="field{!! !$errors->has('x-ray_sputum_exam_result_2') ? '"' : ' error" data-content="' . $errors->first('x-ray_sputum_exam_result_2') . '" data-position="top center"' !!}>
-									<input type="text" name="x-ray_sputum_exam_result_2" value="{{ old('x-ray_sputum_exam_result_2') }}">
-								</td>
-							</tr>
-
-							<tr>
-								<td>3</td>
-
-								<td class="field{!! !$errors->has('x-ray_sputum_exam_date_3') ? '"' : ' error" data-content="' . $errors->first('x-ray_sputum_exam_date_3') . '" data-position="top center"' !!}>
-									<input type="date" name="x-ray_sputum_exam_date_3" value="{{ old('x-ray_sputum_exam_date_3') }}">
-								</td>
-
-								<td class="field{!! !$errors->has('x-ray_sputum_exam_kind_3') ? '"' : ' error" data-content="' . $errors->first('x-ray_sputum_exam_kind_3') . '" data-position="top center"' !!}>
-									<input type="text" name="x-ray_sputum_exam_kind_3" value="{{ old('x-ray_sputum_exam_kind_3') }}">
-								</td>
-
-								<td class="field{!! !$errors->has('x-ray_sputum_exam_result_3') ? '"' : ' error" data-content="' . $errors->first('x-ray_sputum_exam_result_3') . '" data-position="top center"' !!}>
-									<input type="text" name="x-ray_sputum_exam_result_3" value="{{ old('x-ray_sputum_exam_result_3') }}">
-								</td>
-							</tr>
+									<td class="field{!! !$errors->has('x-ray_sputum_exam_result_' . $i) ? '"' : ' error" data-content="' . $errors->first('x-ray_sputum_exam_result_' . $i) . '" data-position="top center"' !!}>
+										<input type="text" name="x-ray_sputum_exam_result_{{ $i }}" value="{{ old('x-ray_sputum_exam_result_' . $i) }}">
+									</td>
+								</tr>
+							@endfor
 						</tbody>
 					</table>
 
@@ -313,53 +253,23 @@
 						</thead>
 
 						<tbody>
-							<tr>
-								<td>1</td>
+							@for($i = 1; $i <= $stool_and_other_rows; $i++)
+								<tr>
+									<td>{{ $i }}</td>
 
-								<td class="field{!! !$errors->has('stool_and_other_exam_date_1') ? '"' : ' error" data-content="' . $errors->first('stool_and_other_exam_date_1') . '" data-position="top center"' !!}>
-									<input type="date" name="stool_and_other_exam_date_1" value="{{ old('stool_and_other_exam_date_1') }}">
-								</td>
+									<td class="field{!! !$errors->has('stool_and_other_exam_date_' . $i) ? '"' : ' error" data-content="' . $errors->first('stool_and_other_exam_date_' . $i) . '" data-position="top center"' !!}>
+										<input type="date" name="stool_and_other_exam_date_{{ $i }}" value="{{ old('stool_and_other_exam_date_' . $i) }}">
+									</td>
 
-								<td class="field{!! !$errors->has('stool_and_other_exam_kind_1') ? '"' : ' error" data-content="' . $errors->first('stool_and_other_exam_kind_1') . '" data-position="top center"' !!}>
-									<input type="text" name="stool_and_other_exam_kind_1" value="{{ old('stool_and_other_exam_kind_1') }}" readonly="">
-								</td>
+									<td class="field{!! !$errors->has('stool_and_other_exam_kind_' . $i) ? '"' : ' error" data-content="' . $errors->first('stool_and_other_exam_kind_' . $i) . '" data-position="top center"' !!}>
+										<input type="text" name="stool_and_other_exam_kind_{{ $i }}" value="{{ old('stool_and_other_exam_kind_' . $i) }}">
+									</td>
 
-								<td class="field{!! !$errors->has('stool_and_other_exam_result_1') ? '"' : ' error" data-content="' . $errors->first('stool_and_other_exam_result_1') . '" data-position="top center"' !!}>
-									<input type="text" name="stool_and_other_exam_result_1" value="{{ old('stool_and_other_exam_result_1') }}" readonly="">
-								</td>
-							</tr>
-
-							<tr>
-								<td>2</td>
-
-								<td class="field{!! !$errors->has('stool_and_other_exam_date_2') ? '"' : ' error" data-content="' . $errors->first('stool_and_other_exam_date_2') . '" data-position="top center"' !!}>
-									<input type="date" name="stool_and_other_exam_date_2" value="{{ old('stool_and_other_exam_date_2') }}">
-								</td>
-
-								<td class="field{!! !$errors->has('stool_and_other_exam_kind_2') ? '"' : ' error" data-content="' . $errors->first('stool_and_other_exam_kind_2') . '" data-position="top center"' !!}>
-									<input type="text" name="stool_and_other_exam_kind_2" value="{{ old('stool_and_other_exam_kind_2') }}" readonly="">
-								</td>
-
-								<td class="field{!! !$errors->has('stool_and_other_exam_result_2') ? '"' : ' error" data-content="' . $errors->first('stool_and_other_exam_result_2') . '" data-position="top center"' !!}>
-									<input type="text" name="stool_and_other_exam_result_2" value="{{ old('stool_and_other_exam_result_2') }}" readonly="">
-								</td>
-							</tr>
-
-							<tr>
-								<td>3</td>
-
-								<td class="field{!! !$errors->has('stool_and_other_exam_date_3') ? '"' : ' error" data-content="' . $errors->first('stool_and_other_exam_date_3') . '" data-position="top center"' !!}>
-									<input type="date" name="stool_and_other_exam_date_3" value="{{ old('stool_and_other_exam_date_3') }}">
-								</td>
-
-								<td class="field{!! !$errors->has('stool_and_other_exam_kind_3') ? '"' : ' error" data-content="' . $errors->first('stool_and_other_exam_kind_3') . '" data-position="top center"' !!}>
-									<input type="text" name="stool_and_other_exam_kind_3" value="{{ old('stool_and_other_exam_kind_3') }}" readonly="">
-								</td>
-
-								<td class="field{!! !$errors->has('stool_and_other_exam_result_3') ? '"' : ' error" data-content="' . $errors->first('stool_and_other_exam_result_3') . '" data-position="top center"' !!}>
-									<input type="text" name="stool_and_other_exam_result_3" value="{{ old('stool_and_other_exam_result_3') }}" readonly="">
-								</td>
-							</tr>
+									<td class="field{!! !$errors->has('stool_and_other_exam_result_' . $i) ? '"' : ' error" data-content="' . $errors->first('stool_and_other_exam_result_' . $i) . '" data-position="top center"' !!}>
+										<input type="text" name="stool_and_other_exam_result_{{ $i }}" value="{{ old('stool_and_other_exam_result_' . $i) }}">
+									</td>
+								</tr>
+							@endfor
 						</tbody>
 					</table>
 					<!--pink card specific tables-->
@@ -377,53 +287,23 @@
 						</thead>
 
 						<tbody>
-							<tr>
-								<td>1</td>
+							@for($i = 1; $i <= $hiv_rows; $i++)
+								<tr>
+									<td>{{ $i }}</td>
 
-								<td class="field{!! !$errors->has('hiv_date_1') ? '"' : ' error" data-content="' . $errors->first('hiv_date_1') . '" data-position="top center"' !!}>
-									<input type="date" name="hiv_date_1" value="{{ old('hiv_date_1') }}">
-								</td>
+									<td class="field{!! !$errors->has('hiv_date_' . $i) ? '"' : ' error" data-content="' . $errors->first('hiv_date_' . $i) . '" data-position="top center"' !!}>
+										<input type="date" name="hiv_date_{{ $i }}" value="{{ old('hiv_date_' . $i) }}">
+									</td>
 
-								<td class="field{!! !$errors->has('hiv_kind_1') ? '"' : ' error" data-content="' . $errors->first('hiv_kind_1') . '" data-position="top center"' !!}>
-									<input type="text" name="hiv_kind_1" value="{{ old('hiv_kind_1') }}">
-								</td>
+									<td class="field{!! !$errors->has('hiv_kind_' . $i) ? '"' : ' error" data-content="' . $errors->first('hiv_kind_' . $i) . '" data-position="top center"' !!}>
+										<input type="text" name="hiv_kind_{{ $i }}" value="{{ old('hiv_kind_' . $i) }}">
+									</td>
 
-								<td class="field{!! !$errors->has('hiv_date_of_next_exam_1')? '"' :' error" data-content="' . $errors->first('hiv_date_of_next_exam_1') . '" data-position="top center"' !!}>
-									<input type="date" name="hiv_date_of_next_exam_1" value="{{ old('hiv_date_of_next_exam_1') }}">
-								</td>
-							</tr>
-
-							<tr>
-								<td>2</td>
-
-								<td class="field{!! !$errors->has('hiv_date_2') ? '"' : ' error" data-content="' . $errors->first('hiv_date_2') . '" data-position="top center"' !!}>
-									<input type="date" name="hiv_date_2" value="{{ old('hiv_date_2') }}">
-								</td>
-
-								<td class="field{!! !$errors->has('hiv_kind_2') ? '"' : ' error" data-content="' . $errors->first('hiv_kind_2') . '" data-position="top center"' !!}>
-									<input type="text" name="hiv_kind_2" value="{{ old('hiv_kind_2') }}">
-								</td>
-
-								<td class="field{!! !$errors->has('hiv_date_of_next_exam_2')? '"' :' error" data-content="' . $errors->first('hiv_date_of_next_exam_2') . '" data-position="top center"' !!}>
-									<input type="date" name="hiv_date_of_next_exam_2" value="{{ old('hiv_date_of_next_exam_2') }}">
-								</td>
-							</tr>
-
-							<tr>
-								<td>3</td>
-
-								<td class="field{!! !$errors->has('hiv_date_3') ? '"' : ' error" data-content="' . $errors->first('hiv_date_3') . '" data-position="top center"' !!}>
-									<input type="date" name="hiv_date_3" value="{{ old('hiv_date_3') }}">
-								</td>
-
-								<td class="field{!! !$errors->has('hiv_kind_3') ? '"' : ' error" data-content="' . $errors->first('hiv_kind_3') . '" data-position="top center"' !!}>
-									<input type="text" name="hiv_kind_3" value="{{ old('hiv_kind_3') }}">
-								</td>
-
-								<td class="field{!! !$errors->has('hiv_date_of_next_exam_3')? '"' :' error" data-content="' . $errors->first('hiv_date_of_next_exam_3') . '" data-position="top center"' !!}>
-									<input type="date" name="hiv_date_of_next_exam_3" value="{{ old('hiv_date_of_next_exam_3') }}">
-								</td>
-							</tr>
+									<td class="field{!! !$errors->has('hiv_date_of_next_exam_' . $i) ? '"' :' error" data-content="' . $errors->first('hiv_date_of_next_exam_' . $i) . '" data-position="top center"' !!}>
+										<input type="date" name="hiv_date_of_next_exam_{{ $i }}" value="{{ old('hiv_date_of_next_exam_' . $i) }}">
+									</td>
+								</tr>
+							@endfor
 						</tbody>
 					</table>
 
@@ -441,53 +321,23 @@
 						</thead>
 
 						<tbody>
-							<tr>
-								<td>1</td>
+							@for($i = 1; $i <= $hbsag_rows; $i++)
+								<tr>
+									<td>{{ $i }}</td>
 
-								<td class="field{!! !$errors->has('hbsag_date_1') ? '"' : ' error" data-content="' . $errors->first('hbsag_date_1') . '" data-position="top center"' !!}>
-									<input type="date" name="hbsag_date_1" value="{{ old('hbsag_date_1') }}">
-								</td>
+									<td class="field{!! !$errors->has('hbsag_date_' . $i) ? '"' : ' error" data-content="' . $errors->first('hbsag_date_' . $i) . '" data-position="top center"' !!}>
+										<input type="date" name="hbsag_date_{{ $i }}" value="{{ old('hbsag_date_' . $i) }}">
+									</td>
 
-								<td class="field{!! !$errors->has('hbsag_kind_1') ? '"' : ' error" data-content="' . $errors->first('hbsag_kind_1') . '" data-position="top center"' !!}>
-									<input type="text" name="hbsag_kind_1" value="{{ old('hbsag_kind_1') }}">
-								</td>
+									<td class="field{!! !$errors->has('hbsag_kind_' . $i) ? '"' : ' error" data-content="' . $errors->first('hbsag_kind_' . $i) . '" data-position="top center"' !!}>
+										<input type="text" name="hbsag_kind_{{ $i }}" value="{{ old('hbsag_kind_' . $i) }}">
+									</td>
 
-								<td class="field{!! !$errors->has('hbsag_date_of_next_exam_1')? '"' :' error" data-content="' . $errors->first('hbsag_date_of_next_exam_1') . '" data-position="top center"' !!}>
-									<input type="date" name="hbsag_date_of_next_exam_1" value="{{ old('hbsag_date_of_next_exam_1') }}">
-								</td>
-							</tr>
-
-							<tr>
-								<td>2</td>
-
-								<td class="field{!! !$errors->has('hbsag_date_2') ? '"' : ' error" data-content="' . $errors->first('hbsag_date_2') . '" data-position="top center"' !!}>
-									<input type="date" name="hbsag_date_2" value="{{ old('hbsag_date_2') }}">
-								</td>
-
-								<td class="field{!! !$errors->has('hbsag_kind_2') ? '"' : ' error" data-content="' . $errors->first('hbsag_kind_2') . '" data-position="top center"' !!}>
-									<input type="text" name="hbsag_kind_2" value="{{ old('hbsag_kind_2') }}">
-								</td>
-
-								<td class="field{!! !$errors->has('hbsag_date_of_next_exam_2')? '"' :' error" data-content="' . $errors->first('hbsag_date_of_next_exam_2') . '" data-position="top center"' !!}>
-									<input type="date" name="hbsag_date_of_next_exam_2" value="{{ old('hbsag_date_of_next_exam_2') }}">
-								</td>
-							</tr>
-
-							<tr>
-								<td>3</td>
-
-								<td class="field{!! !$errors->has('hbsag_date_3') ? '"' : ' error" data-content="' . $errors->first('hbsag_date_3') . '" data-position="top center"' !!}>
-									<input type="date" name="hbsag_date_3" value="{{ old('hbsag_date_3') }}">
-								</td>
-
-								<td class="field{!! !$errors->has('hbsag_kind_3') ? '"' : ' error" data-content="' . $errors->first('hbsag_kind_3') . '" data-position="top center"' !!}>
-									<input type="text" name="hbsag_kind_3" value="{{ old('hbsag_kind_3') }}">
-								</td>
-
-								<td class="field{!! !$errors->has('hbsag_date_of_next_exam_3')? '"' :' error" data-content="' . $errors->first('hbsag_date_of_next_exam_3') . '" data-position="top center"' !!}>
-									<input type="date" name="hbsag_date_of_next_exam_3" value="{{ old('hbsag_date_of_next_exam_3') }}">
-								</td>
-							</tr>
+									<td class="field{!! !$errors->has('hbsag_date_of_next_exam_' . $i) ? '"' :' error" data-content="' . $errors->first('hbsag_date_of_next_exam_' . $i) . '" data-position="top center"' !!}>
+										<input type="date" name="hbsag_date_of_next_exam_{{ $i }}" value="{{ old('hbsag_date_of_next_exam_' . $i) }}">
+									</td>
+								</tr>
+							@endfor
 						</tbody>
 					</table>
 
@@ -505,53 +355,23 @@
 						</thead>
 
 						<tbody>
-							<tr>
-								<td>1</td>
+							@for($i = 1; $i <= $vdrl_rows; $i++)
+								<tr>
+									<td>{{ $i }}</td>
 
-								<td class="field{!! !$errors->has('vdrl_date_1') ? '"' : ' error" data-content="' . $errors->first('vdrl_date_1') . '" data-position="top center"' !!}>
-									<input type="date" name="vdrl_date_1" value="{{ old('vdrl_date_1') }}">
-								</td>
+									<td class="field{!! !$errors->has('vdrl_date_' . $i) ? '"' : ' error" data-content="' . $errors->first('vdrl_date_' . $i) . '" data-position="top center"' !!}>
+										<input type="date" name="vdrl_date_{{ $i }}" value="{{ old('vdrl_date_' . $i) }}">
+									</td>
 
-								<td class="field{!! !$errors->has('vdrl_kind_1') ? '"' : ' error" data-content="' . $errors->first('vdrl_kind_1') . '" data-position="top center"' !!}>
-									<input type="text" name="vdrl_kind_1" value="{{ old('vdrl_kind_1') }}">
-								</td>
+									<td class="field{!! !$errors->has('vdrl_kind_' . $i) ? '"' : ' error" data-content="' . $errors->first('vdrl_kind_' . $i) . '" data-position="top center"' !!}>
+										<input type="text" name="vdrl_kind_{{ $i }}" value="{{ old('vdrl_kind_' . $i) }}">
+									</td>
 
-								<td class="field{!! !$errors->has('vdrl_date_of_next_exam_1')? '"' :' error" data-content="' . $errors->first('vdrl_date_of_next_exam_1') . '" data-position="top center"' !!}>
-									<input type="date" name="vdrl_date_of_next_exam_1" value="{{ old('vdrl_date_of_next_exam_1') }}">
-								</td>
-							</tr>
-
-							<tr>
-								<td>2</td>
-
-								<td class="field{!! !$errors->has('vdrl_date_2') ? '"' : ' error" data-content="' . $errors->first('vdrl_date_2') . '" data-position="top center"' !!}>
-									<input type="date" name="vdrl_date_2" value="{{ old('vdrl_date_2') }}">
-								</td>
-
-								<td class="field{!! !$errors->has('vdrl_kind_2') ? '"' : ' error" data-content="' . $errors->first('vdrl_kind_2') . '" data-position="top center"' !!}>
-									<input type="text" name="vdrl_kind_2" value="{{ old('vdrl_kind_2') }}">
-								</td>
-
-								<td class="field{!! !$errors->has('vdrl_date_of_next_exam_2')? '"' :' error" data-content="' . $errors->first('vdrl_date_of_next_exam_2') . '" data-position="top center"' !!}>
-									<input type="date" name="vdrl_date_of_next_exam_2" value="{{ old('vdrl_date_of_next_exam_2') }}">
-								</td>
-							</tr>
-
-							<tr>
-								<td>3</td>
-
-								<td class="field{!! !$errors->has('vdrl_date_3') ? '"' : ' error" data-content="' . $errors->first('vdrl_date_3') . '" data-position="top center"' !!}>
-									<input type="date" name="vdrl_date_3" value="{{ old('vdrl_date_3') }}">
-								</td>
-
-								<td class="field{!! !$errors->has('vdrl_kind_3') ? '"' : ' error" data-content="' . $errors->first('vdrl_kind_3') . '" data-position="top center"' !!}>
-									<input type="text" name="vdrl_kind_3" value="{{ old('vdrl_kind_3') }}">
-								</td>
-
-								<td class="field{!! !$errors->has('vdrl_date_of_next_exam_3')? '"' :' error" data-content="' . $errors->first('vdrl_date_of_next_exam_3') . '" data-position="top center"' !!}>
-									<input type="date" name="vdrl_date_of_next_exam_3" value="{{ old('vdrl_date_of_next_exam_3') }}">
-								</td>
-							</tr>
+									<td class="field{!! !$errors->has('vdrl_date_of_next_exam_' . $i) ? '"' :' error" data-content="' . $errors->first('vdrl_date_of_next_exam_' . $i) . '" data-position="top center"' !!}>
+										<input type="date" name="vdrl_date_of_next_exam_{{ $i }}" value="{{ old('vdrl_date_of_next_exam_' . $i) }}">
+									</td>
+								</tr>
+							@endfor
 						</tbody>
 					</table>
 
@@ -570,8 +390,7 @@
 							</thead>
 
 							<tbody>
-								{{-- Since there are only 69 rows in the pink card for cervical smear records, then only loop for 69 times for each rows --}}
-								@for($i = 1; $i <= 69; $i++)
+								@for($i = 1; $i <= $cervical_smear_max_rows; $i++)
 									<tr>
 										<td>{{ $i }}</td>
 
@@ -614,5 +433,8 @@
 @endsection
 
 @section('sub_custom_js')
+<script>
+	var validity = {!! $validity_period !!};
+</script>
 <script src="{{ mix('/js/create_pink_health_certificate.js') }}"></script>
 @endsection

@@ -847,7 +847,6 @@ class HealthCertificateController extends Controller
             $stool_and_others2 = $this->findByRowNumber($stool_and_others, 2, 'App\StoolAndOther');
         }
 
-        //solve: what if an immunization is only at row 2 or row 1? applies to xray and sputum and stools and others
         //save to database for the 3 tables linked to health certificate
         if($this->request->immunization_date_1 != null && $this->request->immunization_kind_1 != null && $this->request->immunization_date_of_expiration_1 != null)
         {
