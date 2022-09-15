@@ -53,7 +53,7 @@ class ApplicantController extends Controller
             if($applicant->health_certificates != null)
             {
                 $old_certificate_file_generator = new CertificateFileGenerator($applicant->health_certificates->first());
-                $old_applicant_certificate_folder = $old_certificate_file_generator->getHealthCertificateFolder()['applicant_folder'];
+                $old_applicant_certificate_folder = $old_certificate_file_generator->getHealthCertificateFolder();
             }
 
             /*if($applicant->sanitary_permits->isNotEmpty())
@@ -75,8 +75,8 @@ class ApplicantController extends Controller
                 $new_certificate_file_generator = new CertificateFileGenerator($applicant->health_certificates->first()->refresh());
                 $new_applicant_certificate_folder = $new_certificate_file_generator->getHealthCertificateFolder()['applicant_folder'];
 
-                if($old_applicant_certificate_folder != $new_applicant_certificate_folder)
-                    $new_certificate_file_generator->updateApplicantFolder($old_applicant_certificate_folder);
+                if($old_applicant_certificate_folder['applicant_folder'] != $new_applicant_certificate_folder && file_exists($old_applicant_certificate_folder['certificate_folder_path']))
+                    $new_certificate_file_generator->updateApplicantFolder($old_applicant_certificate_folder['applicant_folder']);
             }
 
             /*if($applicant->sanitary_permits->isNotEmpty())

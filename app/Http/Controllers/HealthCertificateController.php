@@ -485,7 +485,7 @@ class HealthCertificateController extends Controller
             $picture_url_path = $file_generator->getPicturePathAndURL(true);
 
             if(!file_exists($file_generator->getHealthCertificateFolder()['certificate_folder_path']))
-                mkdir($file_generator->getHealthCertificateFolder()['certificate_folder_path']);
+                mkdir($file_generator->getHealthCertificateFolder()['certificate_folder_path'], 0777, true);
 
             file_put_contents($picture_url_path['path'], base64_decode($this->request->webcam));
             //(new CertificateFileGenerator($health_certificate))->updatePDF();
