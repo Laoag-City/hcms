@@ -17,9 +17,12 @@ use App\Custom\CertificateFileGenerator;
 use App\Custom\RegistrationNumberGenerator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Custom\CertificateTableRowFinder
 
 class HealthCertificateController extends Controller
 {
+    use CertificateTableRowFinder;
+    
 	protected $request;
 
 	public function __construct(Request $request)
@@ -858,7 +861,7 @@ class HealthCertificateController extends Controller
             $immunization1->save();
         }
 
-        elseif($this->request->immunization_date_1 == null && $this->request->immunization_kind_1 == null && $this->request->immunization_date_of_expiration_1 == null && ($mode == 'edit' || $mode == 'renew') && $immunization1 != null)
+        elseif($this->request->immunization_date_1 == null && $this->request->immunization_kind_1 == null && $this->request->immunization_date_of_expiration_1 == null && ($mode == 'edit' || $mode == 'renew'))
             $immunization1->delete();
 
         if($this->request->immunization_date_2 != null && $this->request->immunization_kind_2 != null && $this->request->immunization_date_of_expiration_2 != null)
@@ -871,7 +874,7 @@ class HealthCertificateController extends Controller
             $immunization2->save();
         }
 
-        elseif($this->request->immunization_date_2 == null && $this->request->immunization_kind_2 == null && $this->request->immunization_date_of_expiration_2 == null && ($mode == 'edit' || $mode == 'renew') && $immunization2 != null)
+        elseif($this->request->immunization_date_2 == null && $this->request->immunization_kind_2 == null && $this->request->immunization_date_of_expiration_2 == null && ($mode == 'edit' || $mode == 'renew'))
             $immunization2->delete();
 
         if($this->request->input('x-ray_sputum_exam_date_1') != null && $this->request->input('x-ray_sputum_exam_kind_1') != null && $this->request->input('x-ray_sputum_exam_result_1') != null)
@@ -884,8 +887,7 @@ class HealthCertificateController extends Controller
             $x_ray_sputum_exam1->save();
         }
 
-        elseif($this->request->input('x-ray_sputum_exam_date_1') == null && $this->request->input('x-ray_sputum_exam_kind_1') == null && $this->request->input('x-ray_sputum_exam_result_1') == null 
-                && ($mode == 'edit' || $mode == 'renew') && $x_ray_sputum_exam1 != null)
+        elseif($this->request->input('x-ray_sputum_exam_date_1') == null && $this->request->input('x-ray_sputum_exam_kind_1') == null && $this->request->input('x-ray_sputum_exam_result_1') == null && ($mode == 'edit' || $mode == 'renew'))
                 $x_ray_sputum_exam1->delete();
 
         if($this->request->input('x-ray_sputum_exam_date_2') != null && $this->request->input('x-ray_sputum_exam_kind_2') != null && $this->request->input('x-ray_sputum_exam_result_2') != null)
@@ -898,8 +900,7 @@ class HealthCertificateController extends Controller
             $x_ray_sputum_exam2->save();
         }
 
-        elseif($this->request->input('x-ray_sputum_exam_date_2') == null && $this->request->input('x-ray_sputum_exam_kind_2') == null && $this->request->input('x-ray_sputum_exam_result_2') == null 
-                && ($mode == 'edit' || $mode == 'renew') && $x_ray_sputum_exam2 != null)
+        elseif($this->request->input('x-ray_sputum_exam_date_2') == null && $this->request->input('x-ray_sputum_exam_kind_2') == null && $this->request->input('x-ray_sputum_exam_result_2') == null && ($mode == 'edit' || $mode == 'renew'))
                 $x_ray_sputum_exam2->delete();
 
         if($this->request->stool_and_other_exam_date_1 != null && $this->request->stool_and_other_exam_kind_1 != null && $this->request->stool_and_other_exam_result_1 != null)
@@ -912,8 +913,7 @@ class HealthCertificateController extends Controller
             $stool_and_others1->save();
         }
 
-        elseif($this->request->stool_and_other_exam_date_1 == null && $this->request->stool_and_other_exam_kind_1 == null && $this->request->stool_and_other_exam_result_1 == null 
-            && ($mode == 'edit' || $mode == 'renew') && $stool_and_others1 != null)
+        elseif($this->request->stool_and_other_exam_date_1 == null && $this->request->stool_and_other_exam_kind_1 == null && $this->request->stool_and_other_exam_result_1 == null && ($mode == 'edit' || $mode == 'renew'))
             $stool_and_others1->delete();
 
         if($this->request->stool_and_other_exam_date_2 != null && $this->request->stool_and_other_exam_kind_2 != null && $this->request->stool_and_other_exam_result_2 != null)
@@ -926,8 +926,7 @@ class HealthCertificateController extends Controller
             $stool_and_others2->save();
         }
 
-        elseif($this->request->stool_and_other_exam_date_2 == null && $this->request->stool_and_other_exam_kind_2 == null && $this->request->stool_and_other_exam_result_2 == null 
-            && ($mode == 'edit' || $mode == 'renew') && $stool_and_others2 != null)
+        elseif($this->request->stool_and_other_exam_date_2 == null && $this->request->stool_and_other_exam_kind_2 == null && $this->request->stool_and_other_exam_result_2 == null && ($mode == 'edit' || $mode == 'renew'))
             $stool_and_others2->delete();
 
         //logic for saving pdf files of certificates
@@ -939,12 +938,6 @@ class HealthCertificateController extends Controller
 
         //else
         	//(new CertificateFileGenerator($health_certificate))->updatePDF(/*$old_health_certificate*/);
-    }
-
-    private function findByRowNumber($model, $row_number, $class_name)
-    {
-        $model = $model->where('row_number', $row_number)->first();
-        return $model == null ? new $class_name : $model;
     }
 
     private function getExpirationDate($issuance_date, $certificate_type)

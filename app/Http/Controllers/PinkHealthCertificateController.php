@@ -17,6 +17,7 @@ use App\CervicalSmearExamination;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Custom\CertificateTableRowFinder
 
 /*
 This controller share many similiarites with HealthCertificateController.
@@ -26,6 +27,8 @@ The improvements and optimizations made here that are applicable for the health 
 */
 class PinkHealthCertificateController extends Controller
 {
+    use CertificateTableRowFinder;
+    
     protected $request;
     protected $immunization_rows = 3;
     protected $xray_sputum_rows = 3;
@@ -33,6 +36,7 @@ class PinkHealthCertificateController extends Controller
     protected $hiv_rows = 3;
     protected $hbsag_rows = 3;
     protected $vdrl_rows = 3;
+    protected $cervical_smear_rows = 69;
 
     public function __construct(Request $request)
     {
@@ -46,13 +50,13 @@ class PinkHealthCertificateController extends Controller
             return view('pink_health_certificate.add', [
                 'title' => 'Add Pink Health Certificate',
                 'validity_period' => PinkHealthCertificate::VALIDITY_PERIOD['months'],
-                'cervical_smear_max_rows' => PinkHealthCertificate::MAX_ROWS,
                 'immunization_rows' => $this->immunization_rows,
                 'xray_sputum_rows' => $this->xray_sputum_rows,
                 'stool_and_other_rows' => $this->stool_and_other_rows,
                 'hiv_rows' => $this->hiv_rows,
                 'hbsag_rows' => $this->hbsag_rows,
                 'vdrl_rows' => $this->vdrl_rows,
+                'cervical_smear_max_rows' => $this->cervical_smear_rows,
             ]);
         }
 
@@ -144,6 +148,9 @@ class PinkHealthCertificateController extends Controller
             'occupation' => 'bail|required|alpha_spaces|max:40',
             'place_of_work' => 'bail|required|max:50',
             'date_of_expiration' => 'bail|required|date|after:date_of_issuance',
+            'community_tax_no' => 'bail|required|string|max:20',
+            'community_tax_issued_at' => 'bail|required|alpha_spaces|max:30'
+            'community_tax_issued_on' => 'bail|required|date|before_or_equal:today',
 
             'immunization_date_1' => 'nullable|bail|required_with:immunization_kind_1,immunization_date_of_expiration_1|date|before_or_equal:today',
 
@@ -281,9 +288,9 @@ class PinkHealthCertificateController extends Controller
         //run the validation process. If there are errors, it will automatically redirect back
         $validator->validate();
 
-        //save to database
         if($mode == 'add')
         {
+            //if applicant is new
             if($this->request->id == null)
             {
                 $applicant = new Applicant;
@@ -297,6 +304,7 @@ class PinkHealthCertificateController extends Controller
                 $applicant->save();
             }
 
+            //if applicant chosen already exists
             else
             {
                 $applicant = Applicant::find($this->request->id);
@@ -305,10 +313,11 @@ class PinkHealthCertificateController extends Controller
                 $applicant->save();
             }
 
+            //save to database
             $pink_health_certificate = new PinkHealthCertificate;
             $pink_health_certificate->applicant_id = $applicant->applicant_id;
             $pink_health_certificate->registration_number = (new RegistrationNumberGenerator)->getRegistrationNumber('App\PinkHealthCertificate', 'registration_number');
-            $pink_health_certificate->validity_period = PinkHealthCertificate::VALIDITY_PERIOD['string'];    //added this row if ever pink card will have differing validity period in the future
+            $pink_health_certificate->validity_period = PinkHealthCertificate::VALIDITY_PERIOD['string'];
             $pink_health_certificate->occupation = $this->request->occupation;
             $pink_health_certificate->place_of_work = $this->request->place_of_work;
             $pink_health_certificate->issuance_date = $this->request->date_of_issuance;
@@ -319,6 +328,7 @@ class PinkHealthCertificateController extends Controller
             $pink_health_certificate->is_expired = false;
             $pink_health_certificate->save();
 
+            //prepare variables for the input fields in a table at the front-end
             for($i = 0; $i < $this->immunization_rows; $i++)
                 $immunizations[$i] = new Immunization;
 
@@ -336,47 +346,83 @@ class PinkHealthCertificateController extends Controller
 
             for($i = 0; $i < $this->vdrl_rows; $i++)
                 $vdrls[$i] = new VdrlExamination;
+
+            for($i = 0; $i < $this->cervical_smear_rows; $i++)
+                $cervical_smears[$i] = new CervicalSmearExamination;
         }
 
+        //if either edit or renew
         else
         {
+            //update applicant's age, which usually changes
             $applicant = $pink_health_certificate->applicant;
             $applicant->age = $this->request->age;
             $applicant->save();
-            
-            $pink_health_certificate->duration = $this->request->certificate_type;
+
+            //update common pink card values that usually change
+            $pink_health_certificate->occupation = $this->request->occupation;
+            $pink_health_certificate->place_of_work = $this->request->place_of_work;
             $pink_health_certificate->issuance_date = $this->request->date_of_issuance;
-            $pink_health_certificate->expiration_date = $this->request->date_of_expiration;//$this->getExpirationDate($this->request->date_of_issuance, $this->request->certificate_type);
-            $pink_health_certificate->work_type = $this->request->type_of_work;
-            $pink_health_certificate->establishment = $this->request->name_of_establishment;
+            $pink_health_certificate->expiration_date = $this->request->date_of_expiration;
+            $pink_health_certificate->community_tax_no = $this->request->community_tax_no;
+            $pink_health_certificate->community_tax_issued_at = $this->request->community_tax_issued_at;
+            $pink_health_certificate->community_tax_issued_on = $this->request->community_tax_issued_on;
 
             //if renewing and it's already next year, update registration number
             if($mode == 'renew')
-            {   
                 if((int)explode('-', $pink_health_certificate->registration_number)[0] < (int)date('Y', strtotime('now')))
-                    $pink_health_certificate->registration_number = (new RegistrationNumberGenerator)->getRegistrationNumber('App\HealthCertificate', 'registration_number');
-            }
+                    $pink_health_certificate->registration_number = (new RegistrationNumberGenerator)->getRegistrationNumber('App\PinkHealthCertificate', 'registration_number');
 
             $pink_health_certificate->save();
 
             $pink_health_certificate->checkIfExpired();
-            
-            $immunizations = Immunization::where('health_certificate_id', '=', $pink_health_certificate->health_certificate_id)->get();
-            $immunization1 = $this->findByRowNumber($immunizations, 1, 'App\Immunization');
-            $immunization2 = $this->findByRowNumber($immunizations, 2, 'App\Immunization');
 
-            $x_ray_sputum_exams = XRaySputum::where('health_certificate_id', '=', $pink_health_certificate->health_certificate_id)->get();
-            $x_ray_sputum_exam1 = $this->findByRowNumber($x_ray_sputum_exams, 1, 'App\XRaySputum');
-            $x_ray_sputum_exam2 = $this->findByRowNumber($x_ray_sputum_exams, 2, 'App\XRaySputum');
+            //prepare variables for the input fields in a table at the front-end
+            $immunizations = Immunization::where('pink_health_certificate_id', '=', $pink_health_certificate->pink_health_certificate_id)->get();
 
-            $stool_and_others = StoolAndOther::where('health_certificate_id', '=', $pink_health_certificate->health_certificate_id)->get();
-            $stool_and_others1 = $this->findByRowNumber($stool_and_others, 1, 'App\StoolAndOther');
-            $stool_and_others2 = $this->findByRowNumber($stool_and_others, 2, 'App\StoolAndOther');
+            for($i = 0; $i < $this->immunization_rows; $i++)
+                $immunizations[$i] = $this->findByRowNumber($immunizations, $i + 1, 'App\Immunization');
+
+
+            $xray_sputums = XRaySputum::where('pink_health_certificate_id', '=', $pink_health_certificate->pink_health_certificate_id)->get();
+
+            for($i = 0; $i < $this->xray_sputum_rows; $i++)
+                $xray_sputums[$i] = $this->findByRowNumber($xray_sputums, $i + 1, 'App\XRaySputum');
+
+
+            $stool_and_others = StoolAndOther::where('pink_health_certificate_id', '=', $pink_health_certificate->pink_health_certificate_id)->get();
+
+            for($i = 0; $i < $this->stool_and_other_rows; $i++)
+                $stool_and_others[$i] = $this->findByRowNumber($stool_and_others, $i + 1, 'App\StoolAndOther');
+
+
+            $hivs = HivExamination::where('pink_health_certificate_id', '=', $pink_health_certificate->pink_health_certificate_id)->get();
+
+            for($i = 0; $i < $this->hiv_rows; $i++)
+                $hivs[$i] = $this->findByRowNumber($hivs, $i + 1, 'App\HivExamination');
+
+
+            $hbsags = HbsagExamination::where('pink_health_certificate_id', '=', $pink_health_certificate->pink_health_certificate_id)->get();
+
+            for($i = 0; $i < $this->hbsag_rows; $i++)
+                $hbsags[$i] = $this->findByRowNumber($hbsags, $i + 1, 'App\HbsagExamination');
+
+
+            $vdrls = VdrlExamination::where('pink_health_certificate_id', '=', $pink_health_certificate->pink_health_certificate_id)->get();
+
+            for($i = 0; $i < $this->vdrl_rows; $i++)
+                $vdrls[$i] = $this->findByRowNumber($vdrls, $i + 1, 'App\VdrlExamination');
+
+
+            $cervical_smears = CervicalSmearExamination::where('pink_health_certificate_id', '=', $pink_health_certificate->pink_health_certificate_id)->get();
+
+            for($i = 0; $i < $this->cervical_smear_rows; $i++)
+                $cervical_smears[$i] = $this->findByRowNumber($cervical_smears, $i + 1, 'App\CervicalSmearExamination');
+            //last here
         }
 
-        //Database operations below for form fields in tables. If statement for adding/editing record, elseif statement for deleting record when in edit/renew mode and the user deletes a record.
-
-        //loop variable for every foreach loop below
+        //Database operations below for form fields in tables. If statement for adding/editing record, elseif statement for deleting a record when it is edit/renew mode and the user deletes a record.
+        //loop variable $i for every foreach loop below. It is used for accessing form fields names suffixed with a number.
         $i = 1;
 
         foreach($immunizations as $immunization)
@@ -391,7 +437,7 @@ class PinkHealthCertificateController extends Controller
                 $immunization->save();
             }
 
-            elseif($this->request->{"immunization_date_$i"} == null && $this->request->{"immunization_kind_$i"} == null && $this->request->{"immunization_date_of_expiration_$i"} == null && ($mode == 'edit' || $mode == 'renew') && $immunization != null)
+            elseif($this->request->{"immunization_date_$i"} == null && $this->request->{"immunization_kind_$i"} == null && $this->request->{"immunization_date_of_expiration_$i"} == null && ($mode == 'edit' || $mode == 'renew'))
                 $immunization->delete();
 
             $i++;
@@ -411,8 +457,7 @@ class PinkHealthCertificateController extends Controller
                 $xray_sputum->save();
             }
 
-            elseif($this->request->input("x-ray_sputum_exam_date_$i") == null && $this->request->input("x-ray_sputum_exam_kind_$i") == null && $this->request->input("x-ray_sputum_exam_result_$i") == null 
-                    && ($mode == 'edit' || $mode == 'renew') && $xray_sputum != null)
+            elseif($this->request->input("x-ray_sputum_exam_date_$i") == null && $this->request->input("x-ray_sputum_exam_kind_$i") == null && $this->request->input("x-ray_sputum_exam_result_$i") == null && ($mode == 'edit' || $mode == 'renew'))
                     $xray_sputum->delete();
 
             $i++;
@@ -432,8 +477,7 @@ class PinkHealthCertificateController extends Controller
                 $stool_and_other->save();
             }
 
-            elseif($this->request->{"stool_and_other_exam_date_$i"} == null && $this->request->{"stool_and_other_exam_kind_$i"} == null && $this->request->{"stool_and_other_exam_result_$i"} == null 
-                && ($mode == 'edit' || $mode == 'renew') && $stool_and_other != null)
+            elseif($this->request->{"stool_and_other_exam_date_$i"} == null && $this->request->{"stool_and_other_exam_kind_$i"} == null && $this->request->{"stool_and_other_exam_result_$i"} == null && ($mode == 'edit' || $mode == 'renew'))
                 $stool_and_other->delete();
 
             $i++;
@@ -443,18 +487,17 @@ class PinkHealthCertificateController extends Controller
 
         foreach($hivs as $hiv)
         {
-            if($this->request->{"hiv_date_$i"} != null && $this->request->{"hiv_kind_$i"} != null && $this->request->{"hiv_date_of_next_exam_$i"} != null)
+            if($this->request->{"hiv_date_$i"} != null && $this->request->{"hiv_result_$i"} != null && $this->request->{"hiv_date_of_next_exam_$i"} != null)
             {
                 $hiv->pink_health_certificate_id = $pink_health_certificate->pink_health_certificate_id;
                 $hiv->date_of_exam = $this->request->{"hiv_date_$i"};
-                $hiv->result = $this->request->{"hiv_kind_$i"};
+                $hiv->result = $this->request->{"hiv_result_$i"};
                 $hiv->date_of_next_exam = $this->request->{"hiv_date_of_next_exam_$i"};
                 $hiv->row_number = $i;
                 $hiv->save();
             }
 
-            elseif($this->request->{"hiv_date_$i"} == null && $this->request->{"hiv_kind_$i"} == null && $this->request->{"hiv_date_of_next_exam_$i"} == null 
-                && ($mode == 'edit' || $mode == 'renew') && $hiv != null)
+            elseif($this->request->{"hiv_date_$i"} == null && $this->request->{"hiv_result_$i"} == null && $this->request->{"hiv_date_of_next_exam_$i"} == null && ($mode == 'edit' || $mode == 'renew'))
                 $hiv->delete();
 
             $i++;
@@ -464,22 +507,61 @@ class PinkHealthCertificateController extends Controller
 
         foreach($hbsags as $hbsag)
         {
-            if($this->request->{"hbsag_date_$i"} != null && $this->request->{"hbsag_kind_$i"} != null && $this->request->{"hbsag_date_of_next_exam_$i"} != null)
+            if($this->request->{"hbsag_date_$i"} != null && $this->request->{"hbsag_result_$i"} != null && $this->request->{"hbsag_date_of_next_exam_$i"} != null)
             {
                 $hbsag->pink_health_certificate_id = $pink_health_certificate->pink_health_certificate_id;
                 $hbsag->date_of_exam = $this->request->{"hbsag_date_$i"};
-                $hbsag->result = $this->request->{"hbsag_kind_$i"};
+                $hbsag->result = $this->request->{"hbsag_result_$i"};
                 $hbsag->date_of_next_exam = $this->request->{"hbsag_date_of_next_exam_$i"};
                 $hbsag->row_number = $i;
                 $hbsag->save();
             }
 
-            elseif($this->request->{"hbsag_date_$i"} == null && $this->request->{"hbsag_kind_$i"} == null && $this->request->{"hbsag_date_of_next_exam_$i"} == null 
-                && ($mode == 'edit' || $mode == 'renew') && $hbsag != null)
+            elseif($this->request->{"hbsag_date_$i"} == null && $this->request->{"hbsag_result_$i"} == null && $this->request->{"hbsag_date_of_next_exam_$i"} == null && ($mode == 'edit' || $mode == 'renew'))
                 $hbsag->delete();
 
             $i++;
-        }//last edit here
+        }
+
+        $i = 1;
+
+        foreach($vdrls as $vdrl)
+        {
+            if($this->request->{"vdrl_date_$i"} != null && $this->request->{"vdrl_result_$i"} != null && $this->request->{"vdrl_date_of_next_exam_$i"} != null)
+            {
+                $vdrl->pink_health_certificate_id = $pink_health_certificate->pink_health_certificate_id;
+                $vdrl->date_of_exam = $this->request->{"vdrl_date_$i"};
+                $vdrl->result = $this->request->{"vdrl_result_$i"};
+                $vdrl->date_of_next_exam = $this->request->{"vdrl_date_of_next_exam_$i"};
+                $vdrl->row_number = $i;
+                $vdrl->save();
+            }
+
+            elseif($this->request->{"vdrl_date_$i"} == null && $this->request->{"vdrl_result_$i"} == null && $this->request->{"vdrl_date_of_next_exam_$i"} == null && ($mode == 'edit' || $mode == 'renew'))
+                $vdrl->delete();
+
+            $i++;
+        }
+
+        $i = 1;
+
+        foreach($cervical_smears as $cervical_smear)
+        {
+            if($this->request->cervical_smear[$i]['date'] != null && $this->request->cervical_smear[$i]['initial'] != null && $this->request->cervical_smear[$i]['date_of_next_exam'] != null)
+            {
+                $cervical_smear->pink_health_certificate_id = $pink_health_certificate->pink_health_certificate_id;
+                $cervical_smear->date_of_exam = $this->request->cervical_smear[$i]['date'];
+                $cervical_smear->initial = $this->request->cervical_smear[$i]['initial'];
+                $cervical_smear->date_of_next_exam = $this->request->cervical_smear[$i]['date_of_next_exam'];
+                $cervical_smear->row_number = $i;
+                $cervical_smear->save();
+            }
+
+            elseif($this->request->cervical_smear[$i]['date'] == null && $this->request->cervical_smear[$i]['initial'] == null && $this->request->cervical_smear[$i]['date_of_next_exam'] == null && ($mode == 'edit' || $mode == 'renew'))
+                $cervical_smear->delete();
+
+            $i++;
+        }//last here
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -487,10 +569,16 @@ class PinkHealthCertificateController extends Controller
         if($mode != 'edit')
         {
             //(new CertificateFileGenerator($pink_health_certificate))->generatePDF();
-            return $pink_health_certificate->health_certificate_id;
+            return $pink_health_certificate->pink_health_certificate_id;
         }
 
         //else
             //(new CertificateFileGenerator($pink_health_certificate))->updatePDF(/*$old_health_certificate*/);
+    }
+
+    private function findByRowNumber($model, $row_number, $class_name)
+    {
+        $model = $model->where('row_number', $row_number)->first();
+        return $model == null ? new $class_name : $model;
     }
 }

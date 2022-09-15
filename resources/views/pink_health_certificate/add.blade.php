@@ -295,8 +295,8 @@
 										<input type="date" name="hiv_date_{{ $i }}" value="{{ old('hiv_date_' . $i) }}">
 									</td>
 
-									<td class="field{!! !$errors->has('hiv_kind_' . $i) ? '"' : ' error" data-content="' . $errors->first('hiv_kind_' . $i) . '" data-position="top center"' !!}>
-										<input type="text" name="hiv_kind_{{ $i }}" value="{{ old('hiv_kind_' . $i) }}">
+									<td class="field{!! !$errors->has('hiv_result_' . $i) ? '"' : ' error" data-content="' . $errors->first('hiv_result_' . $i) . '" data-position="top center"' !!}>
+										<input type="text" name="hiv_result_{{ $i }}" value="{{ old('hiv_result_' . $i) }}">
 									</td>
 
 									<td class="field{!! !$errors->has('hiv_date_of_next_exam_' . $i) ? '"' :' error" data-content="' . $errors->first('hiv_date_of_next_exam_' . $i) . '" data-position="top center"' !!}>
@@ -329,8 +329,8 @@
 										<input type="date" name="hbsag_date_{{ $i }}" value="{{ old('hbsag_date_' . $i) }}">
 									</td>
 
-									<td class="field{!! !$errors->has('hbsag_kind_' . $i) ? '"' : ' error" data-content="' . $errors->first('hbsag_kind_' . $i) . '" data-position="top center"' !!}>
-										<input type="text" name="hbsag_kind_{{ $i }}" value="{{ old('hbsag_kind_' . $i) }}">
+									<td class="field{!! !$errors->has('hbsag_result_' . $i) ? '"' : ' error" data-content="' . $errors->first('hbsag_result_' . $i) . '" data-position="top center"' !!}>
+										<input type="text" name="hbsag_result_{{ $i }}" value="{{ old('hbsag_result_' . $i) }}">
 									</td>
 
 									<td class="field{!! !$errors->has('hbsag_date_of_next_exam_' . $i) ? '"' :' error" data-content="' . $errors->first('hbsag_date_of_next_exam_' . $i) . '" data-position="top center"' !!}>
@@ -363,8 +363,8 @@
 										<input type="date" name="vdrl_date_{{ $i }}" value="{{ old('vdrl_date_' . $i) }}">
 									</td>
 
-									<td class="field{!! !$errors->has('vdrl_kind_' . $i) ? '"' : ' error" data-content="' . $errors->first('vdrl_kind_' . $i) . '" data-position="top center"' !!}>
-										<input type="text" name="vdrl_kind_{{ $i }}" value="{{ old('vdrl_kind_' . $i) }}">
+									<td class="field{!! !$errors->has('vdrl_result_' . $i) ? '"' : ' error" data-content="' . $errors->first('vdrl_result_' . $i) . '" data-position="top center"' !!}>
+										<input type="text" name="vdrl_result_{{ $i }}" value="{{ old('vdrl_result_' . $i) }}">
 									</td>
 
 									<td class="field{!! !$errors->has('vdrl_date_of_next_exam_' . $i) ? '"' :' error" data-content="' . $errors->first('vdrl_date_of_next_exam_' . $i) . '" data-position="top center"' !!}>

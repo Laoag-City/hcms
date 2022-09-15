@@ -18,7 +18,7 @@ class CreatePinkHealthCertificatesTable extends Migration
             $table->increments('pink_health_certificate_id');
             $table->integer('applicant_id')->unsigned();
             $table->string('registration_number', 11)->unique();
-            $table->string('validity_period', 20);
+            $table->string('validity_period', 20); //added this row if ever pink card will have differing validity period in the future
             $table->string('occupation', 40);
             $table->string('place_of_work', 50);
             $table->date('issuance_date');
