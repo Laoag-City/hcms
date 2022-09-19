@@ -15,8 +15,7 @@ class CreateXRaySputumsTable extends Migration
     {
         Schema::create('x-ray_sputums', function (Blueprint $table) {
             $table->increments('x-ray_sputum_id');
-            $table->integer('health_certificate_id')->unsigned()->nullable();
-            $tablie->integer('pink_health_certificate_id')->unsigned()->nullable();
+            $table->integer('health_certificate_id')->unsigned();
             $table->date('date');
             $table->string('kind', 20);
             $table->string('result', 20);
@@ -26,12 +25,6 @@ class CreateXRaySputumsTable extends Migration
             $table->foreign('health_certificate_id')
                                     ->references('health_certificate_id')
                                     ->on('health_certificates')
-                                    ->onUpdate('cascade')
-                                    ->onDelete('cascade');
-
-            $table->foreign('pink_health_certificate_id')
-                                    ->references('pink_health_certificate_id')
-                                    ->on('pink_health_certificates')
                                     ->onUpdate('cascade')
                                     ->onDelete('cascade');
         });

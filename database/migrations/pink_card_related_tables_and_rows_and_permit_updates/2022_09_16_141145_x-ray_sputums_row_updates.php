@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateHbsagExaminationsTable extends Migration
+class XRaySputumsRowUpdates extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,11 @@ class CreateHbsagExaminationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('hbsag_examinations', function (Blueprint $table) {
-            $table->increments('hbsag_examination_id');
-            $tablie->integer('pink_health_certificate_id')->unsigned();
-            $table->date('date_of_exam');
-            $table->string('result', 20);
-            $table->date('date_of_next_exam');
-            $table->tinyInteger('row_number')->unsigned();
-            $table->timestamps();
+        //used raw statement since the schema class has issues with the table name and how it changes a row
+        DB::statement('ALTER TABLE `x-ray_sputums` CHANGE `health_certificate_id` `health_certificate_id` INT UNSIGNED DEFAULT NULL');
+
+        Schema::table('x-ray_sputums', function (Blueprint $table) {
+            $table->integer('pink_health_certificate_id')->unsigned()->nullable()->after('health_certificate_id');
 
             $table->foreign('pink_health_certificate_id')
                                     ->references('pink_health_certificate_id')
@@ -37,6 +34,8 @@ class CreateHbsagExaminationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hbsag_examinations');
+        Schema::table('x-ray_sputums', function (Blueprint $table) {
+            //
+        });
     }
 }

@@ -29,7 +29,7 @@
 
 						<div class="three wide field">
 							<div class="ui check checkbox">
-								<label><b>Add Pink Health Certificate to Existing Client</b></label>
+								<label><b>Add Pink Card to Existing Client</b></label>
 								<input type="checkbox" name="existing_client" {{ old('existing_client') == null ?: 'checked' }}>
 							</div>
 						</div>

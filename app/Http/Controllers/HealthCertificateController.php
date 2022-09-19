@@ -17,7 +17,7 @@ use App\Custom\CertificateFileGenerator;
 use App\Custom\RegistrationNumberGenerator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use App\Custom\CertificateTableRowFinder
+use App\Custom\CertificateTableRowFinder;
 
 class HealthCertificateController extends Controller
 {

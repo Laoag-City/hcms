@@ -17,7 +17,8 @@ use App\CervicalSmearExamination;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use App\Custom\CertificateTableRowFinder
+use App\Custom\RegistrationNumberGenerator;
+use App\Custom\CertificateTableRowFinder;
 
 /*
 This controller share many similiarites with HealthCertificateController.
@@ -48,7 +49,7 @@ class PinkHealthCertificateController extends Controller
         if($this->request->isMethod('get'))
         {
             return view('pink_health_certificate.add', [
-                'title' => 'Add Pink Health Certificate',
+                'title' => 'Add Pink Card',
                 'validity_period' => PinkHealthCertificate::VALIDITY_PERIOD['months'],
                 'immunization_rows' => $this->immunization_rows,
                 'xray_sputum_rows' => $this->xray_sputum_rows,
@@ -62,7 +63,9 @@ class PinkHealthCertificateController extends Controller
 
         elseif($this->request->isMethod('post'))
         {
-            $this->create_edit_logic('add');
+            $id = $this->create_edit_logic('add');
+
+            return redirect("pink_card/$id/preview");//last here. double check loops below for tables. it duplicates
         }
 
         return response()->json([], 405);
@@ -149,7 +152,7 @@ class PinkHealthCertificateController extends Controller
             'place_of_work' => 'bail|required|max:50',
             'date_of_expiration' => 'bail|required|date|after:date_of_issuance',
             'community_tax_no' => 'bail|required|string|max:20',
-            'community_tax_issued_at' => 'bail|required|alpha_spaces|max:30'
+            'community_tax_issued_at' => 'bail|required|alpha_spaces|max:30',
             'community_tax_issued_on' => 'bail|required|date|before_or_equal:today',
 
             'immunization_date_1' => 'nullable|bail|required_with:immunization_kind_1,immunization_date_of_expiration_1|date|before_or_equal:today',
@@ -215,67 +218,67 @@ class PinkHealthCertificateController extends Controller
             'stool_and_other_exam_result_3' => 'nullable|bail|required_with:stool_and_other_exam_date_3,stool_and_other_exam_kind_3|max:20',
             ///////////////////////////
 
-            'hiv_date_1' => 'nullable|bail|required_with:hiv_kind_1,hiv_date_of_next_exam_1|date|before_or_equal:today',
+            'hiv_date_1' => 'nullable|bail|required_with:hiv_result_1,hiv_date_of_next_exam_1|date|before_or_equal:today',
 
-            'hiv_kind_1' => 'nullable|bail|required_with:hiv_date_1,hiv_date_of_next_exam_1|max:20',
+            'hiv_result_1' => 'nullable|bail|required_with:hiv_date_1,hiv_date_of_next_exam_1|max:20',
 
-            'hiv_date_of_next_exam_1' => 'nullable|bail|required_with:hiv_date_1,hiv_kind_1|date|after:hiv_date_1',
+            'hiv_date_of_next_exam_1' => 'nullable|bail|required_with:hiv_date_1,hiv_result_1|date|after:hiv_date_1',
             ///////////////////////////
 
-            'hiv_date_2' => 'nullable|bail|required_with:hiv_kind_2,hiv_date_of_next_exam_2|date|before_or_equal:today',
+            'hiv_date_2' => 'nullable|bail|required_with:hiv_result_2,hiv_date_of_next_exam_2|date|before_or_equal:today',
 
-            'hiv_kind_2' => 'nullable|bail|required_with:hiv_date_2,hiv_date_of_next_exam_2|max:20',
+            'hiv_result_2' => 'nullable|bail|required_with:hiv_date_2,hiv_date_of_next_exam_2|max:20',
 
-            'hiv_date_of_next_exam_2' => 'nullable|bail|required_with:hiv_date_2,hiv_kind_2|date|after:hiv_date_2',
+            'hiv_date_of_next_exam_2' => 'nullable|bail|required_with:hiv_date_2,hiv_result_2|date|after:hiv_date_2',
             ///////////////////////////
 
-            'hiv_date_3' => 'nullable|bail|required_with:hiv_kind_3,hiv_date_of_next_exam_3|date|before_or_equal:today',
+            'hiv_date_3' => 'nullable|bail|required_with:hiv_result_3,hiv_date_of_next_exam_3|date|before_or_equal:today',
 
-            'hiv_kind_3' => 'nullable|bail|required_with:hiv_date_3,hiv_date_of_next_exam_3|max:20',
+            'hiv_result_3' => 'nullable|bail|required_with:hiv_date_3,hiv_date_of_next_exam_3|max:20',
 
-            'hiv_date_of_next_exam_3' => 'nullable|bail|required_with:hiv_date_3,hiv_kind_3|date|after:hiv_date_3',
+            'hiv_date_of_next_exam_3' => 'nullable|bail|required_with:hiv_date_3,hiv_result_3|date|after:hiv_date_3',
             ///////////////////////////
 
-            'hbsag_date_1' => 'nullable|bail|required_with:hbsag_kind_1,hbsag_date_of_next_exam_1|date|before_or_equal:today',
+            'hbsag_date_1' => 'nullable|bail|required_with:hbsag_result_1,hbsag_date_of_next_exam_1|date|before_or_equal:today',
 
-            'hbsag_kind_1' => 'nullable|bail|required_with:hbsag_date_1,hbsag_date_of_next_exam_1|max:20',
+            'hbsag_result_1' => 'nullable|bail|required_with:hbsag_date_1,hbsag_date_of_next_exam_1|max:20',
 
-            'hbsag_date_of_next_exam_1' => 'nullable|bail|required_with:hbsag_date_1,hbsag_kind_1|date|after:hbsag_date_1',
+            'hbsag_date_of_next_exam_1' => 'nullable|bail|required_with:hbsag_date_1,hbsag_result_1|date|after:hbsag_date_1',
             ///////////////////////////
 
-            'hbsag_date_2' => 'nullable|bail|required_with:hbsag_kind_2,hbsag_date_of_next_exam_2|date|before_or_equal:today',
+            'hbsag_date_2' => 'nullable|bail|required_with:hbsag_result_2,hbsag_date_of_next_exam_2|date|before_or_equal:today',
 
-            'hbsag_kind_2' => 'nullable|bail|required_with:hbsag_date_2,hbsag_date_of_next_exam_2|max:20',
+            'hbsag_result_2' => 'nullable|bail|required_with:hbsag_date_2,hbsag_date_of_next_exam_2|max:20',
 
-            'hbsag_date_of_next_exam_2' => 'nullable|bail|required_with:hbsag_date_2,hbsag_kind_2|date|after:hbsag_date_2',
+            'hbsag_date_of_next_exam_2' => 'nullable|bail|required_with:hbsag_date_2,hbsag_result_2|date|after:hbsag_date_2',
             ///////////////////////////
 
-            'hbsag_date_3' => 'nullable|bail|required_with:hbsag_kind_3,hbsag_date_of_next_exam_3|date|before_or_equal:today',
+            'hbsag_date_3' => 'nullable|bail|required_with:hbsag_result_3,hbsag_date_of_next_exam_3|date|before_or_equal:today',
 
-            'hbsag_kind_3' => 'nullable|bail|required_with:hbsag_date_3,hbsag_date_of_next_exam_3|max:20',
+            'hbsag_result_3' => 'nullable|bail|required_with:hbsag_date_3,hbsag_date_of_next_exam_3|max:20',
 
-            'hbsag_date_of_next_exam_3' => 'nullable|bail|required_with:hbsag_date_3,hbsag_kind_3|date|after:hbsag_date_3',
+            'hbsag_date_of_next_exam_3' => 'nullable|bail|required_with:hbsag_date_3,hbsag_result_3|date|after:hbsag_date_3',
             ///////////////////////////
 
-            'vdrl_date_1' => 'nullable|bail|required_with:vdrl_kind_1,vdrl_date_of_next_exam_1|date|before_or_equal:today',
+            'vdrl_date_1' => 'nullable|bail|required_with:vdrl_result_1,vdrl_date_of_next_exam_1|date|before_or_equal:today',
 
-            'vdrl_kind_1' => 'nullable|bail|required_with:vdrl_date_1,vdrl_date_of_next_exam_1|max:20',
+            'vdrl_result_1' => 'nullable|bail|required_with:vdrl_date_1,vdrl_date_of_next_exam_1|max:20',
 
-            'vdrl_date_of_next_exam_1' => 'nullable|bail|required_with:vdrl_date_1,vdrl_kind_1|date|after:vdrl_date_1',
+            'vdrl_date_of_next_exam_1' => 'nullable|bail|required_with:vdrl_date_1,vdrl_result_1|date|after:vdrl_date_1',
             ///////////////////////////
 
-            'vdrl_date_2' => 'nullable|bail|required_with:vdrl_kind_2,vdrl_date_of_next_exam_2|date|before_or_equal:today',
+            'vdrl_date_2' => 'nullable|bail|required_with:vdrl_result_2,vdrl_date_of_next_exam_2|date|before_or_equal:today',
 
-            'vdrl_kind_2' => 'nullable|bail|required_with:vdrl_date_2,vdrl_date_of_next_exam_2|max:20',
+            'vdrl_result_2' => 'nullable|bail|required_with:vdrl_date_2,vdrl_date_of_next_exam_2|max:20',
 
-            'vdrl_date_of_next_exam_2' => 'nullable|bail|required_with:vdrl_date_2,vdrl_kind_2|date|after:vdrl_date_2',
+            'vdrl_date_of_next_exam_2' => 'nullable|bail|required_with:vdrl_date_2,vdrl_result_2|date|after:vdrl_date_2',
             ///////////////////////////
 
-            'vdrl_date_3' => 'nullable|bail|required_with:vdrl_kind_3,vdrl_date_of_next_exam_3|date|before_or_equal:today',
+            'vdrl_date_3' => 'nullable|bail|required_with:vdrl_result_3,vdrl_date_of_next_exam_3|date|before_or_equal:today',
 
-            'vdrl_kind_3' => 'nullable|bail|required_with:vdrl_date_3,vdrl_date_of_next_exam_3|max:20',
+            'vdrl_result_3' => 'nullable|bail|required_with:vdrl_date_3,vdrl_date_of_next_exam_3|max:20',
 
-            'vdrl_date_of_next_exam_3' => 'nullable|bail|required_with:vdrl_date_3,vdrl_kind_3|date|after:vdrl_date_3',
+            'vdrl_date_of_next_exam_3' => 'nullable|bail|required_with:vdrl_date_3,vdrl_result_3|date|after:vdrl_date_3',
             //////////////////////////
 
             'cervical_smear.*.date' => 'nullable|bail|required_with:cervical_smear.*.initial,cervical_smear.*.date_of_next_exam|date|before_or_equal:today',
@@ -376,6 +379,7 @@ class PinkHealthCertificateController extends Controller
             $pink_health_certificate->save();
 
             $pink_health_certificate->checkIfExpired();
+
 
             //prepare variables for the input fields in a table at the front-end
             $immunizations = Immunization::where('pink_health_certificate_id', '=', $pink_health_certificate->pink_health_certificate_id)->get();
@@ -561,9 +565,7 @@ class PinkHealthCertificateController extends Controller
                 $cervical_smear->delete();
 
             $i++;
-        }//last here
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        }
 
         //logic for saving pdf files of certificates
         if($mode != 'edit')

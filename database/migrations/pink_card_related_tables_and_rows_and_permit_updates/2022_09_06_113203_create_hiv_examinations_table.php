@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateVdrlExaminationsTable extends Migration
+class CreateHivExaminationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateVdrlExaminationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('vdrl_examinations', function (Blueprint $table) {
-            $table->increments('vdrl_examination_id');
-            $tablie->integer('pink_health_certificate_id')->unsigned();
+        Schema::create('hiv_examinations', function (Blueprint $table) {
+            $table->increments('hiv_examination_id');
+            $table->integer('pink_health_certificate_id')->unsigned();
             $table->date('date_of_exam');
             $table->string('result', 20);
             $table->date('date_of_next_exam');
@@ -37,6 +37,6 @@ class CreateVdrlExaminationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vdrl_examinations');
+        Schema::dropIfExists('hiv_examinations');
     }
 }

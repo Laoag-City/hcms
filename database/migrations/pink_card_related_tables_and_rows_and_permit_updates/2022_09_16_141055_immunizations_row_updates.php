@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCervicalSmearExaminationsTable extends Migration
+class ImmunizationsRowUpdates extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,9 @@ class CreateCervicalSmearExaminationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('cervical_smear_examinations', function (Blueprint $table) {
-            $table->increments('cervical_smear_examination_id');
-            $tablie->integer('pink_health_certificate_id')->unsigned();
-            $table->date('date_of_exam');
-            $table->string('initial', 20);
-            $table->date('date_of_next_exam');
-            $table->tinyInteger('row_number')->unsigned();
-            $table->timestamps();
+        Schema::table('immunizations', function (Blueprint $table) {
+            $table->integer('health_certificate_id')->unsigned()->nullable()->change();
+            $table->integer('pink_health_certificate_id')->unsigned()->nullable()->after('health_certificate_id');
 
             $table->foreign('pink_health_certificate_id')
                                     ->references('pink_health_certificate_id')
@@ -37,6 +32,8 @@ class CreateCervicalSmearExaminationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cervical_smear_examinations');
+        Schema::table('immunizations', function (Blueprint $table) {
+            //
+        });
     }
 }
