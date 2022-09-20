@@ -19,12 +19,13 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Custom\RegistrationNumberGenerator;
 use App\Custom\CertificateTableRowFinder;
+use App\Custom\PinkCardFileGenerator;
 
 /*
 This controller share many similiarites with HealthCertificateController.
 Some codes from the HealthCertificateController that are applicable here are further improved and optimized.
 Those codes are used as the building blocks for the pink card.
-The improvements and optimizations made here that are applicable for the health certificate are not done due to time constraints.
+Most improvements and optimizations made here that are applicable for the health certificate are not done due to time constraints.
 */
 class PinkHealthCertificateController extends Controller
 {
@@ -65,10 +66,71 @@ class PinkHealthCertificateController extends Controller
         {
             $id = $this->create_edit_logic('add');
 
-            return redirect("pink_card/$id/preview");//last here. double check loops below for tables. it duplicates
+            return redirect("pink_card/$id/preview");
         }
 
         return response()->json([], 405);
+    }
+
+    public function viewEditPinkHealthCertificate(PinkHealthCertificate $pink_health_certificate)
+    {
+        if($this->request->isMethod('get'))
+        {
+            $immunizations = $this->tabledFieldsLooper(false, 'App\Immunization', $this->immunization_rows, $pink_health_certificate->immunizations->sortBy('row_number'));
+
+            $xray_sputums = $this->tabledFieldsLooper(false, 'App\XRaySputum', $this->xray_sputum_rows, $pink_health_certificate->xray_sputums->sortBy('row_number'));
+
+            $stool_and_others = $this->tabledFieldsLooper(false, 'App\StoolAndOther', $this->stool_and_other_rows, $pink_health_certificate->stool_and_others->sortBy('row_number'));
+
+            $hivs = $this->tabledFieldsLooper(false, 'App\HivExamination', $this->hiv_rows, $pink_health_certificate->hiv_examinations->sortBy('row_number'));
+
+            $hbsags = $this->tabledFieldsLooper(false, 'App\HbsagExamination', $this->hbsag_rows, $pink_health_certificate->hbsag_examinations->sortBy('row_number'));
+
+            $vdrls = $this->tabledFieldsLooper(false, 'App\VdrlExamination', $this->vdrl_rows, $pink_health_certificate->vdrl_examinations->sortBy('row_number'));
+
+            $cervical_smears = $this->tabledFieldsLooper(false, 'App\CervicalSmearExamination', $this->cervical_smear_rows, $pink_health_certificate->cervical_smear_examinations->sortBy('row_number'));
+
+            return view('pink_health_certificate.view_edit', [
+                'title' => "Pink Card Information",
+
+                'applicant' => $pink_health_certificate->applicant,
+                'pink_health_certificate' => $pink_health_certificate,
+                'immunizations' => $immunizations,
+                'xray_sputums' => $xray_sputums,
+                'stool_and_others' => $stool_and_others,
+                'hivs' => $hivs,
+                'hbsags' => $hbsags,
+                'vdrls' => $vdrls,
+                'cervical_smears' => $cervical_smears,
+
+                'picture_url' => (new PinkCardFileGenerator($pink_health_certificate))->getPicturePathAndURL()['url'],
+                'validity_period' => PinkHealthCertificate::VALIDITY_PERIOD['months']
+            ]);
+        }
+
+        elseif($this->request->isMethod('put'))
+        {
+            $this->create_edit_logic('edit', $pink_health_certificate);
+
+            return redirect("pink_card/{$pink_health_certificate->pink_health_certificate_id}/preview");
+        }
+    }
+
+    public function deletePinkHealthCertificate(PinkHealthCertificate $pink_health_certificate)
+    {
+        $validator = Validator::make($this->request->all(), [
+            'password' => 'bail|required'
+        ]);
+
+        $validator->after(function ($validator){
+            if(!app('hash')->check($this->request->password, $this->request->user()->password))
+                $validator->errors()->add('password', 'Incorrect password.');
+        });
+
+        $validator->validate();
+
+        $pink_health_certificate->delete();
+        return redirect(explode('?', url()->previous())[0]);
     }
 
     private function create_edit_logic($mode, PinkHealthCertificate $pink_health_certificate = null)
@@ -134,12 +196,7 @@ class PinkHealthCertificateController extends Controller
 
             $create_or_edit_rules = array_merge($specific_rules, [
                 'age' => 'bail|required|integer|min:15|max:100'
-
             ]);
-            /*$old_health_certificate = $pink_health_certificate->replicate();
-
-            $old_health_certificate->health_certificate_id = $pink_health_certificate->health_certificate_id;
-            $old_health_certificate->created_at = $pink_health_certificate->created_at;*/
         }
         
         /*
@@ -281,6 +338,8 @@ class PinkHealthCertificateController extends Controller
             'vdrl_date_of_next_exam_3' => 'nullable|bail|required_with:vdrl_date_3,vdrl_result_3|date|after:vdrl_date_3',
             //////////////////////////
 
+            'cervical_smear' => 'array|size:' . $this->cervical_smear_rows,
+
             'cervical_smear.*.date' => 'nullable|bail|required_with:cervical_smear.*.initial,cervical_smear.*.date_of_next_exam|date|before_or_equal:today',
 
             'cervical_smear.*.initial' => 'nullable|bail|required_with:cervical_smear.*.date,cervical_smear.*.date_of_next_exam|max:20',
@@ -332,26 +391,19 @@ class PinkHealthCertificateController extends Controller
             $pink_health_certificate->save();
 
             //prepare variables for the input fields in a table at the front-end
-            for($i = 0; $i < $this->immunization_rows; $i++)
-                $immunizations[$i] = new Immunization;
+            $immunizations = $this->tabledFieldsLooper(true, 'App\Immunization', $this->immunization_rows);
 
-            for($i = 0; $i < $this->xray_sputum_rows; $i++)
-                $xray_sputums[$i] = new XRaySputum;
+            $xray_sputums = $this->tabledFieldsLooper(true, 'App\XRaySputum', $this->xray_sputum_rows);
 
-            for($i = 0; $i < $this->stool_and_other_rows; $i++)
-                $stool_and_others[$i] = new StoolAndOther;
+            $stool_and_others = $this->tabledFieldsLooper(true, 'App\StoolAndOther', $this->stool_and_other_rows);
 
-            for($i = 0; $i < $this->hiv_rows; $i++)
-                $hivs[$i] = new HivExamination;
+            $hivs = $this->tabledFieldsLooper(true, 'App\HivExamination', $this->hiv_rows);
 
-            for($i = 0; $i < $this->hbsag_rows; $i++)
-                $hbsags[$i] = new HbsagExamination;
+            $hbsags = $this->tabledFieldsLooper(true, 'App\HbsagExamination', $this->hbsag_rows);
 
-            for($i = 0; $i < $this->vdrl_rows; $i++)
-                $vdrls[$i] = new VdrlExamination;
+            $vdrls = $this->tabledFieldsLooper(true, 'App\VdrlExamination', $this->vdrl_rows);
 
-            for($i = 0; $i < $this->cervical_smear_rows; $i++)
-                $cervical_smears[$i] = new CervicalSmearExamination;
+            $cervical_smears = $this->tabledFieldsLooper(true, 'App\CervicalSmearExamination', $this->cervical_smear_rows);
         }
 
         //if either edit or renew
@@ -380,9 +432,23 @@ class PinkHealthCertificateController extends Controller
 
             $pink_health_certificate->checkIfExpired();
 
-
             //prepare variables for the input fields in a table at the front-end
-            $immunizations = Immunization::where('pink_health_certificate_id', '=', $pink_health_certificate->pink_health_certificate_id)->get();
+            $immunizations = $this->tabledFieldsLooper(false, 'App\Immunization', $this->immunization_rows, $pink_health_certificate->immunizations->sortBy('row_number'));
+
+            $xray_sputums = $this->tabledFieldsLooper(false, 'App\XRaySputum', $this->xray_sputum_rows, $pink_health_certificate->xray_sputums->sortBy('row_number'));
+
+            $stool_and_others = $this->tabledFieldsLooper(false, 'App\StoolAndOther', $this->stool_and_other_rows, $pink_health_certificate->stool_and_others->sortBy('row_number'));
+
+            $hivs = $this->tabledFieldsLooper(false, 'App\HivExamination', $this->hiv_rows, $pink_health_certificate->hiv_examinations->sortBy('row_number'));
+
+            $hbsags = $this->tabledFieldsLooper(false, 'App\HbsagExamination', $this->hbsag_rows, $pink_health_certificate->hbsag_examinations->sortBy('row_number'));
+
+            $vdrls = $this->tabledFieldsLooper(false, 'App\VdrlExamination', $this->vdrl_rows, $pink_health_certificate->vdrl_examinations->sortBy('row_number'));
+
+            $cervical_smears = $this->tabledFieldsLooper(false, 'App\CervicalSmearExamination', $this->cervical_smear_rows, $pink_health_certificate->cervical_smear_examinations->sortBy('row_number'));
+
+            
+            /*$immunizations = Immunization::where('pink_health_certificate_id', '=', $pink_health_certificate->pink_health_certificate_id)->get();
 
             for($i = 0; $i < $this->immunization_rows; $i++)
                 $immunizations[$i] = $this->findByRowNumber($immunizations, $i + 1, 'App\Immunization');
@@ -421,12 +487,11 @@ class PinkHealthCertificateController extends Controller
             $cervical_smears = CervicalSmearExamination::where('pink_health_certificate_id', '=', $pink_health_certificate->pink_health_certificate_id)->get();
 
             for($i = 0; $i < $this->cervical_smear_rows; $i++)
-                $cervical_smears[$i] = $this->findByRowNumber($cervical_smears, $i + 1, 'App\CervicalSmearExamination');
-            //last here
+                $cervical_smears[$i] = $this->findByRowNumber($cervical_smears, $i + 1, 'App\CervicalSmearExamination');*/
         }
 
-        //Database operations below for form fields in tables. If statement for adding/editing record, elseif statement for deleting a record when it is edit/renew mode and the user deletes a record.
-        //loop variable $i for every foreach loop below. It is used for accessing form fields names suffixed with a number.
+        //Database operations below for form fields in tables. If statement for adding/editing record, elseif statement for deleting a record when it is in edit/renew mode and the user deletes a record.
+        //loop variable $i for every foreach loop below. It is used for accessing form fields' name suffixed with a number.
         $i = 1;
 
         foreach($immunizations as $immunization)
@@ -567,20 +632,9 @@ class PinkHealthCertificateController extends Controller
             $i++;
         }
 
-        //logic for saving pdf files of certificates
         if($mode != 'edit')
         {
-            //(new CertificateFileGenerator($pink_health_certificate))->generatePDF();
             return $pink_health_certificate->pink_health_certificate_id;
         }
-
-        //else
-            //(new CertificateFileGenerator($pink_health_certificate))->updatePDF(/*$old_health_certificate*/);
-    }
-
-    private function findByRowNumber($model, $row_number, $class_name)
-    {
-        $model = $model->where('row_number', $row_number)->first();
-        return $model == null ? new $class_name : $model;
     }
 }

@@ -116,7 +116,7 @@
 						<div class="four wide field
 						{!! !$errors->has('nationality') ? '"' : ' error" data-content="' . $errors->first('nationality') . '" data-position="top center"' !!}>
 							<label>Nationality:</label>
-							<input type="text" name="nationality" value="{{ old('nationality') }}" class="dynamic_on_search" placeholder="Nationality">
+							<input type="text" name="nationality" value="{{ old('nationality') ? old('nationality') : 'Filipino' }}" class="dynamic_on_search" placeholder="Nationality">
 						</div>
 					</div>
 
@@ -131,12 +131,14 @@
 							<input type="text" name="place_of_work" value="{{ old('place_of_work') }}" placeholder="Place of Work">
 						</div>
 
-				    	<div class="four wide field{!! !$errors->has('date_of_issuance') ? '"' : ' error" data-content="' . $errors->first('date_of_issuance') . '" data-position="top center"' !!}>
+				    	<div class="four wide field
+				    	{!! !$errors->has('date_of_issuance') ? '"' : ' error" data-content="' . $errors->first('date_of_issuance') . '" data-position="top center"' !!}>
 				    		<label>Date of Issuance:</label>
 				    		<input type="date" name="date_of_issuance" value="{{ old('date_of_issuance') ? old('date_of_issuance') : date('Y-m-d', strtotime('now')) }}">
 				    	</div>
 
-				    	<div class="four wide field{!! !$errors->has('date_of_expiration') ? '"' : ' error" data-content="' . $errors->first('date_of_expiration') . '" data-position="top center"' !!}>
+				    	<div class="four wide field
+				    	{!! !$errors->has('date_of_expiration') ? '"' : ' error" data-content="' . $errors->first('date_of_expiration') . '" data-position="top center"' !!}>
 				    		<label>Date of Expiration:</label>
 				    		<input type="date" name="date_of_expiration" value="{{ old('date_of_expiration') }}" readonly="">
 				    	</div>
@@ -153,24 +155,20 @@
 							<input type="text" name="community_tax_no" value="{{ old('community_tax_no') }}" placeholder="Community Tax No">
 						</div>
 
-						<div class="four wide field{!! !$errors->has('community_tax_issued_at') ? '"' : ' error" data-content="' . $errors->first('community_tax_issued_at') . '" data-position="top center"' !!}>
+						<div class="four wide field
+						{!! !$errors->has('community_tax_issued_at') ? '"' : ' error" data-content="' . $errors->first('community_tax_issued_at') . '" data-position="top center"' !!}>
 				    		<label>Community Tax Issued At:</label>
 				    		<input type="text" name="community_tax_issued_at" value="{{ old('community_tax_issued_at') ? old('community_tax_issued_at') : 'Laoag City' }}" placeholder="Community Tax Issued At">
 				    	</div>
 
-				    	<div class="four wide field{!! !$errors->has('community_tax_issued_on') ? '"' : ' error" data-content="' . $errors->first('community_tax_issued_on') . '" data-position="top center"' !!}>
+				    	<div class="four wide field
+				    	{!! !$errors->has('community_tax_issued_on') ? '"' : ' error" data-content="' . $errors->first('community_tax_issued_on') . '" data-position="top center"' !!}>
 				    		<label>Community Tax Issued On:</label>
 				    		<input type="date" name="community_tax_issued_on" value="{{ old('community_tax_issued_on') }}">
 				    	</div>
 					</div>
 
 					<br>
-
-					@if($errors->has('general_table_error'))
-						<div class="ui error message">
-							<p>{{ $errors->first('general_table_error') }}</p>
-						</div>
-					@endif
 
 					<div class="ui horizontal divider">IMMUNIZATION</div>
 

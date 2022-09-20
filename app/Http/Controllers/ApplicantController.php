@@ -7,6 +7,7 @@ use App\Applicant;
 use App\HealthCertificate;
 use App\Custom\CertificateFileGenerator;
 use App\Custom\PermitFileGenerator;
+use App\Custom\PinkCardFileGenerator;
 use Validator;
 
 class ApplicantController extends Controller
@@ -34,6 +35,7 @@ class ApplicantController extends Controller
     			'title' => $applicant->formatName(),
     			'applicant' => $applicant,
                 'health_certificates' => $applicant->health_certificates,
+                'pink_health_certificates' => $applicant->pink_health_certificates,
                 'sanitary_permits' => $applicant->sanitary_permits,
                 'picture_url' => $applicant->health_certificates->isNotEmpty() ? (new CertificateFileGenerator($applicant->health_certificates->first()))->getPicturePathAndURL()['url'] : null
     		]);
@@ -50,10 +52,17 @@ class ApplicantController extends Controller
     			'gender' => 'bail|required|in:0,1',
     		]);
 
+    		//get folder paths for the documents with files in the storage folder
             if($applicant->health_certificates != null)
             {
                 $old_certificate_file_generator = new CertificateFileGenerator($applicant->health_certificates->first());
                 $old_applicant_certificate_folder = $old_certificate_file_generator->getHealthCertificateFolder();
+            }
+
+            if($applicant->pink_health_certificates != null)
+            {
+                $old_pink_hc_file_generator = new PinkCardFileGenerator($applicant->pink_health_certificates->first());
+                $old_applicant_pink_hc_folder = $old_pink_hc_file_generator->getPinkHealthCertificateFolder();
             }
 
             /*if($applicant->sanitary_permits->isNotEmpty())
@@ -70,6 +79,8 @@ class ApplicantController extends Controller
     		$applicant->gender = $this->request->gender;
     		$applicant->save();
 
+    		//if there are changes affecting the filepath, update them below
+    		//for health certificate
             if($applicant->health_certificates != null)
             {
                 $new_certificate_file_generator = new CertificateFileGenerator($applicant->health_certificates->first()->refresh());
@@ -77,6 +88,16 @@ class ApplicantController extends Controller
 
                 if($old_applicant_certificate_folder['applicant_folder'] != $new_applicant_certificate_folder && file_exists($old_applicant_certificate_folder['certificate_folder_path']))
                     $new_certificate_file_generator->updateApplicantFolder($old_applicant_certificate_folder['applicant_folder']);
+            }
+
+            //for pink card
+            if($applicant->pink_health_certificates != null)
+            {
+                $new_pink_hc_file_generator = new PinkCardFileGenerator($applicant->pink_health_certificates->first()->refresh());
+                $new_applicant_pink_hc_folder = $new_pink_hc_file_generator->getPinkHealthCertificateFolder()['applicant_folder'];
+
+                if($old_applicant_pink_hc_folder['applicant_folder'] != $new_applicant_pink_hc_folder && file_exists($old_applicant_pink_hc_folder['certificate_folder_path']))
+                    $new_pink_hc_file_generator->updateApplicantFolder($old_applicant_pink_hc_folder['applicant_folder']);
             }
 
             /*if($applicant->sanitary_permits->isNotEmpty())

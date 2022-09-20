@@ -26,6 +26,8 @@ mix.js('resources/assets/js/app.js', 'public/js')
 
 	.scripts(['resources/assets/js/custom/health_certificate_information.js'], 'public/js/health_certificate_information.js')
 
+	.scripts(['resources/assets/js/custom/pink_health_certificate_information.js'], 'public/js/pink_health_certificate_information.js')
+
 	.scripts(['resources/assets/js/custom/camera.js'], 'public/js/camera.js')
 
 	.scripts(['resources/assets/js/custom/values_only_camera.js'], 'public/js/values_only_camera.js')

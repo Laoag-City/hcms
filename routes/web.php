@@ -38,7 +38,7 @@ Route::group(['middleware' => 'auth'], function(){
 	//for bulk print page search input
 	Route::get('health_certificate/search', 'HealthCertificateController@searchHealthCertificates');
 
-	//views and edits a health certificate
+	//renew a health certificate
 	Route::match(['get', 'put'], 'health_certificate/renew', 'HealthCertificateController@renewCertificate');
 
 	//views and edits a health certificate
@@ -106,6 +106,10 @@ Route::group(['middleware' => 'auth'], function(){
 	////Pink Health Certificate routes
 
 	Route::match(['get', 'post'], 'pink_card', 'PinkHealthCertificateController@addPinkHealthCertificate');
+
+	Route::match(['get', 'put'], 'pink_card/{pink_health_certificate}', 'PinkHealthCertificateController@viewEditPinkHealthCertificate');
+
+	Route::delete('pink_card/{pink_health_certificate}', 'PinkHealthCertificateController@deletePinkHealthCertificate');
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

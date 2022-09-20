@@ -17,6 +17,11 @@ class Applicant extends Model
     	return $this->hasMany('App\HealthCertificate', 'applicant_id', 'applicant_id');
     }
 
+    public function pink_health_certificates()
+    {
+        return $this->hasMany('App\PinkHealthCertificate', 'applicant_id', 'applicant_id');
+    }
+
     public function sanitary_permits()
     {
         return $this->hasMany('App\SanitaryPermit', 'applicant_id', 'applicant_id');

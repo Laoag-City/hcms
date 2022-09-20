@@ -29,37 +29,37 @@ class PinkHealthCertificate extends Model
 
     public function immunizations()
     {
-        return $this->hasMany('App\Immunization', 'health_certificate_id', 'health_certificate_id');
-    }
-
-    public function stool_and_others()
-    {
-        return $this->hasMany('App\StoolAndOther', 'health_certificate_id', 'health_certificate_id');
+        return $this->hasMany('App\Immunization', 'pink_health_certificate_id', 'pink_health_certificate_id');
     }
 
     public function xray_sputums()
     {
-        return $this->hasMany('App\XRaySputum', 'health_certificate_id', 'health_certificate_id');
+        return $this->hasMany('App\XRaySputum', 'pink_health_certificate_id', 'pink_health_certificate_id');
+    }
+
+    public function stool_and_others()
+    {
+        return $this->hasMany('App\StoolAndOther', 'pink_health_certificate_id', 'pink_health_certificate_id');
     }
 
     public function hiv_examinations()
     {
-        return $this->hasMany('App\HivExamination', 'hiv_examination_id', 'hiv_examination_id');
+        return $this->hasMany('App\HivExamination', 'pink_health_certificate_id', 'pink_health_certificate_id');
     }
 
     public function hbsag_examinations()
     {
-        return $this->hasMany('App\HbsagExamination', 'hbsag_examination_id', 'hbsag_examination_id');
+        return $this->hasMany('App\HbsagExamination', 'pink_health_certificate_id', 'pink_health_certificate_id');
     }
 
     public function vdrl_examinations()
     {
-        return $this->hasMany('App\VdrlExamination', 'vdrl_examination_id', 'vdrl_examination_id');
+        return $this->hasMany('App\VdrlExamination', 'pink_health_certificate_id', 'pink_health_certificate_id');
     }
 
     public function cervical_smear_examinations()
     {
-        return $this->hasMany('App\CervicalSmearExamination', 'cervical_smear_examination_id', 'cervical_smear_examination_id');
+        return $this->hasMany('App\CervicalSmearExamination', 'pink_health_certificate_id', 'pink_health_certificate_id');
     }
 
     public function getIssuanceDateAttribute($value)
