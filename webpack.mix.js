@@ -40,6 +40,8 @@ mix.js('resources/assets/js/app.js', 'public/js')
 
 	.scripts(['resources/assets/js/custom/bulk_print.js'], 'public/js/bulk_print.js')
 
+	.scripts(['resources/assets/js/custom/bulk_print_pink_card.js'], 'public/js/bulk_print_pink_card.js')
+
 	.scripts(['resources/assets/js/custom/renew_health_certificate.js'], 'public/js/renew_health_certificate.js')
 
 	.scripts(['resources/assets/js/custom/renew_pink_health_certificate.js'], 'public/js/renew_pink_health_certificate.js')

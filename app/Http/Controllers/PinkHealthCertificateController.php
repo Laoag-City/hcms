@@ -159,7 +159,7 @@ class PinkHealthCertificateController extends Controller
                                             ->with('applicant')
                                             ->get();
 
-            return view('applicant.bulk_print', [
+            return view('applicant.bulk_print_pink_card', [
                 'title' => 'Bulk Print Pink Card',
                 'pink_health_certificates' => $hc_on_bulk_print_list
             ]);
@@ -200,8 +200,8 @@ class PinkHealthCertificateController extends Controller
                                 'id' => $item->pink_health_certificate_id,
                                 'label' => $item->registration_number . ' / ' . $item->formatName(),
                                 'whole_name' => $item->formatName(),
-                                'hc_no' => $item->registration_number,
-                                'basic_info' => "{$item->work_type}, {$item->establishment}"
+                                'pc_no' => $item->registration_number,
+                                'basic_info' => "{$item->occupation}, {$item->place_of_work}"
                             ]); 
                         })
                     ]);
