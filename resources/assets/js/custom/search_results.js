@@ -8,6 +8,12 @@ $('.delete_button').click(function(){
 		form_action = '/health_certificate/';
 	}
 
+	else if($(this).attr('data-type') == 'phc')
+	{
+		delete_title = 'Pink Card';
+		form_action = '/pink_card/';
+	}
+
 	else
 	{
 		delete_title = 'Sanitary Permit';

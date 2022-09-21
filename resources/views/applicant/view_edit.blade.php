@@ -97,7 +97,7 @@
 				<div class="fields">
 					<div class="four wide field"></div>
 
-					<div class="four wide field{!! !$errors->has('age') ? '"' : ' error" data-content="' . $errors->first('age') . '" data-position="top center"' !!}>
+					<div class="two wide field{!! !$errors->has('age') ? '"' : ' error" data-content="' . $errors->first('age') . '" data-position="top center"' !!}>
 						<label>Age:</label>
 						<input type="number" name="age" class="dynamic_input" value="{{ old('age') != null ? old('age') : $applicant->age }}" min="">
 					</div>
@@ -106,7 +106,7 @@
 						$selected_gender = $checker->dropdown_select_check(old('gender'), $applicant->gender, ['0', '1'])
 					@endphp
 						
-					<div class="four wide field{!! !$errors->has('gender') ? '"' : ' error" data-content="' . $errors->first('gender') . '" data-position="top center"' !!}>
+					<div class="two wide field{!! !$errors->has('gender') ? '"' : ' error" data-content="' . $errors->first('gender') . '" data-position="top center"' !!}>
 						<label>Gender:</label>
 
 						<input value="{{ $selected_gender == 1 ? 'Male' : 'Female' }}" class="view_only" readonly>
@@ -116,6 +116,11 @@
 							<option value="1" {{ (string)$selected_gender != '1' ?: 'selected' }}>Male</option>
 							<option value="0" {{ (string)$selected_gender != '0' ?: 'selected' }}>Female</option>
 						</select>
+					</div>
+
+					<div class="four wide field{!! !$errors->has('nationality') ? '"' : ' error" data-content="' . $errors->first('nationality') . '" data-position="top center"' !!}>
+						<label>Nationality:</label>
+						<input type="text" name="nationality" value="{{ old('nationality') ? old('nationality') : $applicant->nationality }}" class="dynamic_input" placeholder="Nationality">
 					</div>
 				</div>
 

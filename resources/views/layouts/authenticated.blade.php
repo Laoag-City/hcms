@@ -76,9 +76,11 @@
 							<option value="Business Name">Business Name</option>
 							<option value="HC Reg. No.">HC Reg. No.</option>
 							<option value="SP Number">SP Number</option>
+							<option value="Pink Card Reg. No.">Pink Card Reg. No.</option>
 							<option value="Work Type">Work Type</option>
 							<option value="Establ. Name (HC)">Establ. Name (HC)</option>
 							<option value="Establ. Type (SP)">Establ. Type (SP)</option>
+							<option value="Place of Work (PC)">Place of Work (PC)</option>
 						</select>
 
 						<button class="ui icon small button">

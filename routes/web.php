@@ -107,6 +107,8 @@ Route::group(['middleware' => 'auth'], function(){
 
 	Route::match(['get', 'post'], 'pink_card', 'PinkHealthCertificateController@addPinkHealthCertificate');
 
+	Route::match(['get', 'put'], 'pink_card/renew', 'PinkHealthCertificateController@renewPinkHealthCertificate');
+
 	Route::match(['get', 'put'], 'pink_card/{pink_health_certificate}', 'PinkHealthCertificateController@viewEditPinkHealthCertificate');
 
 	Route::delete('pink_card/{pink_health_certificate}', 'PinkHealthCertificateController@deletePinkHealthCertificate');

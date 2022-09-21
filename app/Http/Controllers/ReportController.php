@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Applicant;
 use App\Business;
 use App\HealthCertificate;
+use App\PinkHealthCertificate;
 use App\SanitaryPermit;
 
 class ReportController extends Controller
@@ -23,8 +24,11 @@ class ReportController extends Controller
         $total_food_sanitary_permits = SanitaryPermit::where('permit_classification', SanitaryPermit::PERMIT_CLASSIFICATIONS[0])->count();
         $total_nonfood_sanitary_permits = SanitaryPermit::where('permit_classification', SanitaryPermit::PERMIT_CLASSIFICATIONS[1])->count();
 
+        $total_pink_card = PinkHealthCertificate::count();
+
         $total_registered_hc_for_each_year = collect();
         $total_registered_sp_for_each_year = collect();
+        $total_registered_pc_for_each_year = collect();
 
         $year_now = (int)date('Y', strtotime('now'));
 
@@ -32,9 +36,11 @@ class ReportController extends Controller
         {
             $hc_current_year_total = HealthCertificate::where('registration_number', 'like', "$records_year_start-%")->count();
             $sp_current_year_total = SanitaryPermit::where('sanitary_permit_number', 'like', "$records_year_start-%")->count();
+            $pc_current_year_total = PinkHealthCertificate::where('registration_number', 'like', "$records_year_start-%")->count();
 
             $total_registered_hc_for_each_year->put($records_year_start, $hc_current_year_total);
             $total_registered_sp_for_each_year->put($records_year_start, $sp_current_year_total);
+            $total_registered_pc_for_each_year->put($records_year_start, $pc_current_year_total);
 
             $records_year_start++;
         }
@@ -51,8 +57,11 @@ class ReportController extends Controller
             'total_food_sanitary_permits' => $total_food_sanitary_permits,
             'total_nonfood_sanitary_permits' => $total_nonfood_sanitary_permits,
 
+            'total_pink_card' => $total_pink_card,
+
             'total_registered_hc_for_each_year' => $total_registered_hc_for_each_year,
-            'total_registered_sp_for_each_year' => $total_registered_sp_for_each_year
+            'total_registered_sp_for_each_year' => $total_registered_sp_for_each_year,
+            'total_registered_pc_for_each_year' => $total_registered_pc_for_each_year
         ]);
     }
 }

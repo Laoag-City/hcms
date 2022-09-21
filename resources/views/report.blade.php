@@ -120,6 +120,44 @@
 					</table>
 				</div>
 			</div>
+
+			<div class="row">
+				<div class="ui center aligned seven wide column">
+					<br>
+					<h2 class="ui header">
+						<i class="address card outline icon"></i>
+						Pink Card
+					</h2>
+
+					<div class="ui large labels">
+						<div class="ui basic pink label">
+							Pink Card
+							<div class="detail">{{ $total_pink_card }}</div>
+						</div>
+					</div>
+
+					<table class="ui attached striped selectable structured celled center aligned table">
+						<thead>
+							<tr>
+								<th colspan="2">Registered PC each year</th>
+							</tr>
+							<tr>
+								<th>Year</th>
+								<th>Total</th>
+							</tr>
+						</thead>
+
+						<tbody>
+							@foreach($total_registered_pc_for_each_year as $year => $total)
+								<tr>
+									<td>{{ $year }}</td>
+									<td>{{ $total }}</td>
+								</tr>
+							@endforeach
+						</tbody>
+					</table>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

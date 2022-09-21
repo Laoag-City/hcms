@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 class PinkCardFileGenerator
 {
 	protected $pink_health_certificate;
+	protected $folder = 'pink_cards';
 
 	public function __construct(PinkHealthCertificate $pink_health_certificate)
 	{
@@ -28,7 +29,7 @@ class PinkCardFileGenerator
 
 		return [
 			'applicant_folder' => $applicant_folder,
-			'pink_card_folder_path' => storage_path("app\\pink_cards\\$applicant_folder\\")
+			'pink_card_folder_path' => storage_path("app\\$this->folder\\$applicant_folder\\")
 		];
 	}
 
@@ -36,7 +37,7 @@ class PinkCardFileGenerator
 	{
 		$applicant_folder = $this->getPinkHealthCertificateFolder()['applicant_folder'];
 
-		Storage::move("pink_cards\\$old_applicant_folder", "pink_cards\\$applicant_folder");
+		Storage::move("$this->folder\\$old_applicant_folder", "$this->folder\\$applicant_folder");
 	}
 
 	public function getPicturePathAndURL($generate_paths_skip_exist_check = false)
@@ -49,7 +50,7 @@ class PinkCardFileGenerator
 					'url' => url("pink_card/{$this->pink_health_certificate->pink_health_certificate_id}/picture")
 				];
 
-		if(Storage::exists("certificates\\{$certificate_path['applicant_folder']}\\picture.png"))
+		if(Storage::exists("$this->folder\\{$certificate_path['applicant_folder']}\\picture.png"))
 			return [
 					'path' => $certificate_path['pink_card_folder_path'] . 'picture.png',
 					'url' => url("pink_card/{$this->pink_health_certificate->pink_health_certificate_id}/picture")

@@ -31,13 +31,21 @@ class ApplicantController extends Controller
 	{
 		if($this->request->isMethod('get'))
     	{
+            $picture_url = null;
+
+            if($applicant->health_certificates->isNotEmpty())
+                $picture_url = (new CertificateFileGenerator($applicant->health_certificates->first()))->getPicturePathAndURL()['url'];
+
+            elseif($applicant->pink_health_certificates->isNotEmpty())
+                $picture_url = (new PinkCardFileGenerator($applicant->pink_health_certificates->first()))->getPicturePathAndURL()['url'];
+
     		return view('applicant.view_edit', [
     			'title' => $applicant->formatName(),
     			'applicant' => $applicant,
                 'health_certificates' => $applicant->health_certificates,
                 'pink_health_certificates' => $applicant->pink_health_certificates,
                 'sanitary_permits' => $applicant->sanitary_permits,
-                'picture_url' => $applicant->health_certificates->isNotEmpty() ? (new CertificateFileGenerator($applicant->health_certificates->first()))->getPicturePathAndURL()['url'] : null
+                'picture_url' => $picture_url
     		]);
     	}
 
@@ -50,16 +58,17 @@ class ApplicantController extends Controller
     			'suffix_name' => 'nullable|bail|in:Jr.,Sr.,I,II,III,IV,V,VI,VII,VIII,IX,X',
     			'age' => 'bail|required|integer|min:0|max:120',
     			'gender' => 'bail|required|in:0,1',
+                'nationality'=> 'bail|required|alpha_spaces|max:20'
     		]);
 
     		//get folder paths for the documents with files in the storage folder
-            if($applicant->health_certificates != null)
+            if($applicant->health_certificates->isNotEmpty())
             {
                 $old_certificate_file_generator = new CertificateFileGenerator($applicant->health_certificates->first());
                 $old_applicant_certificate_folder = $old_certificate_file_generator->getHealthCertificateFolder();
             }
 
-            if($applicant->pink_health_certificates != null)
+            if($applicant->pink_health_certificates->isNotEmpty())
             {
                 $old_pink_hc_file_generator = new PinkCardFileGenerator($applicant->pink_health_certificates->first());
                 $old_applicant_pink_hc_folder = $old_pink_hc_file_generator->getPinkHealthCertificateFolder();
@@ -77,11 +86,12 @@ class ApplicantController extends Controller
     		$applicant->suffix_name = $this->request->suffix_name == null ? null : $this->request->suffix_name;
     		$applicant->age = $this->request->age;
     		$applicant->gender = $this->request->gender;
+            $applicant->nationality = $this->request->nationality;
     		$applicant->save();
 
     		//if there are changes affecting the filepath, update them below
     		//for health certificate
-            if($applicant->health_certificates != null)
+            if($applicant->health_certificates->isNotEmpty())
             {
                 $new_certificate_file_generator = new CertificateFileGenerator($applicant->health_certificates->first()->refresh());
                 $new_applicant_certificate_folder = $new_certificate_file_generator->getHealthCertificateFolder()['applicant_folder'];
@@ -91,12 +101,12 @@ class ApplicantController extends Controller
             }
 
             //for pink card
-            if($applicant->pink_health_certificates != null)
+            if($applicant->pink_health_certificates->isNotEmpty())
             {
                 $new_pink_hc_file_generator = new PinkCardFileGenerator($applicant->pink_health_certificates->first()->refresh());
                 $new_applicant_pink_hc_folder = $new_pink_hc_file_generator->getPinkHealthCertificateFolder()['applicant_folder'];
 
-                if($old_applicant_pink_hc_folder['applicant_folder'] != $new_applicant_pink_hc_folder && file_exists($old_applicant_pink_hc_folder['certificate_folder_path']))
+                if($old_applicant_pink_hc_folder['applicant_folder'] != $new_applicant_pink_hc_folder && file_exists($old_applicant_pink_hc_folder['pink_card_folder_path']))
                     $new_pink_hc_file_generator->updateApplicantFolder($old_applicant_pink_hc_folder['applicant_folder']);
             }
 
