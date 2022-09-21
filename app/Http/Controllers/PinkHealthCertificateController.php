@@ -72,50 +72,6 @@ class PinkHealthCertificateController extends Controller
         return response()->json([], 405);
     }
 
-    public function viewEditPinkHealthCertificate(PinkHealthCertificate $pink_health_certificate)
-    {
-        if($this->request->isMethod('get'))
-        {
-            $immunizations = $this->tabledFieldsLooper(false, 'App\Immunization', $this->immunization_rows, $pink_health_certificate->immunizations->sortBy('row_number'));
-
-            $xray_sputums = $this->tabledFieldsLooper(false, 'App\XRaySputum', $this->xray_sputum_rows, $pink_health_certificate->xray_sputums->sortBy('row_number'));
-
-            $stool_and_others = $this->tabledFieldsLooper(false, 'App\StoolAndOther', $this->stool_and_other_rows, $pink_health_certificate->stool_and_others->sortBy('row_number'));
-
-            $hivs = $this->tabledFieldsLooper(false, 'App\HivExamination', $this->hiv_rows, $pink_health_certificate->hiv_examinations->sortBy('row_number'));
-
-            $hbsags = $this->tabledFieldsLooper(false, 'App\HbsagExamination', $this->hbsag_rows, $pink_health_certificate->hbsag_examinations->sortBy('row_number'));
-
-            $vdrls = $this->tabledFieldsLooper(false, 'App\VdrlExamination', $this->vdrl_rows, $pink_health_certificate->vdrl_examinations->sortBy('row_number'));
-
-            $cervical_smears = $this->tabledFieldsLooper(false, 'App\CervicalSmearExamination', $this->cervical_smear_rows, $pink_health_certificate->cervical_smear_examinations->sortBy('row_number'));
-
-            return view('pink_health_certificate.view_edit', [
-                'title' => "Pink Card Information",
-
-                'applicant' => $pink_health_certificate->applicant,
-                'pink_health_certificate' => $pink_health_certificate,
-                'immunizations' => $immunizations,
-                'xray_sputums' => $xray_sputums,
-                'stool_and_others' => $stool_and_others,
-                'hivs' => $hivs,
-                'hbsags' => $hbsags,
-                'vdrls' => $vdrls,
-                'cervical_smears' => $cervical_smears,
-
-                'picture_url' => (new PinkCardFileGenerator($pink_health_certificate))->getPicturePathAndURL()['url'],
-                'validity_period' => PinkHealthCertificate::VALIDITY_PERIOD['months']
-            ]);
-        }
-
-        elseif($this->request->isMethod('put'))
-        {
-            $this->create_edit_logic('edit', $pink_health_certificate);
-
-            return redirect("pink_card/{$pink_health_certificate->pink_health_certificate_id}/preview");
-        }
-    }
-
     public function renewPinkHealthCertificate()
     {
         $searches = null;
@@ -191,6 +147,149 @@ class PinkHealthCertificateController extends Controller
         }
     }
 
+    ////////////////////////////////////////////
+    public function bulkPrintPinkHealthCertificates()
+    {
+        if($this->request->isMethod('get'))
+        {
+            $hc_on_bulk_print_list = null;
+
+            if(session()->has('pink_card_print_ids'))
+                $hc_on_bulk_print_list = PinkHealthCertificate::whereIn('pink_health_certificate_id', session()->get('pink_card_print_ids'))
+                                            ->with('applicant')
+                                            ->get();
+
+            return view('applicant.bulk_print', [
+                'title' => 'Bulk Print Pink Card',
+                'pink_health_certificates' => $hc_on_bulk_print_list
+            ]);
+        }
+
+        elseif($this->request->isMethod('post'))
+        {
+            Validator::make($this->request->all(), [
+                'ids' => 'required|array',
+                'ids.*' => 'distinct|exists:pink_health_certificates,pink_health_certificate_id'
+            ])->validate();
+
+            $ids = [];
+
+            foreach($this->request->ids as $id)
+                $ids[] = (int)$id;
+
+            $this->request->session()->forget('pink_card_print_ids');
+            $this->request->session()->put('pink_card_print_ids', $ids);
+
+            return redirect('pink_card/bulk_print_preview');
+        }
+
+        elseif($this->request->isMethod('delete'))
+        {
+            $this->request->session()->forget('pink_card_print_ids');
+            return back();
+        }
+    }
+
+    public function searchPinkHealthCertificates()
+    {
+        return collect(['results' => Applicant::search($this->request->q)
+                        ->join('pink_health_certificates', 'applicants.applicant_id', '=', 'pink_health_certificates.applicant_id')
+                        ->get()
+                        ->transform(function($item, $key){
+                            return collect([
+                                'id' => $item->pink_health_certificate_id,
+                                'label' => $item->registration_number . ' / ' . $item->formatName(),
+                                'whole_name' => $item->formatName(),
+                                'hc_no' => $item->registration_number,
+                                'basic_info' => "{$item->work_type}, {$item->establishment}"
+                            ]); 
+                        })
+                    ]);
+    }
+
+    public function bulkPrintAdd()
+    {
+         Validator::make($this->request->all(), [
+            'id' => 'required|exists:pink_health_certificates,pink_health_certificate_id'
+        ])->validate();
+
+        if(session()->has('pink_card_print_ids'))
+            session()->push('pink_card_print_ids', (int)$this->request->id);
+
+        else
+            session()->put('pink_card_print_ids', [(int)$this->request->id]);
+
+        return back();
+    }
+
+    public function bulkPrintClear()
+    {
+        $this->request->session()->forget('pink_card_print_ids');
+        return back();
+    }
+
+    public function bulkPrintPreview()
+    {
+        if(session()->has('pink_card_print_ids'))
+        {
+            return view('pink_health_certificate.bulk_print_preview', [
+                'logo' => '/doh_logo.png',
+                'pink_health_certificates' => PinkHealthCertificate::whereIn('pink_health_certificate_id', session()->get('pink_card_print_ids'))
+                                            ->with(['applicant', 'immunizations', 'xray_sputums', 'stool_and_others',
+                                                    'hiv_examinations', 'hbsag_examinations', 'vdrl_examinations', 'cervical_smear_examinations'])
+                                            ->get()
+            ]);
+        }
+
+        else
+            return redirect('/');
+    }
+    ////////////////////////////////////////////
+
+    public function viewEditPinkHealthCertificate(PinkHealthCertificate $pink_health_certificate)
+    {
+        if($this->request->isMethod('get'))
+        {
+            $immunizations = $this->tabledFieldsLooper(false, 'App\Immunization', $this->immunization_rows, $pink_health_certificate->immunizations->sortBy('row_number'));
+
+            $xray_sputums = $this->tabledFieldsLooper(false, 'App\XRaySputum', $this->xray_sputum_rows, $pink_health_certificate->xray_sputums->sortBy('row_number'));
+
+            $stool_and_others = $this->tabledFieldsLooper(false, 'App\StoolAndOther', $this->stool_and_other_rows, $pink_health_certificate->stool_and_others->sortBy('row_number'));
+
+            $hivs = $this->tabledFieldsLooper(false, 'App\HivExamination', $this->hiv_rows, $pink_health_certificate->hiv_examinations->sortBy('row_number'));
+
+            $hbsags = $this->tabledFieldsLooper(false, 'App\HbsagExamination', $this->hbsag_rows, $pink_health_certificate->hbsag_examinations->sortBy('row_number'));
+
+            $vdrls = $this->tabledFieldsLooper(false, 'App\VdrlExamination', $this->vdrl_rows, $pink_health_certificate->vdrl_examinations->sortBy('row_number'));
+
+            $cervical_smears = $this->tabledFieldsLooper(false, 'App\CervicalSmearExamination', $this->cervical_smear_rows, $pink_health_certificate->cervical_smear_examinations->sortBy('row_number'));
+
+            return view('pink_health_certificate.view_edit', [
+                'title' => "Pink Card Information",
+
+                'applicant' => $pink_health_certificate->applicant,
+                'pink_health_certificate' => $pink_health_certificate,
+                'immunizations' => $immunizations,
+                'xray_sputums' => $xray_sputums,
+                'stool_and_others' => $stool_and_others,
+                'hivs' => $hivs,
+                'hbsags' => $hbsags,
+                'vdrls' => $vdrls,
+                'cervical_smears' => $cervical_smears,
+
+                'picture_url' => (new PinkCardFileGenerator($pink_health_certificate))->getPicturePathAndURL()['url'],
+                'validity_period' => PinkHealthCertificate::VALIDITY_PERIOD['months']
+            ]);
+        }
+
+        elseif($this->request->isMethod('put'))
+        {
+            $this->create_edit_logic('edit', $pink_health_certificate);
+
+            return redirect("pink_card/{$pink_health_certificate->pink_health_certificate_id}/preview");
+        }
+    }
+
     public function deletePinkHealthCertificate(PinkHealthCertificate $pink_health_certificate)
     {
         $validator = Validator::make($this->request->all(), [
@@ -207,6 +306,43 @@ class PinkHealthCertificateController extends Controller
         $pink_health_certificate->delete();
         return redirect(explode('?', url()->previous())[0]);
     }
+
+    ////////////////////////////////////////////
+    public function printPreview(PinkHealthCertificate $pink_health_certificate)
+    {
+        return view('pink_health_certificate.preview', [
+            'logo' => '/doh_logo.png',
+            'picture' => (new PinkCardFileGenerator($pink_health_certificate))->getPicturePathAndURL()['url'],
+            'pink_health_certificate' => PinkHealthCertificate::where('pink_health_certificate_id', '=', $pink_health_certificate->pink_health_certificate_id)
+                                                        ->with(['applicant', 'immunizations', 'xray_sputums', 'stool_and_others',
+                                                                'hiv_examinations', 'hbsag_examinations', 'vdrl_examinations', 'cervical_smear_examinations'])
+                                                        ->first()
+        ]);
+    }
+
+    public function savePicture(PinkHealthCertificate $pink_health_certificate)
+    {
+        if($this->request->ajax() && $this->request->isMethod('post'))
+        {
+            $file_generator = new PinkCardFileGenerator($pink_health_certificate);
+            $picture_url_path = $file_generator->getPicturePathAndURL(true);
+
+            if(!file_exists($file_generator->getPinkHealthCertificateFolder()['pink_card_folder_path']))
+                mkdir($file_generator->getPinkHealthCertificateFolder()['pink_card_folder_path'], 0777, true);
+
+            file_put_contents($picture_url_path['path'], base64_decode($this->request->webcam));
+
+            return response()->json(['url' => $picture_url_path['url']]);
+        }
+
+        abort(403);
+    }
+
+    public function showPicture(PinkHealthCertificate $pink_health_certificate)
+    {
+        return response()->file((new PinkCardFileGenerator($pink_health_certificate))->getPicturePathAndURL()['path'], ['Cache-Control' => 'No-Store']);
+    }
+    ////////////////////////////////////////////
 
     private function create_edit_logic($mode, PinkHealthCertificate $pink_health_certificate = null)
     {

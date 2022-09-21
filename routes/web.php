@@ -105,13 +105,41 @@ Route::group(['middleware' => 'auth'], function(){
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	////Pink Health Certificate routes
 
+	//add a new pink health certificate
 	Route::match(['get', 'post'], 'pink_card', 'PinkHealthCertificateController@addPinkHealthCertificate');
 
+	//renew a pink health certificate
 	Route::match(['get', 'put'], 'pink_card/renew', 'PinkHealthCertificateController@renewPinkHealthCertificate');
 
+	//bulk-print pink health certificates
+	Route::match(['get', 'post', 'delete'], 'pink_card/bulk_print', 'PinkHealthCertificateController@bulkPrintPinkHealthCertificates');
+
+	//for bulk print page search input
+	Route::get('pink_card/search', 'PinkHealthCertificateController@searchPinkHealthCertificates');
+
+	//add a single pink health certificate to bulk print list
+	Route::post('pink_card/bulk_print_add', 'PinkHealthCertificateController@bulkPrintAdd');
+
+	//clear bulk print ids in session
+	Route::post('pink_card/bulk_print_clear', 'PinkHealthCertificateController@bulkPrintClear');
+
+	//show bulk print preview
+	Route::get('pink_card/bulk_print_preview', 'PinkHealthCertificateController@bulkPrintPreview');
+
+	//view and edit a pink health certificate
 	Route::match(['get', 'put'], 'pink_card/{pink_health_certificate}', 'PinkHealthCertificateController@viewEditPinkHealthCertificate');
 
+	//delete a pink health certificate
 	Route::delete('pink_card/{pink_health_certificate}', 'PinkHealthCertificateController@deletePinkHealthCertificate');
+
+	//shows the preview of the pink health certificate and the take picture feature
+	Route::get('pink_card/{pink_health_certificate}/preview', 'PinkHealthCertificateController@printPreview');
+
+	//ajax for saving the image
+	Route::post('pink_card/{pink_health_certificate}/picture', 'PinkHealthCertificateController@savePicture');
+
+	//shows applicant's id picture
+	Route::get('pink_card/{pink_health_certificate}/picture', 'PinkHealthCertificateController@showPicture');
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
