@@ -24,6 +24,7 @@ class HealthCertificateController extends Controller
     use CertificateTableRowFinder;
     
 	protected $request;
+    protected $bulk_print_session_ids_name = 'print_hc_ids';
 
 	public function __construct(Request $request)
 	{
@@ -159,6 +160,7 @@ class HealthCertificateController extends Controller
         return view('health_certificate.preview', [
             'logo' => '/doh_logo.png',
         	'picture' => (new CertificateFileGenerator($health_certificate))->getPicturePathAndURL()['url'],
+            'save_picture_url' => "/health_certificate/{$health_certificate->health_certificate_id}/picture",
             'color' => $health_certificate->getColor(),
             'health_certificate' => HealthCertificate::where('health_certificate_id', '=', $health_certificate->health_certificate_id)
                                                         ->with(['applicant', 'immunizations', 'stool_and_others', 'xray_sputums'])
@@ -172,14 +174,18 @@ class HealthCertificateController extends Controller
         {
             $hc_on_bulk_print_list = null;
 
-            if(session()->has('print_ids'))
-                $hc_on_bulk_print_list = HealthCertificate::whereIn('health_certificate_id', session()->get('print_ids'))
+            if(session()->has($this->bulk_print_session_ids_name))
+                $hc_on_bulk_print_list = HealthCertificate::whereIn('health_certificate_id', session()->get($this->bulk_print_session_ids_name))
                                             ->with('applicant')
                                             ->get();
 
             return view('applicant.bulk_print', [
                 'title' => 'Bulk Print Health Certificates',
-                'health_certificates' => $hc_on_bulk_print_list
+                'certificates' => $hc_on_bulk_print_list,
+                'certificate_primary_key_name' => (new HealthCertificate())->getKeyName(),
+                'bulk_print_session_ids_name' => $this->bulk_print_session_ids_name,
+                'bulk_print_clear_url' => 'health_certificate/bulk_print_clear',
+                'search_certificates_url' => '/health_certificate/search'
             ]);
         }
 
@@ -195,15 +201,15 @@ class HealthCertificateController extends Controller
             foreach($this->request->ids as $id)
                 $ids[] = (int)$id;
 
-            $this->request->session()->forget('print_ids');
-            $this->request->session()->put('print_ids', $ids);
+            $this->request->session()->forget($this->bulk_print_session_ids_name);
+            $this->request->session()->put($this->bulk_print_session_ids_name, $ids);
 
             return redirect('health_certificate/bulk_print_preview');
         }
 
         elseif($this->request->isMethod('delete'))
         {
-            $this->request->session()->forget('print_ids');
+            $this->request->session()->forget($this->bulk_print_session_ids_name);
             return back();
         }
     }
@@ -218,7 +224,7 @@ class HealthCertificateController extends Controller
                                 'id' => $item->health_certificate_id,
                                 'label' => $item->registration_number . ' / ' . $item->formatName(),
                                 'whole_name' => $item->formatName(),
-                                'hc_no' => $item->registration_number,
+                                'reg_no' => $item->registration_number,
                                 'basic_info' => "{$item->work_type}, {$item->establishment}"
                             ]); 
                         })
@@ -227,7 +233,7 @@ class HealthCertificateController extends Controller
 
     public function bulkPrintClear()
     {
-        $this->request->session()->forget('print_ids');
+        $this->request->session()->forget($this->bulk_print_session_ids_name);
         return back();
     }
 
@@ -237,22 +243,22 @@ class HealthCertificateController extends Controller
             'id' => 'required|exists:health_certificates,health_certificate_id'
         ])->validate();
 
-        if(session()->has('print_ids'))
-            session()->push('print_ids', (int)$this->request->id);
+        if(session()->has($this->bulk_print_session_ids_name))
+            session()->push($this->bulk_print_session_ids_name, (int)$this->request->id);
 
         else
-            session()->put('print_ids', [(int)$this->request->id]);
+            session()->put($this->bulk_print_session_ids_name, [(int)$this->request->id]);
 
         return back();
     }
 
     public function bulkPrintPreview()
     {
-        if(session()->has('print_ids'))
+        if(session()->has($this->bulk_print_session_ids_name))
         {   //to use the view for printing the old health certificate layout, use view name 'health_certificate.values_only_bulk_print_preview'
             return view('health_certificate.bulk_print_preview', [
                 'logo' => '/doh_logo.png',
-                'health_certificates' => HealthCertificate::whereIn('health_certificate_id', session()->get('print_ids'))
+                'health_certificates' => HealthCertificate::whereIn('health_certificate_id', session()->get($this->bulk_print_session_ids_name))
                                             ->with(['applicant', 'immunizations', 'stool_and_others', 'xray_sputums'])
                                             ->get()
             ]);

@@ -39,6 +39,7 @@ class PinkHealthCertificateController extends Controller
     protected $hbsag_rows = 3;
     protected $vdrl_rows = 3;
     protected $cervical_smear_rows = 69;
+    protected $bulk_print_session_ids_name = 'print_phc_ids';
 
     public function __construct(Request $request)
     {
@@ -152,16 +153,20 @@ class PinkHealthCertificateController extends Controller
     {
         if($this->request->isMethod('get'))
         {
-            $hc_on_bulk_print_list = null;
+            $phc_on_bulk_print_list = null;
 
-            if(session()->has('pink_card_print_ids'))
-                $hc_on_bulk_print_list = PinkHealthCertificate::whereIn('pink_health_certificate_id', session()->get('pink_card_print_ids'))
+            if(session()->has($this->bulk_print_session_ids_name))
+                $phc_on_bulk_print_list = PinkHealthCertificate::whereIn('pink_health_certificate_id', session()->get($this->bulk_print_session_ids_name))
                                             ->with('applicant')
                                             ->get();
 
-            return view('applicant.bulk_print_pink_card', [
+            return view('applicant.bulk_print', [
                 'title' => 'Bulk Print Pink Card',
-                'pink_health_certificates' => $hc_on_bulk_print_list
+                'certificates' => $phc_on_bulk_print_list,
+                'certificate_primary_key_name' => (new PinkHealthCertificate)->getKeyName(),
+                'bulk_print_session_ids_name' => $this->bulk_print_session_ids_name,
+                'bulk_print_clear_url' => 'pink_card/bulk_print_clear',
+                'search_certificates_url' => "/pink_card/search"
             ]);
         }
 
@@ -177,15 +182,15 @@ class PinkHealthCertificateController extends Controller
             foreach($this->request->ids as $id)
                 $ids[] = (int)$id;
 
-            $this->request->session()->forget('pink_card_print_ids');
-            $this->request->session()->put('pink_card_print_ids', $ids);
+            $this->request->session()->forget($this->bulk_print_session_ids_name);
+            $this->request->session()->put($this->bulk_print_session_ids_name, $ids);
 
             return redirect('pink_card/bulk_print_preview');
         }
 
         elseif($this->request->isMethod('delete'))
         {
-            $this->request->session()->forget('pink_card_print_ids');
+            $this->request->session()->forget($this->bulk_print_session_ids_name);
             return back();
         }
     }
@@ -200,7 +205,7 @@ class PinkHealthCertificateController extends Controller
                                 'id' => $item->pink_health_certificate_id,
                                 'label' => $item->registration_number . ' / ' . $item->formatName(),
                                 'whole_name' => $item->formatName(),
-                                'pc_no' => $item->registration_number,
+                                'reg_no' => $item->registration_number,
                                 'basic_info' => "{$item->occupation}, {$item->place_of_work}"
                             ]); 
                         })
@@ -213,28 +218,28 @@ class PinkHealthCertificateController extends Controller
             'id' => 'required|exists:pink_health_certificates,pink_health_certificate_id'
         ])->validate();
 
-        if(session()->has('pink_card_print_ids'))
-            session()->push('pink_card_print_ids', (int)$this->request->id);
+        if(session()->has($this->bulk_print_session_ids_name))
+            session()->push($this->bulk_print_session_ids_name, (int)$this->request->id);
 
         else
-            session()->put('pink_card_print_ids', [(int)$this->request->id]);
+            session()->put($this->bulk_print_session_ids_name, [(int)$this->request->id]);
 
         return back();
     }
 
     public function bulkPrintClear()
     {
-        $this->request->session()->forget('pink_card_print_ids');
+        $this->request->session()->forget($this->bulk_print_session_ids_name);
         return back();
     }
 
     public function bulkPrintPreview()
     {
-        if(session()->has('pink_card_print_ids'))
+        if(session()->has($this->bulk_print_session_ids_name))
         {
             return view('pink_health_certificate.bulk_print_preview', [
                 'logo' => '/doh_logo.png',
-                'pink_health_certificates' => PinkHealthCertificate::whereIn('pink_health_certificate_id', session()->get('pink_card_print_ids'))
+                'pink_health_certificates' => PinkHealthCertificate::whereIn('pink_health_certificate_id', session()->get($this->bulk_print_session_ids_name))
                                             ->with(['applicant', 'immunizations', 'xray_sputums', 'stool_and_others',
                                                     'hiv_examinations', 'hbsag_examinations', 'vdrl_examinations', 'cervical_smear_examinations'])
                                             ->get()
@@ -313,6 +318,7 @@ class PinkHealthCertificateController extends Controller
         return view('pink_health_certificate.preview', [
             'logo' => '/doh_logo.png',
             'picture' => (new PinkCardFileGenerator($pink_health_certificate))->getPicturePathAndURL()['url'],
+            'save_picture_url' => "/pink_card/{$pink_health_certificate->pink_health_certificate_id}/picture",
             'pink_health_certificate' => PinkHealthCertificate::where('pink_health_certificate_id', '=', $pink_health_certificate->pink_health_certificate_id)
                                                         ->with(['applicant', 'immunizations', 'xray_sputums', 'stool_and_others',
                                                                 'hiv_examinations', 'hbsag_examinations', 'vdrl_examinations', 'cervical_smear_examinations'])

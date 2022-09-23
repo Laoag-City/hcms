@@ -10,7 +10,7 @@
     <script>window.Laravel = {!! json_encode(['csrfToken' => csrf_token(), ]) !!};</script>
 	<title>Health Certificate</title>
 
-	<link rel="stylesheet" href="{{ mix('/css/print_health_certificate_values_only.css') }}">
+	<link rel="stylesheet" href="{{ mix('/css/print_pink_health_certificate.css') }}">
 </head>
 <body>
 	<div class="no-print">
@@ -21,19 +21,19 @@
 			ADD SANITARY PERMIT
 		</button>
 
-		@if(!collect(session()->get('print_hc_ids'))->contains($health_certificate->health_certificate_id))
+		@if(!collect(session()->get('print_phc_ids'))->contains($pink_health_certificate->pink_health_certificate_id))
 			<button onclick="event.preventDefault(); document.getElementById('add_to_bulk_print_form').submit();">
 				ADD TO BULK PRINT LIST
 			</button>
 
-			<form id="add_to_bulk_print_form" action="{{ url('health_certificate/bulk_print_add') }}" method="POST" style="display: none;">
+			<form id="add_to_bulk_print_form" action="{{ url('pink_card/bulk_print_add') }}" method="POST" style="display: none;">
 				{{ csrf_field() }}
-				<input type="hidden" name="id" value="{{ $health_certificate->health_certificate_id }}">
+				<input type="hidden" name="id" value="{{ $pink_health_certificate->pink_health_certificate_id }}">
 			</form>
 		@endif
-
-		<button id="print_back" class="pull_right print" style="margin-left: 10px;">PRINT (BACK)</button>
-		<button id="print_front" class="pull_right print">PRINT (FRONT)</button>
+		
+		<!--<button id="print_back" class="pull_right print" style="margin-left: 10px;">PRINT (BACK)</button>-->
+		<button id="print_front" class="pull_right print">PRINT</button>
 		<br>
 		<br>
 		<button id="take_picture" class="hidden">TAKE PICTURE</button>
@@ -49,14 +49,14 @@
 		<div style="display: inline-block;">
 			<div style="float: left;">
 				<h3 class="text-center no-print camera_certificate_header">Front Preview</h3>
-				@include('health_certificate.values_only_front')
+				@include('pink_health_certificate.front')
 			</div>
 
-			<p id="page_breaker"></p>
+			<div class="no-print" style="width: 50px; height: 1px; float: left;"></div>
 			
 			<div style="float: left;">
 				<h3 class="text-center no-print camera_certificate_header">Back Preview</h3>
-				@include('health_certificate.values_only_back')
+				@include('pink_health_certificate.back')
 			</div>
 		</div>
 	</div>
@@ -67,5 +67,5 @@
 </script>
 <script src="/webcamjs/webcam.js"></script>
 <script src="{{ mix('/js/app.js') }}"></script>
-<script src="{{ mix('/js/values_only_camera.js') }}"></script>
+<script src="{{ mix('/js/camera.js') }}"></script>
 </html>

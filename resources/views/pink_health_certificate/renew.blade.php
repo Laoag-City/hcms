@@ -171,7 +171,7 @@
 
 					    	<div class="four wide field{!! !$errors->has('date_of_expiration') ? '"' : ' error" data-content="' . $errors->first('date_of_expiration') . '" data-position="top center"' !!}>
 					    		<label>Date of Expiration:</label>
-					    		<input type="date" name="date_of_expiration" value="{{ old('date_of_expiration') != null ? old('date_of_expiration') : $pink_health_certificate->dateToInput('expiration_date') }}" placeholder="Date of Issuance" class="dynamic_input">
+					    		<input type="date" name="date_of_expiration" value="{{ old('date_of_expiration') != null ? old('date_of_expiration') : $pink_health_certificate->dateToInput('expiration_date') }}" placeholder="Date of Issuance" readonly="">
 					    	</div>
 						</div>
 
@@ -558,7 +558,9 @@
 @endsection
 
 @section('sub_custom_js')
-
+<script>
+	var validity = {!! $validity_period !!};
+</script>
 <script src="{{ mix('/js/renew_pink_health_certificate.js') }}"></script>
 
 @include('commons.delete_modal')
