@@ -52,5 +52,17 @@ Webcam.on( 'error', function(err){
 });
 
 $('.print').click(function(){
+	if($(this).attr('data-function') == 'print_front')
+	{
+		$('#front_preview').removeClass('no-print');
+		$('#back_preview').addClass('no-print');
+	}
+
+	else if($(this).attr('data-function') == 'print_back')
+	{
+		$('#back_preview').removeClass('no-print');
+		$('#front_preview').addClass('no-print');
+	}
+	
 	window.print();
 });

@@ -32,8 +32,8 @@
 			</form>
 		@endif
 		
-		<!--<button id="print_back" class="pull_right print" style="margin-left: 10px;">PRINT (BACK)</button>-->
-		<button id="print_front" class="pull_right print">PRINT</button>
+		<button data-function="print_back" class="pull_right print" style="margin-left: 10px;">PRINT (BACK)</button>
+		<button data-function="print_front" class="pull_right print">PRINT (FRONT)</button>
 		<br>
 		<br>
 		<button id="take_picture" class="hidden">TAKE PICTURE</button>
@@ -41,24 +41,18 @@
 		<button id="save_picture" class="pull_right hidden">SAVE PICTURE</button>
 		<hr>
 
-		<h3 class="text-center camera_certificate_header">Camera Output</h3>
+		<h3 class="text_center camera_certificate_header">Camera Output</h3>
 		<div id="camera"></div>
 	</div>
 
-	<div id="certificates-wrapper" class="text-center">
-		<div style="display: inline-block;">
-			<div style="float: left;">
-				<h3 class="text-center no-print camera_certificate_header">Front Preview</h3>
-				@include('pink_health_certificate.front')
-			</div>
+	<div id="certificates-wrapper" class="text_center">
+		<h3 class="no-print">Front Preview</h3>
 
-			<div class="no-print" style="width: 50px; height: 1px; float: left;"></div>
-			
-			<div style="float: left;">
-				<h3 class="text-center no-print camera_certificate_header">Back Preview</h3>
-				@include('pink_health_certificate.back')
-			</div>
-		</div>
+		@include('pink_health_certificate.front')
+
+		<h3 class="no-print">Back Preview</h3>
+
+		@include('pink_health_certificate.back')
 	</div>
 	
 </body>

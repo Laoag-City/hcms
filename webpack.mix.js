@@ -20,6 +20,8 @@ mix.js('resources/assets/js/app.js', 'public/js')
 
 	.styles(['resources/assets/css/print_health_certificate.css'], 'public/css/print_health_certificate.css')
 
+	.styles(['resources/assets/css/print_pink_health_certificate.css'], 'public/css/print_pink_health_certificate.css')
+
 	.scripts(['resources/assets/js/custom/authenticated.js'], 'public/js/authenticated.js')
 
 	.scripts(['resources/assets/js/custom/user_administration.js'], 'public/js/user_administration.js')

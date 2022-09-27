@@ -322,7 +322,14 @@ class PinkHealthCertificateController extends Controller
             'pink_health_certificate' => PinkHealthCertificate::where('pink_health_certificate_id', '=', $pink_health_certificate->pink_health_certificate_id)
                                                         ->with(['applicant', 'immunizations', 'xray_sputums', 'stool_and_others',
                                                                 'hiv_examinations', 'hbsag_examinations', 'vdrl_examinations', 'cervical_smear_examinations'])
-                                                        ->first()
+                                                        ->first(),
+            'immunization_rows' => $this->immunization_rows,
+            'xray_sputum_rows' => $this->xray_sputum_rows,
+            'stool_and_other_rows' => $this->stool_and_other_rows,
+            'hiv_rows' => $this->hiv_rows,
+            'hbsag_rows' => $this->hbsag_rows,
+            'vdrl_rows' => $this->vdrl_rows,
+            'cervical_smear_max_rows' => $this->cervical_smear_rows,
         ]);
     }
 

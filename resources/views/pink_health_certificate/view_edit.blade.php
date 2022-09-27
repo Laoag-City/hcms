@@ -161,7 +161,7 @@
 
 				    	<div class="four wide field{!! !$errors->has('community_tax_issued_on') ? '"' : ' error" data-content="' . $errors->first('community_tax_issued_on') . '" data-position="top center"' !!}>
 				    		<label>Community Tax Issued On:</label>
-				    		<input type="date" name="community_tax_issued_on" value="{{ old('community_tax_issued_on') ? old('community_tax_issued_on') : $pink_health_certificate->community_tax_issued_on }}" class="dynamic_input">
+				    		<input type="date" name="community_tax_issued_on" value="{{ old('community_tax_issued_on') ? old('community_tax_issued_on') : $pink_health_certificate->dateToInput('community_tax_issued_on') }}" class="dynamic_input">
 				    	</div>
 					</div>
 

@@ -72,6 +72,11 @@ class PinkHealthCertificate extends Model
         return date(self::DATES_FORMAT, strtotime($value));
     }
 
+    public function getCommunityTaxIssuedOnAttribute($value)
+    {
+        return date(self::DATES_FORMAT, strtotime($value));
+    }
+
     public function dateToInput($attribute)
     {
         return $this->convertDateForInputField($this->attributes[$attribute]);
