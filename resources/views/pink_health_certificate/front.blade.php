@@ -149,7 +149,7 @@
 						$records = $pink_health_certificate->xray_sputums;
 					@endphp
 
-					@for($i = 1;$i <= $immunization_rows; $i++)
+					@for($i = 1;$i <= $xray_sputum_rows; $i++)
 						@php
 							$record = null;
 
@@ -190,7 +190,7 @@
 						$records = $pink_health_certificate->stool_and_others;
 					@endphp
 
-					@for($i = 1;$i <= $immunization_rows; $i++)
+					@for($i = 1;$i <= $stool_and_other_rows; $i++)
 						@php
 							$record = null;
 
@@ -235,7 +235,7 @@
 						$records = $pink_health_certificate->hiv_examinations;
 					@endphp
 
-					@for($i = 1;$i <= $immunization_rows; $i++)
+					@for($i = 1;$i <= $hiv_rows; $i++)
 						@php
 							$record = null;
 
@@ -276,7 +276,7 @@
 						$records = $pink_health_certificate->hbsag_examinations;
 					@endphp
 
-					@for($i = 1;$i <= $immunization_rows; $i++)
+					@for($i = 1;$i <= $hbsag_rows; $i++)
 						@php
 							$record = null;
 
@@ -317,7 +317,7 @@
 						$records = $pink_health_certificate->vdrl_examinations;
 					@endphp
 
-					@for($i = 1;$i <= $immunization_rows; $i++)
+					@for($i = 1;$i <= $vdrl_rows; $i++)
 						@php
 							$record = null;
 
@@ -344,17 +344,17 @@
 
 			<div class="field" style="margin-top: 30pt;">
 				<span class="label">Community Tax No.: </span>
-				<b class="value" style="width: 119pt;">{{ $pink_health_certificate->community_tax_no }}</b>
+				<b class="value" style="width: 115pt;">{{ $pink_health_certificate->community_tax_no }}</b>
 			</div>
 
 			<div class="field">
 				<span class="label">Issued At: </span>
-				<b class="value" style="width: 153pt;">{{ $pink_health_certificate->community_tax_issued_at }}</b>
+				<b class="value" style="width: 150pt;">{{ $pink_health_certificate->community_tax_issued_at }}</b>
 			</div>
 
 			<div class="field">
 				<span class="label">Issued On: </span>
-				<b class="value" style="width: 150pt;">{{ $pink_health_certificate->community_tax_issued_on }}</b>
+				<b class="value" style="width: 146pt;">{{ $pink_health_certificate->community_tax_issued_on }}</b>
 			</div>
 		</div>
 	</div>

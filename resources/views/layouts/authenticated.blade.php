@@ -38,7 +38,7 @@
 				<div class="menu">
 					<a href="{{ url('pink_card') }}" class="item">Add Pink Card</a>
 					<a href="{{ url('pink_card/renew') }}" class="item">Renew A Pink Card</a>
-					<a href="{{ url('pink_card/bulk_print') }}" class="item">Bulk Print Pink Cards</a>
+					<!--<a href="{{ url('pink_card/bulk_print') }}" class="item">Bulk Print Pink Cards</a>-->
 				</div>
 			</div>
 

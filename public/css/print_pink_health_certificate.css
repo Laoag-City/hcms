@@ -115,13 +115,17 @@
 	}
 
 	.card_column {
-		width: 2.814in;
 		height: 5.99in;
 		float: left;
 	}
 
 	.card_column:nth-child(1), .card_column:nth-child(2) {
-		border-right: 1pt solid grey;
+		width: 2.814in;
+		border-right: 1pt solid #dbdbdb;
+	}
+
+	.card_column:nth-child(3) {
+		width: 2.77in;
 	}
 
 	.contents {

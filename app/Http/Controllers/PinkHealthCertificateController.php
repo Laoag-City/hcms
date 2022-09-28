@@ -149,7 +149,9 @@ class PinkHealthCertificateController extends Controller
     }
 
     ////////////////////////////////////////////
-    public function bulkPrintPinkHealthCertificates()
+    //These functions are commented out since bulk printing pink cards
+    //is not that much of a use.
+    /*public function bulkPrintPinkHealthCertificates()
     {
         if($this->request->isMethod('get'))
         {
@@ -248,7 +250,7 @@ class PinkHealthCertificateController extends Controller
 
         else
             return redirect('/');
-    }
+    }*/
     ////////////////////////////////////////////
 
     public function viewEditPinkHealthCertificate(PinkHealthCertificate $pink_health_certificate)

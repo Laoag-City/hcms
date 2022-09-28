@@ -112,19 +112,19 @@ Route::group(['middleware' => 'auth'], function(){
 	Route::match(['get', 'put'], 'pink_card/renew', 'PinkHealthCertificateController@renewPinkHealthCertificate');
 
 	//bulk-print pink health certificates
-	Route::match(['get', 'post', 'delete'], 'pink_card/bulk_print', 'PinkHealthCertificateController@bulkPrintPinkHealthCertificates');
+	//Route::match(['get', 'post', 'delete'], 'pink_card/bulk_print', 'PinkHealthCertificateController@bulkPrintPinkHealthCertificates');
 
 	//for bulk print page search input
-	Route::get('pink_card/search', 'PinkHealthCertificateController@searchPinkHealthCertificates');
+	//Route::get('pink_card/search', 'PinkHealthCertificateController@searchPinkHealthCertificates');
 
 	//add a single pink health certificate to bulk print list
-	Route::post('pink_card/bulk_print_add', 'PinkHealthCertificateController@bulkPrintAdd');
+	//Route::post('pink_card/bulk_print_add', 'PinkHealthCertificateController@bulkPrintAdd');
 
 	//clear bulk print ids in session
-	Route::post('pink_card/bulk_print_clear', 'PinkHealthCertificateController@bulkPrintClear');
+	//Route::post('pink_card/bulk_print_clear', 'PinkHealthCertificateController@bulkPrintClear');
 
 	//show bulk print preview
-	Route::get('pink_card/bulk_print_preview', 'PinkHealthCertificateController@bulkPrintPreview');
+	//Route::get('pink_card/bulk_print_preview', 'PinkHealthCertificateController@bulkPrintPreview');
 
 	//view and edit a pink health certificate
 	Route::match(['get', 'put'], 'pink_card/{pink_health_certificate}', 'PinkHealthCertificateController@viewEditPinkHealthCertificate');
