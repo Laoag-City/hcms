@@ -26,6 +26,11 @@
 	box-shadow: 0 0 10px #888;
 }
 
+#logout_form
+{
+	display: none;
+}
+
 #footer
 {
 	margin-top: 0px;

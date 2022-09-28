@@ -5,11 +5,13 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Custom\DateToInputFormatter;
 use Sofa\Eloquence\Eloquence;
+use App\Custom\ExpirationChecker;
 
 class HealthCertificate extends Model
 {
     use DateToInputFormatter;
     use Eloquence;
+    use ExpirationChecker;
 
     protected $primaryKey = 'health_certificate_id';
     public const DATES_FORMAT = 'M d, Y';
@@ -70,26 +72,6 @@ class HealthCertificate extends Model
 
     public function checkIfExpired()
     {
-        if(strtotime('now') >= strtotime($this->attributes['expiration_date']))
-        {
-            if($this->is_expired == false)
-            {
-                $this->is_expired = true;
-                $this->save();
-            }
-
-            return true;
-        }
-
-        else
-        {
-            if($this->is_expired == true)
-            {
-                $this->is_expired = false;
-                $this->save();
-            }
-
-            return false;
-        }
+        return $this->checkExpiration($this->attributes['expiration_date'], $this->is_expired);
     }
 }

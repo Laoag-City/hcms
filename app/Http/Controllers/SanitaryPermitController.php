@@ -10,9 +10,12 @@ use App\Business;
 use App\SanitaryPermit;
 use App\Custom\PermitFileGenerator;
 use App\Custom\RegistrationNumberGenerator;
+use App\Custom\BrgyTrait;
 
 class SanitaryPermitController extends Controller
 {
+	use BrgyTrait;
+
     protected $request;
 
 	public function __construct(Request $request)
@@ -87,23 +90,7 @@ class SanitaryPermitController extends Controller
     	$sanitary_permits = [];
 
     	if($this->request->brgy)
-    	{
-    		$alternate_brgy_number = null;
-
-    		if(str_contains($this->request->brgy, '-'))
-    			$alternate_brgy_number = str_replace('-', '', $this->request->brgy);
-
-    		if($alternate_brgy_number == null)
-	    		$sanitary_permits = SanitaryPermit::where('brgy', 'like', "%{$this->request->brgy}%")
-	    										->orWhere('street', 'like', "% {$this->request->brgy} %");
-
-	    	else
-	    		$sanitary_permits = SanitaryPermit::where('brgy', 'like', "%{$this->request->brgy}%")
-	    										->orWhere('street', 'like', "% {$this->request->brgy} %")
-	    										->orWhere('street', 'like', "% $alternate_brgy_number %");
-
-	    	$sanitary_permits = $sanitary_permits->paginate(150);
-    	}
+	    	$sanitary_permits= SanitaryPermit::where('brgy', $this->request->brgy)->paginate(150);
 
     	return view('sanitary_permit.permits_list', [
 			'title' => "Sanitary Permits List",
@@ -186,18 +173,18 @@ class SanitaryPermitController extends Controller
 		if($mode == 'add')
 		{
 			$permit_owner_rules = [
-				'business_name' => 'bail|required_if:permit_type,business|max:100',
+				'business_name' => 'bail|required_if:permit_owner_type,business|max:100',
 
-				'first_name' => 'bail|required_if:permit_type,individual|alpha_spaces|max:40',
+				'first_name' => 'bail|required_if:permit_owner_type,individual|alpha_spaces|max:40',
 	            'middle_name' => 'nullable|bail|alpha_spaces|max:30',
-	            'last_name' => 'bail|required_if:permit_type,individual|alpha_spaces|max:30',
+	            'last_name' => 'bail|required_if:permit_owner_type,individual|alpha_spaces|max:30',
 	            'suffix_name' => 'nullable|bail|in:Jr.,Sr.,I,II,III,IV,V,VI,VII,VIII,IX,X',
-	            'age' => 'bail|required_if:permit_type,individual|integer|min:0|max:120',
-	            'gender' => 'bail|required_if:permit_type,individual|in:0,1',
+	            'age' => 'bail|required_if:permit_owner_type,individual|integer|min:0|max:120',
+	            'gender' => 'bail|required_if:permit_owner_type,individual|in:0,1',
 			];
 
 			$specific_rules = [
-				'permit_type' => 'bail|required|in:individual,business',
+				'permit_owner_type' => 'bail|required|in:individual,business',
 				'has_existing_registered_name' => 'bail|sometimes|required|in:on',
 				'date_of_issuance' => 'bail|required|date|before_or_equal:today',
 			];
@@ -206,10 +193,10 @@ class SanitaryPermitController extends Controller
 			{
 				$exist_rule = '';
 
-				if($this->request->permit_type == 'individual')
+				if($this->request->permit_owner_type == 'individual')
 					$exist_rule = '|exists:applicants,applicant_id';
 
-				elseif($this->request->permit_type == 'business')
+				elseif($this->request->permit_owner_type == 'business')
 					$exist_rule = '|exists:businesses,business_id';
 
 				$add_rules = [
@@ -227,7 +214,7 @@ class SanitaryPermitController extends Controller
 			if($sanitary_permit->applicant_id != null)
 			{
 				$permit_owner_rules = [
-					'business_name' => 'bail|nullable|required_with:permit_type|max:100',
+					'business_name' => 'bail|nullable|required_with:permit_owner_type|max:100',
 				];
 
             	$in_rule = 'business';
@@ -236,12 +223,12 @@ class SanitaryPermitController extends Controller
             else
             {
             	$permit_owner_rules = [
-					'first_name' => 'bail|nullable|required_with:permit_type|alpha_spaces|max:40',
+					'first_name' => 'bail|nullable|required_with:permit_owner_type|alpha_spaces|max:40',
             		'middle_name' => 'nullable|bail|alpha_spaces|max:30',
-            		'last_name' => 'bail|nullable|required_with:permit_type|alpha_spaces|max:30',
+            		'last_name' => 'bail|nullable|required_with:permit_owner_type|alpha_spaces|max:30',
             		'suffix_name' => 'nullable|bail|in:Jr.,Sr.,I,II,III,IV,V,VI,VII,VIII,IX,X',
-            		'age' => 'bail|nullable|required_if:permit_type,individual|integer|min:0|max:120',
-            		'gender' => 'bail|nullable|required_with:permit_type|in:0,1',
+            		'age' => 'bail|nullable|required_if:permit_owner_type,individual|integer|min:0|max:120',
+            		'gender' => 'bail|nullable|required_with:permit_owner_type|in:0,1',
 				];
 
             	$in_rule = 'individual';
@@ -250,7 +237,7 @@ class SanitaryPermitController extends Controller
 			if($mode == 'renew')
 			{
                 $specific_rules = [
-            		'permit_type' => 'bail|sometimes|in:' . $in_rule,
+            		'permit_owner_type' => 'bail|sometimes|in:' . $in_rule,
                 	'date_of_issuance' => "bail|required|date|before_or_equal:today|after:{$sanitary_permit->dateToInput('issuance_date')}"
             	];
 			}
@@ -258,7 +245,7 @@ class SanitaryPermitController extends Controller
             else
             {
                 $specific_rules = [
-            		'permit_type' => 'bail|sometimes|in:' . $in_rule,
+            		'permit_owner_type' => 'bail|sometimes|in:' . $in_rule,
                 	'update_mode' => 'bail|required|accepted',
                 	'date_of_issuance' => 'bail|required|date|before_or_equal:today'
             	];
@@ -269,7 +256,8 @@ class SanitaryPermitController extends Controller
 			'establishment_type' => 'bail|required|string|max:100',
 			'date_of_expiration' => 'bail|required|date|after:date_of_issuance',
 			'total_employees' => 'bail|required|integer|min:0',
-			'brgy' => 'bail|required|string',
+			'permit_classification' => 'bail|required|in:'  . implode(',', SanitaryPermit::PERMIT_CLASSIFICATIONS),
+			'brgy' => 'bail|required|in:' . implode(',', $this->brgys),
 			'street' => 'bail|nullable|string|max:150',
 			'sanitary_inspector' => 'bail|required|string|alpha_spaces|max:100'
 		]))->validate();
@@ -278,7 +266,7 @@ class SanitaryPermitController extends Controller
 		{
 			if($this->request->id == null)
 			{
-				if($this->request->permit_type == 'individual')
+				if($this->request->permit_owner_type == 'individual')
 				{
 					$permit_holder = new Applicant;
 		            $permit_holder->first_name = $this->request->first_name;
@@ -300,7 +288,7 @@ class SanitaryPermitController extends Controller
 
 			else
 			{
-				if($this->request->permit_type == 'individual')
+				if($this->request->permit_owner_type == 'individual')
 				{
 					$permit_holder = Applicant::find($this->request->id);
 					$permit_holder->age = $this->request->age;
@@ -321,6 +309,7 @@ class SanitaryPermitController extends Controller
 
 			$sanitary_permit->establishment_type = $this->request->establishment_type;
 			$sanitary_permit->total_employees = $this->request->total_employees;
+			$sanitary_permit->permit_classification = $this->request->permit_classification;
 			$sanitary_permit->brgy = $this->request->brgy;
 			$sanitary_permit->street = $this->request->street;
 			$sanitary_permit->issuance_date = $this->request->date_of_issuance;
@@ -334,9 +323,9 @@ class SanitaryPermitController extends Controller
 		else
 		{
 			//if changing permit owner type
-			if($this->request->permit_type != null)
+			if($this->request->permit_owner_type != null)
 			{
-				if($this->request->permit_type == 'individual')
+				if($this->request->permit_owner_type == 'individual')
 				{
 					$permit_holder = new Applicant;
 		            $permit_holder->first_name = $this->request->first_name;
@@ -364,6 +353,7 @@ class SanitaryPermitController extends Controller
 
 			$sanitary_permit->establishment_type = $this->request->establishment_type;
 			$sanitary_permit->total_employees = $this->request->total_employees;
+			$sanitary_permit->permit_classification = $this->request->permit_classification;
 			$sanitary_permit->brgy = $this->request->brgy;
 			$sanitary_permit->street = $this->request->street;
 			$sanitary_permit->issuance_date = $this->request->date_of_issuance;

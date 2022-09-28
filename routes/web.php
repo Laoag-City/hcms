@@ -14,6 +14,9 @@
 Route::match(['get', 'post'], 'login', 'AuthenticationController@login')->name('login')->middleware('guest');
 
 Route::group(['middleware' => 'auth'], function(){
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Health Certificate routes
+
 	//creates a new health certiicate
 	Route::match(['get', 'post'], '/', 'HealthCertificateController@createHealthCertificate');
 
@@ -35,7 +38,7 @@ Route::group(['middleware' => 'auth'], function(){
 	//for bulk print page search input
 	Route::get('health_certificate/search', 'HealthCertificateController@searchHealthCertificates');
 
-	//views and edits a health certificate
+	//renew a health certificate
 	Route::match(['get', 'put'], 'health_certificate/renew', 'HealthCertificateController@renewCertificate');
 
 	//views and edits a health certificate
@@ -59,6 +62,7 @@ Route::group(['middleware' => 'auth'], function(){
 	Route::get('duplicates', 'HealthCertificateController@removeDuplicateCertificates');
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Applicant routes
 
 	//shows applicant list
 	Route::get('applicants', 'ApplicantController@getApplicants');
@@ -70,6 +74,7 @@ Route::group(['middleware' => 'auth'], function(){
 	Route::get('applicant_search', 'ApplicantController@searchApplicantsForCertificateOrPermitForm');
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Sanitary Permit routes
 	
 	Route::match(['get', 'post'], 'sanitary_permit', 'SanitaryPermitController@createSanitaryPermit');
 
@@ -86,6 +91,7 @@ Route::group(['middleware' => 'auth'], function(){
 	Route::get('sanitary_permit/{sanitary_permit}/preview', 'SanitaryPermitController@printPreview');
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Business routes
 
 	//shows business list
 	Route::get('businesses', 'BusinessController@getBusinesses');
@@ -97,11 +103,57 @@ Route::group(['middleware' => 'auth'], function(){
 	Route::get('business_search', 'BusinessController@searchBusinessesForPermitForm');
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////Pink Health Certificate routes
+
+	//add a new pink health certificate
+	Route::match(['get', 'post'], 'pink_card', 'PinkHealthCertificateController@addPinkHealthCertificate');
+
+	//renew a pink health certificate
+	Route::match(['get', 'put'], 'pink_card/renew', 'PinkHealthCertificateController@renewPinkHealthCertificate');
+
+	//bulk-print pink health certificates
+	//Route::match(['get', 'post', 'delete'], 'pink_card/bulk_print', 'PinkHealthCertificateController@bulkPrintPinkHealthCertificates');
+
+	//for bulk print page search input
+	//Route::get('pink_card/search', 'PinkHealthCertificateController@searchPinkHealthCertificates');
+
+	//add a single pink health certificate to bulk print list
+	//Route::post('pink_card/bulk_print_add', 'PinkHealthCertificateController@bulkPrintAdd');
+
+	//clear bulk print ids in session
+	//Route::post('pink_card/bulk_print_clear', 'PinkHealthCertificateController@bulkPrintClear');
+
+	//show bulk print preview
+	//Route::get('pink_card/bulk_print_preview', 'PinkHealthCertificateController@bulkPrintPreview');
+
+	//view and edit a pink health certificate
+	Route::match(['get', 'put'], 'pink_card/{pink_health_certificate}', 'PinkHealthCertificateController@viewEditPinkHealthCertificate');
+
+	//delete a pink health certificate
+	Route::delete('pink_card/{pink_health_certificate}', 'PinkHealthCertificateController@deletePinkHealthCertificate');
+
+	//shows the preview of the pink health certificate and the take picture feature
+	Route::get('pink_card/{pink_health_certificate}/preview', 'PinkHealthCertificateController@printPreview');
+
+	//ajax for saving the image
+	Route::post('pink_card/{pink_health_certificate}/picture', 'PinkHealthCertificateController@savePicture');
+
+	//shows applicant's id picture
+	Route::get('pink_card/{pink_health_certificate}/picture', 'PinkHealthCertificateController@showPicture');
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	//searches applicants
 	Route::get('search', 'SearchController@viewSearches');
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Report route
+
+	//show summary of records
+	Route::get('reports', 'ReportController');
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//User routes
 
 	//user administration
 	Route::group(['middleware' => 'can:is-admin'], function(){

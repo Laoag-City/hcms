@@ -21,7 +21,7 @@
 			ADD SANITARY PERMIT
 		</button>
 
-		@if(!collect(session()->get('print_ids'))->contains($health_certificate->health_certificate_id))
+		@if(!collect(session()->get('print_hc_ids'))->contains($health_certificate->health_certificate_id))
 			<button onclick="event.preventDefault(); document.getElementById('add_to_bulk_print_form').submit();">
 				ADD TO BULK PRINT LIST
 			</button>
@@ -63,8 +63,7 @@
 	
 </body>
 <script>
-	var picture = '{{ $picture == null ?: "#print_front" }}';
-	var id = {{ $health_certificate->health_certificate_id }};
+	var save_picture_url = "{!! $save_picture_url !!}";
 </script>
 <script src="/webcamjs/webcam.js"></script>
 <script src="{{ mix('/js/app.js') }}"></script>

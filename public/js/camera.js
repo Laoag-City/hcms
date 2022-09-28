@@ -5,7 +5,7 @@ Webcam.set({
 Webcam.attach('#camera');
 
 Webcam.on( 'live', function(){
-	$('#take_picture, ' + picture).removeClass('hidden');
+	$('#take_picture').removeClass('hidden');
 
 	$('#take_picture').click(function(){
 		Webcam.freeze();	
@@ -25,7 +25,7 @@ Webcam.on( 'live', function(){
 				headers : {
 					'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')
 				},
-				url	: '/health_certificate/' + id + '/picture',
+				url	: save_picture_url,
 				method: 'POST',
 				data : {'webcam' : data_uri.replace(/^data\:image\/\w+\;base64\,/, '')},
 				success : function(data){
@@ -52,17 +52,17 @@ Webcam.on( 'error', function(err){
 });
 
 $('.print').click(function(){
-	/*if($(this).attr('id') == 'print_front')
+	if($(this).attr('data-function') == 'print_front')
 	{
 		$('#front_preview').removeClass('no-print');
 		$('#back_preview').addClass('no-print');
 	}
 
-	else if($(this).attr('id') == 'print_back')
+	else if($(this).attr('data-function') == 'print_back')
 	{
 		$('#back_preview').removeClass('no-print');
 		$('#front_preview').addClass('no-print');
-	}*/
+	}
 	
 	window.print();
 });

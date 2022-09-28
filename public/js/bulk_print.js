@@ -14,7 +14,7 @@ function removeRow(id)
 
 $('.ui.search').search({
 	apiSettings: {
-		url: '/health_certificate/search?q={query}'
+		url: search_url + '?q={query}'
 	},
 
 	searchOnFocus: false,
@@ -45,7 +45,7 @@ $('.ui.search').search({
 
 					<td>${result.whole_name}</td>
 
-					<td>${result.hc_no}</td>
+					<td>${result.reg_no}</td>
 
 					<td>
 						<button type="button" class="ui mini red button remove_button" onclick="removeRow(${result.id})">Remove</button>

@@ -11,11 +11,11 @@ $('.delete.button').click(function(){
 	$('#delete_form').modal('show');
 });
 
-$('input[name=permit_type]').change(function(){
+$('input[name=permit_owner_type]').change(function(){
 	switchPermitOwnerType();
 });
 
-if($('input[name=permit_type]').attr('value') == 'individual')
+if($('input[name=permit_owner_type]').attr('value') == 'individual')
 {
 	$('input.field_individual').attr('readonly', false);
 	$('select.field_individual').attr('disabled', false);
@@ -33,24 +33,24 @@ switchPermitOwnerType();
 
 function switchPermitOwnerType()
 {
-	if($('input[name=permit_type]:checked').val() == 'individual')
+	if($('input[name=permit_owner_type]:checked').val() == 'individual')
 	{
 		$('.field_individual').show();
 		$('.field_business').hide();
 		return;
 	}
 
-	else if($('input[name=permit_type]:checked').val() == 'business')
+	else if($('input[name=permit_owner_type]:checked').val() == 'business')
 	{
 		$('.field_business').show();
 		$('.field_individual').hide();
 		return;
 	}
 
-	//else statements executes if permit_type is unchecked
+	//else statements executes if permit_owner_type is unchecked
 	else
 	{
-		if($('input[name=permit_type]').attr('value') == 'individual')
+		if($('input[name=permit_owner_type]').attr('value') == 'individual')
 		{
 			$('.field_business').show();
 			$('.field_individual').hide();

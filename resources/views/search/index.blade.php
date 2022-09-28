@@ -56,6 +56,15 @@
 						<th>Issuance Date</th>
 						<th>Expiration Date</th>
 						<th></th>
+					@elseif($criteria == 'Pink Card Reg. No.' || $criteria == 'Place of Work (PC)')
+						<th>Registration Number</th>
+						<th>Client Name</th>
+						<th>Occupation</th>
+						<th>Place of Work</th>
+						<th class="collapsing">Expired</th>
+						<th class="collapsing">Issuance Date</th>
+						<th class="collapsing">Expiration Date</th>
+						<th class="collapsing"></th>
 					@endif
 				</tr>
 			</thead>
@@ -160,6 +169,40 @@
 											<a class="item" href="{{ url("sanitary_permit/$result->sanitary_permit_id") }}">Sanitary Permit Info</a>
 											<a class="item" href="{{ url("sanitary_permit/$result->sanitary_permit_id/preview") }}">Print Preview</a>
 											<button type="button" class="item delete_button" data-type="sp" data-id="{{ $result->sanitary_permit_id }}">Remove</button>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+					@endforeach
+
+				@elseif($criteria == 'Pink Card Reg. No.' || $criteria == 'Place of Work (PC)')
+					@foreach($results as $result)
+						@php
+							$expired = $result->checkIfExpired();
+						@endphp
+
+						<tr class="center aligned">
+							<td class="collapsing">{{ $result->registration_number }}</td>
+							<td class="collapsing">{{ $result->applicant->formatName() }}</td>
+							<td>{{ $result->occupation }}</td>
+							<td>{{ $result->place_of_work }}</td>
+							@if($expired)
+								<td class="error">Yes</td>
+							@else
+								<td>No</td>
+							@endif
+							<td>{{ $result->issuance_date }}</td>
+							<td>{{ $result->expiration_date }}</td>
+							<td class="collapsing">
+								<div class="ui compact menu">
+									<div class="ui simple dropdown item">
+										<i class="options icon"></i>
+										<i class="dropdown icon"></i>
+										<div class="menu">
+											<a class="item" href="{{ url("pink_card/$result->pink_health_certificate_id") }}">Pink Card Info</a>
+											<a class="item" href="{{ url("pink_card/$result->pink_health_certificate_id/preview") }}">Print Preview</a>
+											<button type="button" class="item delete_button" data-type="phc" data-id="{{ $result->pink_health_certificate_id }}">Remove</button>
 										</div>
 									</div>
 								</div>

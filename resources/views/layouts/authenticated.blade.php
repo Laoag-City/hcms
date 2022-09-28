@@ -9,7 +9,7 @@
 		$current_url = request()->path();
 	@endphp
 
-	<div id="main_menu" class="ui fluid stackable menu">
+	<div id="main_menu" class="ui fluid stackable small menu">
 		<div class="ui container">
 			<div class="header item">
 				<i class="icons" data-tooltip="Logged in as {{ Auth::user()->username }}" data-position="bottom center">
@@ -32,6 +32,17 @@
 			</div>
 
 			<div class="ui simple dropdown item">
+				Pink Card (HC)
+				<i class="dropdown icon"></i>
+
+				<div class="menu">
+					<a href="{{ url('pink_card') }}" class="item">Add Pink Card</a>
+					<a href="{{ url('pink_card/renew') }}" class="item">Renew A Pink Card</a>
+					<!--<a href="{{ url('pink_card/bulk_print') }}" class="item">Bulk Print Pink Cards</a>-->
+				</div>
+			</div>
+
+			<div class="ui simple dropdown item">
 				Sanitary Permit
 				<i class="dropdown icon"></i>
 
@@ -48,6 +59,7 @@
 				<i class="dropdown icon"></i>
 
 				<div class="menu">
+					<a href="{{ url('reports') }}" class="item">Summary of Records</a>
 					<a href="{{ url('applicants') }}" class="item">Clients</a>
 					<a href="{{ url('businesses') }}" class="item">Businesses</a>
 				</div>
@@ -55,21 +67,23 @@
 
 			<div class="right menu">
 				<form action="{{ url('search') }}" class="item">
-					<div class="ui action input">
+					<div class="ui small action input">
 						<input type="text" name="q" placeholder="Search" required="">
 
 						<select class="ui compact selection dropdown" name="c" required="">
-							<option value="">-- Choose Criteria --</option>
+							<option value="" style="font-style: italic;">-- Criteria --</option>
 							<option value="Client Name">Client Name</option>
 							<option value="Business Name">Business Name</option>
 							<option value="HC Reg. No.">HC Reg. No.</option>
 							<option value="SP Number">SP Number</option>
+							<option value="Pink Card Reg. No.">Pink Card Reg. No.</option>
 							<option value="Work Type">Work Type</option>
 							<option value="Establ. Name (HC)">Establ. Name (HC)</option>
 							<option value="Establ. Type (SP)">Establ. Type (SP)</option>
+							<option value="Place of Work (PC)">Place of Work (PC)</option>
 						</select>
 
-						<button class="ui icon button">
+						<button class="ui icon small button">
     						<i class="search icon"></i>
   						</button>
 					</div>
@@ -79,7 +93,7 @@
 					<div class="ui simple dropdown item">
 						<i class="cogs icon"></i>
 
-						<i class="dropdown icon"></i>
+						<i class="dropdown icon" style="margin-left: 5px;"></i>
 
 						<div class="menu">
 							<a href="{{ url('users') }}" class="item">User Administration</a>
@@ -91,7 +105,7 @@
 					Logout
     			</a>
 
-    			<form id="logout_form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+    			<form id="logout_form" action="{{ url('/logout') }}" method="POST">
         			{{ csrf_field() }}
     			</form>
 			</div>

@@ -31,11 +31,18 @@ function alterFormState(fade)
 $('.delete_button').click(function(){
 	let delete_title;
 	let form_action;
+	let record_type = $(this).attr('data-type');
 
-	if($(this).attr('data-type') == 'hc')
+	if(record_type == 'hc')
 	{
 		delete_title = 'Health Certificate';
 		form_action = '/health_certificate/';
+	}
+
+	else if(record_type == 'phc')
+	{
+		delete_title = 'Pink Card';
+		form_action = '/pink_card/';
 	}
 
 	else

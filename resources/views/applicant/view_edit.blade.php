@@ -97,7 +97,7 @@
 				<div class="fields">
 					<div class="four wide field"></div>
 
-					<div class="four wide field{!! !$errors->has('age') ? '"' : ' error" data-content="' . $errors->first('age') . '" data-position="top center"' !!}>
+					<div class="two wide field{!! !$errors->has('age') ? '"' : ' error" data-content="' . $errors->first('age') . '" data-position="top center"' !!}>
 						<label>Age:</label>
 						<input type="number" name="age" class="dynamic_input" value="{{ old('age') != null ? old('age') : $applicant->age }}" min="">
 					</div>
@@ -106,7 +106,7 @@
 						$selected_gender = $checker->dropdown_select_check(old('gender'), $applicant->gender, ['0', '1'])
 					@endphp
 						
-					<div class="four wide field{!! !$errors->has('gender') ? '"' : ' error" data-content="' . $errors->first('gender') . '" data-position="top center"' !!}>
+					<div class="two wide field{!! !$errors->has('gender') ? '"' : ' error" data-content="' . $errors->first('gender') . '" data-position="top center"' !!}>
 						<label>Gender:</label>
 
 						<input value="{{ $selected_gender == 1 ? 'Male' : 'Female' }}" class="view_only" readonly>
@@ -116,6 +116,11 @@
 							<option value="1" {{ (string)$selected_gender != '1' ?: 'selected' }}>Male</option>
 							<option value="0" {{ (string)$selected_gender != '0' ?: 'selected' }}>Female</option>
 						</select>
+					</div>
+
+					<div class="four wide field{!! !$errors->has('nationality') ? '"' : ' error" data-content="' . $errors->first('nationality') . '" data-position="top center"' !!}>
+						<label>Nationality:</label>
+						<input type="text" name="nationality" value="{{ old('nationality') ? old('nationality') : $applicant->nationality }}" class="dynamic_input" placeholder="Nationality">
 					</div>
 				</div>
 
@@ -150,7 +155,8 @@
 
 		<div class="ui top attached tabular menu">
 			<a class="item active" data-tab="first">Health Certificates</a>
-			<a class="item" data-tab="second">Sanitary Permits</a>
+			<a class="item" data-tab="second">Pink Cards</a>
+			<a class="item" data-tab="third">Sanitary Permits</a>
 		</div>
 
 		<div class="ui bottom attached tab segment active" data-tab="first">
@@ -204,6 +210,56 @@
 		</div>
 
 		<div class="ui bottom attached tab segment" data-tab="second">
+			<table class="ui attached striped selectable structured celled table">
+				<thead>
+					<tr class="center aligned">
+						<th>Registration Number</th>
+						<th>Occupation</th>
+						<th>Place of Work</th>
+						<th class="collapsing">Expired</th>
+						<th class="collapsing">Issuance Date</th>
+						<th class="collapsing">Expiration Date</th>
+						<th class="collapsing">Options</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					@foreach($pink_health_certificates as $phc)
+						@php
+							$expired = $phc->checkIfExpired();
+						@endphp
+
+						<tr class="center aligned">
+							<td class="collapsing">{{ $phc->registration_number }}</td>
+							<td>{{ $phc->occupation }}</td>
+							<td>{{ $phc->place_of_work }}</td>
+							@if($expired)
+								<td class="error">Yes</td>
+							@else
+								<td>No</td>
+							@endif
+							<td>{{ $phc->issuance_date }}</td>
+							<td>{{ $phc->expiration_date }}</td>
+							<td class="collapsing">
+								<div class="ui compact menu">
+									<div class="ui simple dropdown item">
+										<i class="options icon"></i>
+										<i class="dropdown icon"></i>
+										<div class="menu">
+											<a class="item" href="{{ url("pink_card/$phc->pink_health_certificate_id") }}">Pink Card Info</a>
+											<a class="item" href="{{ url("pink_card/$phc->pink_health_certificate_id/preview") }}">Print Preview</a>
+											<button type="button" class="item delete_button" data-type="phc" data-id="{{ $phc->pink_health_certificate_id }}">Remove</button>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+					@endforeach
+				</tbody>
+			</table>
+		</div>
+
+		<div class="ui bottom attached tab segment" data-tab="third">
 			<table class="ui attached striped selectable structured celled table">
 				<thead>
 					<tr class="center aligned">

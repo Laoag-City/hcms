@@ -1,0 +1,175 @@
+/* General HTML element  stlyes */
+	* {
+		font-family: sans-serif;
+	}
+
+	body {
+		margin: 0pt 0pt 0pt 0pt;
+	}
+
+	table {
+		width: 100%;
+		border: 1pt solid black;
+		border-collapse: collapse;
+	}
+
+	td {
+		padding: 3pt 0pt 3pt 0pt !important;
+	}
+
+	td, th {
+		font-size: 8pt;
+		border: 0.5625pt solid black;
+	}
+
+	td:nth-child(1), th:nth-child(1) {
+		width: 30%;
+	}
+
+	td:nth-child(2), th:nth-child(2) {
+		width: 35%;
+	}
+
+	td:nth-child(3), th:nth-child(3) {
+		width: 35%;
+	}
+
+/* Utility styles */
+	.larger_font {
+		font-size: 8pt;
+		font-weight: bold;
+	}
+
+	.standard_font {
+		font-size: 8pt;
+	}
+
+	.smaller_font {
+		font-size: 7pt;
+	}
+
+	.pull_left {
+		float: left;
+	}
+
+	.pull_right {
+		float: right;
+	}
+
+	.text_center {
+		text-align: center;
+	}
+
+	.text_right {
+		text-align: right;
+	}
+
+	.text_justify {
+		text-align: justify;
+	}
+
+	.no_margin {
+		margin: 0pt 0pt 0pt 0pt;
+	}
+
+	.block_center {
+		margin-right: auto;
+		margin-left: auto;
+	}
+
+	.field {
+		display: inline-block;
+		margin-bottom: 10pt;
+	}
+
+	.label {
+		font-size: 7.5pt;
+	}
+
+	.value {
+		border-bottom: 0.7625pt solid black !important;
+		display: inline-block;
+		text-align: center;
+		font-size: 8pt;
+	}
+
+	.empty_cell {
+		height: 7pt;
+	}
+
+	.hidden {
+		display: none;
+	}
+
+	.page_breaker {
+		width: 50px; 
+		height: 1px; 
+		float: left;
+	}
+
+/* Specific element styles */
+	.pink_card {
+		width: 8.47222in;
+		height: 6in;
+		border: 1pt solid black;
+	}
+
+	.card_column {
+		height: 5.99in;
+		float: left;
+	}
+
+	.card_column:nth-child(1), .card_column:nth-child(2) {
+		width: 2.814in;
+		border-right: 1pt solid #dbdbdb;
+	}
+
+	.card_column:nth-child(3) {
+		width: 2.77in;
+	}
+
+	.contents {
+		padding: 8mm 2.5mm 8mm 2.5mm;
+		overflow: auto;
+	}
+
+	#logo {
+		height: 49.5pt;
+		width: 49.5pt;
+	}
+
+	#camera {
+		width: 192pt;
+		height: 192pt;
+		border: 1px solid grey;
+		margin-right: auto;
+		margin-left: auto;
+		margin-bottom: 20px;
+	}
+
+	#picture {
+		width: 96px;
+		height: 96px;
+		border: 0.5625pt solid black;
+	}
+
+/* Print-specific styles */
+	@media print {    
+	    .no-print
+	    {
+	        display: none !important;
+	    }
+
+	    .invisible_on_print
+	    {
+	    	visibility: hidden !important;
+	    }
+
+	    .page_breaker
+	    {
+	    	break-before: always !important;
+	    	width: 0px !important;
+	    	height: 0px !important;
+	    	clear: both !important;
+	    }
+	}

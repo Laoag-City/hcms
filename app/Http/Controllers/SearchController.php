@@ -7,6 +7,7 @@ use App\Applicant;
 use App\Business;
 use App\HealthCertificate;
 use App\SanitaryPermit;
+use App\PinkHealthCertificate;
 use Illuminate\Validation\Rule;
 
 class SearchController extends Controller
@@ -24,8 +25,16 @@ class SearchController extends Controller
             'q' => 'required',
             'c' => [
                 'required',
-                Rule::in('Client Name', 'Business Name', 'HC Reg. No.', 'SP Number', 'Work Type', 'Establ. Name (HC)', 'Establ. Type (SP)')
-            ]
+                Rule::in('Client Name',
+                        'Business Name',
+                        'HC Reg. No.',
+                        'SP Number',
+                        'Pink Card Reg. No.',
+                        'Work Type',
+                        'Establ. Name (HC)',
+                        'Establ. Type (SP)',
+                        'Place of Work (PC)'
+                )]
         ]);
 
         $results = null;
@@ -44,6 +53,9 @@ class SearchController extends Controller
             case 'SP Number':
                 $results = SanitaryPermit::search($this->request->q, ['sanitary_permit_number'])->with(['applicant', 'business']);
                 break;
+            case 'Pink Card Reg. No.':
+                $results = PinkHealthCertificate::search($this->request->q, ['registration_number'])->with(['applicant']);
+                break;
             case 'Work Type':
                 $results = HealthCertificate::search($this->request->q, ['work_type'])->with(['applicant']);
                 break;
@@ -52,6 +64,9 @@ class SearchController extends Controller
                 break;
             case 'Establ. Type (SP)':
                 $results = SanitaryPermit::search($this->request->q, ['establishment_type'])->with(['applicant', 'business']);
+                break;
+            case 'Place of Work (PC)':
+                $results = PinkHealthCertificate::search($this->request->q, ['place_of_work'])->with(['applicant']);
                 break;
         }
 

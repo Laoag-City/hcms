@@ -151,7 +151,7 @@
 										<div class="menu">
 											<a class="item" href="{{ url("sanitary_permit/$sc->sanitary_permit_id") }}">Sanitary Permit Info</a>
 											<a class="item" href="{{ url("sanitary_permit/$sc->sanitary_permit_id/preview") }}">Print Preview</a>
-											<!--<button type="button" class="item delete_button" data-id="{{ $sc->sanitary_permit_id }}">Remove</button>-->
+											<button type="button" class="item delete_button" data-id="{{ $sc->sanitary_permit_id }}">Remove</button>
 										</div>
 									</div>
 								</div>
@@ -165,4 +165,12 @@
 		</div>			
 	</div>
 </div>
+@endsection
+
+@section('sub_custom_js')
+
+<script src="{{ mix('/js/sanitary_permit_list.js') }}"></script>
+
+@include('commons.delete_modal')
+
 @endsection

@@ -9,14 +9,14 @@
 	</div>
 
 	<div class="ui attached fluid segment" style="min-height: 300px;">
-		@if(session()->has('print_ids'))
+		@if(session()->has($bulk_print_session_ids_name))
 		<div style="overflow: auto;">
 			<a class="ui right floated small red button" href="#" onclick="event.preventDefault(); document.getElementById('clear_ids_form').submit();">
-				Clear Bulk Print List <!--({{ count(session()->get('print_ids')) }})-->
+				Clear Bulk Print List
 			</a>
 		</div>
 
-			<form id="clear_ids_form" action="{{ url('health_certificate/bulk_print_clear') }}" method="POST" style="display: none;">
+			<form id="clear_ids_form" action="{{ url($bulk_print_clear_url) }}" method="POST" style="display: none;">
 				{{ csrf_field() }}
 			</form>
 		@endif
@@ -49,17 +49,17 @@
 						</thead>
 
 						<tbody id="to_prints">
-							@if(session()->has('print_ids'))
-								@foreach(session('print_ids') as $id)
+							@if(session()->has($bulk_print_session_ids_name))
+								@foreach(session($bulk_print_session_ids_name) as $id)
 									<tr data-id="{{ $id }}">
 										<input type="hidden" name="ids[]" value="{{ $id }}">
 
 										<td>
-											{{ $health_certificates->where('health_certificate_id', $id)->first()->applicant->formatName() }}
+											{{ $certificates->where($certificate_primary_key_name, $id)->first()->applicant->formatName() }}
 										</td>
 
 										<td>
-											{{ $health_certificates->where('health_certificate_id', $id)->first()->registration_number }}
+											{{ $certificates->where($certificate_primary_key_name, $id)->first()->registration_number }}
 										</td>
 
 										<td>
@@ -87,7 +87,8 @@
 
 @section('sub_custom_js')
 	<script>
-		var to_print_ids = {!! json_encode(session()->get('print_ids', [])) !!};
+		var to_print_ids = {!! json_encode(session()->get($bulk_print_session_ids_name, [])) !!};
+		var search_url = "{!! $search_certificates_url !!}";
 	</script>
 
 	<script src="{{ mix('/js/bulk_print.js') }}"></script>
