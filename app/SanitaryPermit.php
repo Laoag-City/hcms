@@ -29,7 +29,17 @@ class SanitaryPermit extends Model
 
     public function getAddressAttribute()
     {
-        return "Brgy. {$this->brgy} {$this->street}";
+        if($this->brgy && $this->street)
+            return "BRGY. {$this->brgy} {$this->street}, LAOAG CITY";
+
+        elseif($this->brgy && !$this->street)
+            return "BRGY. {$this->brgy}, LAOAG CITY";
+
+        else if(!$this->brgy && $this->street)
+            return "{$this->street}, LAOAG CITY";
+
+        else
+            return "LAOAG CITY";
     }
 
     public function getIssuanceDateAttribute($value)

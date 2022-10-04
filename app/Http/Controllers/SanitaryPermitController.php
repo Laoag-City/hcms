@@ -90,7 +90,59 @@ class SanitaryPermitController extends Controller
     	$sanitary_permits = [];
 
     	if($this->request->brgy)
-	    	$sanitary_permits= SanitaryPermit::where('brgy', $this->request->brgy)->paginate(150);
+    	{
+    		Validator::make($this->request->all(), [
+    			'brgy' => 'required|in:' . implode(',', $this->brgys),
+    			'classification' => 'required|in:All,Food,Non-food'
+    		])->validate();
+
+    		//The $alternate_brgy_number variable is used to query for brgy info in the street column
+    		$alternate_brgy_number = null;
+
+			if(str_contains($this->request->brgy, '-'))
+				$alternate_brgy_number = str_replace('-', '', $this->request->brgy);
+
+			if($this->request->classification != 'All')
+			{
+				if($alternate_brgy_number == null)
+		    		$sanitary_permits = SanitaryPermit::where([
+		    													['brgy', $this->request->brgy],
+		    													['permit_classification', '=', $this->request->classification]
+		    												])
+		    										->orWhere([
+		    													['street', 'like', "% {$this->request->brgy} %"],
+		    													['permit_classification', '=', $this->request->classification]
+		    												]);
+
+		    	else
+		    		$sanitary_permits = SanitaryPermit::where([
+		    													['brgy', $this->request->brgy],
+		    													['permit_classification', '=', $this->request->classification]
+		    												])
+		    										->orWhere([
+		    													['street', 'like', "% {$this->request->brgy} %"],
+		    													['permit_classification', '=', $this->request->classification]
+		    												])
+	    											->orWhere([
+	    														['street', 'like', "% $alternate_brgy_number %"],
+	    														['permit_classification', '=', $this->request->classification]
+	    													]);
+	    	}
+
+    		else
+    		{
+    			if($alternate_brgy_number == null)
+		    		$sanitary_permits = SanitaryPermit::where('brgy', $this->request->brgy)
+		    										->orWhere('street', 'like', "% {$this->request->brgy} %");
+
+		    	else
+		    		$sanitary_permits = SanitaryPermit::where('brgy', $this->request->brgy)
+		    										->orWhere('street', 'like', "% {$this->request->brgy} %")
+	    											->orWhere('street', 'like', "% $alternate_brgy_number %");
+    		}
+
+    		$sanitary_permits = $sanitary_permits->paginate(150);
+    	}
 
     	return view('sanitary_permit.permits_list', [
 			'title' => "Sanitary Permits List",

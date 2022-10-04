@@ -340,7 +340,10 @@
 				    	<div class="seven wide field
 				    	{!! !$errors->has('street') ? '"' : ' error" data-content="' . $errors->first('street') . '" data-position="top center"' !!}>
 				    		<label>Street:</label>
-				    		<input type="text" name="street" value="{{ old('street') ? old('street') : $permit->street }}" class="dynamic_input" placeholder="Street">
+				    		<div class="ui right labeled input">
+				    			<input type="text" name="street" value="{{ old('street') ? old('street') : $permit->street }}" class="dynamic_input" placeholder="Street">
+				    			<div class="ui basic label">Laoag City</div>
+				    		</div>
 				    	</div>
 
 				    	<div class="three wide field{!! !$errors->has('date_of_issuance') ? '"' : ' error" data-content="' . $errors->first('date_of_issuance') . '" data-position="top center"' !!}>

@@ -14,13 +14,13 @@
 
 				<form id="pre-renew-form" method="GET" action="{{ url()->current() }}" class="ui form {{ $errors->any() ? 'error' : 'success' }}">
 					<div class="fields">
-						<div class="six wide field"></div>
+						<div class="five wide field"></div>
 
-						<div class="four wide field">
+						<div class="six wide field">
 							<label>Filter Address:</label>
 							<div class="ui fluid action input">
-								<select class="ui search dropdown" name="brgy">
-									<option value=""></option>
+								<select class="ui search dropdown" name="brgy" required>
+									<option value="" style="font-style: italic;">-- brgy --</option>
 									<option value="1">1, San Lorenzo</option>
 									<option value="2">2, Santa Joaquina</option>
 									<option value="3">3, Nuestra Señora del Rosario</option>
@@ -102,6 +102,14 @@
 									<option value="62-A">62-A, Navotas North</option>
 									<option value="62-B">62-B, Navotas South</option>
 								</select>
+
+								<select class="ui dropdown" name="classification" required>
+									<option value="" style="font-style: italic;">-- classification --</option>
+									<option value="All">All</option>
+									<option value="Food">Food</option>
+									<option value="Non-food">Non-food</option>
+								</select>
+
 								<button class="ui button">Filter</button>
 							</div>
 						</div>
@@ -111,55 +119,59 @@
 				<br>
 
 				@if($sanitary_permits != [])
-					<h3 class="ui left aligned header">Brgy. {{ request()->brgy }} Sanitary Permits</h3>
+					<h3 class="ui left aligned header">Brgy. {{ request()->brgy }} Sanitary Permits{{ request()->classification ? ': ' . request()->classification : '' }}</h3>
 
 					<table class="ui attached striped selectable structured celled table">
-				<thead>
-					<tr class="center aligned">
-						<th class="collapsing">Sanitary Permit Number</th>
-						<th>Establishment Type</th>
-						<th>Address</th>
-						<th class="collapsing">Expired</th>
-						<th class="collapsing">Issuance Date</th>
-						<th class="collapsing">Expiration Date</th>
-						<th class="collapsing">Options</th>
-					</tr>
-				</thead>
+						<thead>
+							<tr class="center aligned">
+								<th class="collapsing">Sanitary Permit Number</th>
+								<th>Establishment Type</th>
+								<th>Address</th>
+								<th class="collapsing">Expired</th>
+								<th class="collapsing">Issuance Date</th>
+								<th class="collapsing">Expiration Date</th>
+								<th class="collapsing">Options</th>
+							</tr>
+						</thead>
 
-				<tbody>
-					@foreach($sanitary_permits as $sc)
-						@php
-							$expired = $sc->checkIfExpired();
-						@endphp
+						<tbody>
+							@foreach($sanitary_permits as $sc)
+								@php
+									$expired = $sc->checkIfExpired();
+								@endphp
 
-						<tr class="center aligned">
-							<td>{{ $sc->sanitary_permit_number }}</td>
-							<td>{{ $sc->establishment_type }}</td>
-							<td>{{ $sc->address }}</td>
-							@if($expired)
-								<td class="error">Yes</td>
-							@else
-								<td>No</td>
-							@endif
-							<td>{{ $sc->issuance_date }}</td>
-							<td>{{ $sc->expiration_date }}</td>
-							<td class="collapsing">
-								<div class="ui compact menu">
-									<div class="ui simple dropdown item">
-										<i class="options icon"></i>
-										<i class="dropdown icon"></i>
-										<div class="menu">
-											<a class="item" href="{{ url("sanitary_permit/$sc->sanitary_permit_id") }}">Sanitary Permit Info</a>
-											<a class="item" href="{{ url("sanitary_permit/$sc->sanitary_permit_id/preview") }}">Print Preview</a>
-											<button type="button" class="item delete_button" data-id="{{ $sc->sanitary_permit_id }}">Remove</button>
+								<tr class="center aligned">
+									<td>{{ $sc->sanitary_permit_number }}</td>
+									<td>{{ $sc->establishment_type }}</td>
+									<td>{{ $sc->address }}</td>
+									@if($expired)
+										<td class="error">Yes</td>
+									@else
+										<td>No</td>
+									@endif
+									<td>{{ $sc->issuance_date }}</td>
+									<td>{{ $sc->expiration_date }}</td>
+									<td class="collapsing">
+										<div class="ui compact menu">
+											<div class="ui simple dropdown item">
+												<i class="options icon"></i>
+												<i class="dropdown icon"></i>
+												<div class="menu">
+													<a class="item" href="{{ url("sanitary_permit/$sc->sanitary_permit_id") }}">Sanitary Permit Info</a>
+													<a class="item" href="{{ url("sanitary_permit/$sc->sanitary_permit_id/preview") }}">Print Preview</a>
+													<button type="button" class="item delete_button" data-id="{{ $sc->sanitary_permit_id }}">Remove</button>
+												</div>
+											</div>
 										</div>
-									</div>
-								</div>
-							</td>
-						</tr>
-					@endforeach
-				</tbody>
-			</table>
+									</td>
+								</tr>
+							@endforeach
+						</tbody>
+					</table>
+
+					<br>
+
+					{{ $sanitary_permits->appends(['brgy' => request()->brgy, 'classification' => request()->classification])->links() }}
 				@endif
 			</div>
 		</div>			
