@@ -59,8 +59,6 @@ Route::group(['middleware' => 'auth'], function(){
 	//shows health certificate list
 	//Route::get('health_certificate', 'HealthCertificateController@getHealthCertificates');
 
-	Route::get('duplicates', 'HealthCertificateController@removeDuplicateCertificates');
-
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//Applicant routes
 
