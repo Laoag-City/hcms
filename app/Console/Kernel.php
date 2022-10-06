@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Custom\DatabaseBackupper;
 use App\Custom\DuplicateRemover;
 
 class Kernel extends ConsoleKernel
@@ -25,7 +26,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {   
-        //task for removing duplicate applicant records
+        $schedule->call(new DatabaseBackupper)->monthly();
         $schedule->call(new DuplicateRemover)->weekly()->mondays()->at('08:30');
     }
 

@@ -63,7 +63,7 @@ class DuplicateRemover
         {
             $removed_ids = $removed_ids->flatten(1);
             $date = date('M-d-Y_h-i-s', strtotime('now'));
-            $file = fopen(storage_path("app\\removed_applicant_duplicates_$date.csv"), 'w');
+            $file = fopen(storage_path("app\\duplicates\\removed_applicant_duplicates_$date.csv"), 'w');
 
             foreach($removed_ids as $applicant)
             {
@@ -82,7 +82,7 @@ class DuplicateRemover
 
             fclose($file);
 
-            Log::info('Successfully saved the removed applicant duplicates at ' . storage_path("app\\removed_duplicates_$date.csv"));
+            Log::info('Successfully saved the removed applicant duplicates at ' . storage_path("app\\duplicates\\removed_applicant_duplicates_$date.csv"));
         }
 
         /////////////////////////////////////////////////////////
@@ -123,7 +123,7 @@ class DuplicateRemover
         {
             $removed_ids = $removed_ids->flatten(1);
             $date = date('M-d-Y_h-i-s', strtotime('now'));
-            $file = fopen(storage_path("app\\removed_business_duplicates_$date.csv"), 'w');
+            $file = fopen(storage_path("app\\duplicates\\removed_business_duplicates_$date.csv"), 'w');
 
             foreach($removed_ids as $business)
             {
@@ -137,7 +137,7 @@ class DuplicateRemover
 
             fclose($file);
 
-            Log::info('Successfully saved the removed business duplicates at ' . storage_path("app\\removed_duplicates_$date.csv"));
+            Log::info('Successfully saved the removed business duplicates at ' . storage_path("app\\duplicates\\removed_business_duplicates_$date.csv"));
         }
 	}
 }
