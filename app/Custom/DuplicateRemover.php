@@ -9,6 +9,7 @@ use App\SanitaryPermit;
 use App\PinkHealthCertificate;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class DuplicateRemover
 {
@@ -20,6 +21,11 @@ class DuplicateRemover
         3. all query results' certificates and permits will be linked to the current record being checked
         4. save the duplicates' data, delete them, then update total record value
         */
+
+        $folder = 'duplicates';
+
+        if(!Storage::exists($folder))
+            Storage::makeDirectory($folder);
 
         //get all applicant ids
         $all_applicant_ids = DB::table('applicants')->select('applicant_id')->get();
@@ -62,8 +68,8 @@ class DuplicateRemover
         if($removed_ids->isNotEmpty())
         {
             $removed_ids = $removed_ids->flatten(1);
-            $date = date('M-d-Y_h-i-s', strtotime('now'));
-            $file = fopen(storage_path("app\\duplicates\\removed_applicant_duplicates_$date.csv"), 'w');
+            $date = date('Y-m-d_H-i-s', strtotime('now'));
+            $file = fopen(storage_path("app\\$folder\\removed_applicant_duplicates_$date.csv"), 'w');
 
             foreach($removed_ids as $applicant)
             {
@@ -82,7 +88,7 @@ class DuplicateRemover
 
             fclose($file);
 
-            Log::info('Successfully saved the removed applicant duplicates at ' . storage_path("app\\duplicates\\removed_applicant_duplicates_$date.csv"));
+            Log::info('Successfully saved the removed applicant duplicates at ' . storage_path("app\\$folder\\removed_applicant_duplicates_$date.csv"));
         }
 
         /////////////////////////////////////////////////////////
@@ -122,8 +128,8 @@ class DuplicateRemover
         if($removed_ids->isNotEmpty())
         {
             $removed_ids = $removed_ids->flatten(1);
-            $date = date('M-d-Y_h-i-s', strtotime('now'));
-            $file = fopen(storage_path("app\\duplicates\\removed_business_duplicates_$date.csv"), 'w');
+            $date = date('Y-m-d_H-i-s', strtotime('now'));
+            $file = fopen(storage_path("app\\$folder\\removed_business_duplicates_$date.csv"), 'w');
 
             foreach($removed_ids as $business)
             {
@@ -137,7 +143,7 @@ class DuplicateRemover
 
             fclose($file);
 
-            Log::info('Successfully saved the removed business duplicates at ' . storage_path("app\\duplicates\\removed_business_duplicates_$date.csv"));
+            Log::info('Successfully saved the removed business duplicates at ' . storage_path("app\\$folder\\removed_business_duplicates_$date.csv"));
         }
 	}
 }

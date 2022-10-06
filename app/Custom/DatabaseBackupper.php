@@ -14,7 +14,7 @@ class DatabaseBackupper
 		if(!Storage::exists($folder))
 			Storage::makeDirectory($folder);
 
-		$filename = Carbon::now()->format('Y-m-d') . ".sql";
+		$filename = Carbon::now()->format('Y-m-d_H-i-s') . ".sql";
   
         $command = 'C:\xampp\mysql\bin\mysqldump --user="' . env('DB_USERNAME') .'" --password="' . env('DB_PASSWORD') . '" --host="' . env('DB_HOST') . '" ' . env('DB_DATABASE') . ' --result-file="' . storage_path("app\\$folder\\$filename" . '"');
 
