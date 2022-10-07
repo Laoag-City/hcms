@@ -16,4 +16,9 @@ class Business extends Model
     {
         return $this->hasMany('App\SanitaryPermit', 'business_id', 'business_id');
     }
+
+    public function logs()
+    {
+        return $this->morphMany('App\Log', 'loggable');
+    }
 }

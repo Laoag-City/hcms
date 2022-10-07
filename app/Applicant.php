@@ -27,6 +27,11 @@ class Applicant extends Model
         return $this->hasMany('App\SanitaryPermit', 'applicant_id', 'applicant_id');
     }
 
+    public function logs()
+    {
+        return $this->morphMany('App\Log', 'loggable');
+    }
+
     public function setFirstNameAttribute($value)
     {
         $this->attributes['first_name'] = title_case($value);

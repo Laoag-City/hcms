@@ -24,10 +24,10 @@ class DatabaseBackupper
 
 		if($all_backups->isNotEmpty())
 		{
-			$last_year = (int)Carbon::now()->format('Y') - 1;
+			$year_now = Carbon::now()->format('Y');
 
-			$to_remove = $all_backups->filter(function($value, $key) use($last_year) {
-				return str_contains($value, $last_year);
+			$to_remove = $all_backups->filter(function($value, $key) use($year_now) {
+				return !str_contains($value, $year_now);
 			});
 
 			foreach($to_remove as $file)

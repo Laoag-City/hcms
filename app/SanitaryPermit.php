@@ -27,6 +27,11 @@ class SanitaryPermit extends Model
         return $this->belongsTo('App\Business', 'business_id', 'business_id');
     }
 
+    public function logs()
+    {
+        return $this->morphMany('App\Log', 'loggable');
+    }
+
     public function getAddressAttribute()
     {
         if($this->brgy && $this->street)
