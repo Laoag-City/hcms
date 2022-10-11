@@ -18,6 +18,7 @@ use App\Custom\RegistrationNumberGenerator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Custom\CertificateTableRowFinder;
+use App\Log as ActivityLog;
 
 class HealthCertificateController extends Controller
 {
@@ -44,6 +45,13 @@ class HealthCertificateController extends Controller
     	elseif($this->request->isMethod('post'))
     	{
             $id = $this->create_edit_logic('add');
+
+            $log = new ActivityLog;
+            $log->user_id = Auth::user()->user_id;
+            $log->loggable_id = $id;
+            $log->loggable_type = get_class(new HealthCertificate);
+            $log->description = "Created new health certificate";
+            $log->save();
 
             return redirect("health_certificate/$id/preview");
     	}
@@ -76,6 +84,13 @@ class HealthCertificateController extends Controller
     	elseif($this->request->isMethod('put'))
     	{
     		$this->create_edit_logic('edit', $health_certificate);
+
+            $log = new ActivityLog;
+            $log->user_id = Auth::user()->user_id;
+            $log->loggable_id = $health_certificate->health_certificate_id;
+            $log->loggable_type = get_class($health_certificate);
+            $log->description = "Updated health certificate's info";
+            $log->save();
 
             return redirect("health_certificate/{$health_certificate->health_certificate_id}/preview");
 
@@ -131,6 +146,13 @@ class HealthCertificateController extends Controller
         elseif($this->request->isMethod('put'))
         {
             $id = $this->create_edit_logic('renew', $health_certificate);
+
+            $log = new ActivityLog;
+            $log->user_id = Auth::user()->user_id;
+            $log->loggable_id = $health_certificate->health_certificate_id;
+            $log->loggable_type = get_class($health_certificate);
+            $log->description = "Renewed health certificate";
+            $log->save();
 
             return redirect("health_certificate/{$id}/preview");
         }
@@ -281,6 +303,13 @@ class HealthCertificateController extends Controller
             file_put_contents($picture_url_path['path'], base64_decode($this->request->webcam));
             //(new CertificateFileGenerator($health_certificate))->updatePDF();
 
+            $log = new ActivityLog;
+            $log->user_id = Auth::user()->user_id;
+            $log->loggable_id = $health_certificate->health_certificate_id;
+            $log->loggable_type = get_class($health_certificate);
+            $log->description = "Added health certificate picture";
+            $log->save();
+
             return response()->json(['url' => $picture_url_path['url']]);
         }
 
@@ -305,7 +334,18 @@ class HealthCertificateController extends Controller
 
         $validator->validate();
 
+        $applicant = $health_certificate->applicant;
+        $hc_reg_no = $health_certificate->registration_number;
+
         $health_certificate->delete();
+
+        $log = new ActivityLog;
+        $log->user_id = Auth::user()->user_id;
+        $log->loggable_id = $applicant->applicant_id;
+        $log->loggable_type = get_class($applicant);
+        $log->description = "Deleted health certificate with registration number $hc_reg_no";
+        $log->save();
+
         return redirect(explode('?', url()->previous())[0]);
     }
 
