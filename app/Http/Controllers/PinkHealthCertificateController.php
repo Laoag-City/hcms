@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\DB;
 use App\Custom\RegistrationNumberGenerator;
 use App\Custom\CertificateTableRowFinder;
 use App\Custom\PinkCardFileGenerator;
+use App\Log as ActivityLog;
 
 /*
 This controller share many similiarites with HealthCertificateController.
@@ -66,6 +67,13 @@ class PinkHealthCertificateController extends Controller
         elseif($this->request->isMethod('post'))
         {
             $id = $this->create_edit_logic('add');
+
+            $log = new ActivityLog;
+            $log->user_id = Auth::user()->user_id;
+            $log->loggable_id = $id;
+            $log->loggable_type = get_class(new PinkHealthCertificate);
+            $log->description = "Created new pink health certificate";
+            $log->save();
 
             return redirect("pink_card/$id/preview");
         }
@@ -143,6 +151,13 @@ class PinkHealthCertificateController extends Controller
         elseif($this->request->isMethod('put'))
         {
             $id = $this->create_edit_logic('renew', $pink_health_certificate);
+
+            $log = new ActivityLog;
+            $log->user_id = Auth::user()->user_id;
+            $log->loggable_id = $pink_health_certificate->pink_health_certificate_id;
+            $log->loggable_type = get_class($pink_health_certificate);
+            $log->description = "Renewed pink health certificate";
+            $log->save();
 
             return redirect("pink_card/{$id}/preview");
         }
@@ -293,6 +308,13 @@ class PinkHealthCertificateController extends Controller
         {
             $this->create_edit_logic('edit', $pink_health_certificate);
 
+            $log = new ActivityLog;
+            $log->user_id = Auth::user()->user_id;
+            $log->loggable_id = $pink_health_certificate->pink_health_certificate_id;
+            $log->loggable_type = get_class($pink_health_certificate);
+            $log->description = "Updated pink health certificate's info";
+            $log->save();
+
             return redirect("pink_card/{$pink_health_certificate->pink_health_certificate_id}/preview");
         }
     }
@@ -310,7 +332,18 @@ class PinkHealthCertificateController extends Controller
 
         $validator->validate();
 
+        $applicant = $pink_health_certificate->applicant;
+        $phc_reg_no = $pink_health_certificate->registration_number;
+
         $pink_health_certificate->delete();
+
+        $log = new ActivityLog;
+        $log->user_id = Auth::user()->user_id;
+        $log->loggable_id = $applicant->applicant_id;
+        $log->loggable_type = get_class($applicant);
+        $log->description = "Deleted pink health certificate with registration number $phc_reg_no";
+        $log->save();
+
         return redirect(explode('?', url()->previous())[0]);
     }
 
@@ -346,6 +379,13 @@ class PinkHealthCertificateController extends Controller
                 mkdir($file_generator->getPinkHealthCertificateFolder()['pink_card_folder_path'], 0777, true);
 
             file_put_contents($picture_url_path['path'], base64_decode($this->request->webcam));
+
+            $log = new ActivityLog;
+            $log->user_id = Auth::user()->user_id;
+            $log->loggable_id = $pink_health_certificate->pink_health_certificate_id;
+            $log->loggable_type = get_class($pink_health_certificate);
+            $log->description = "Added pink health certificate picture";
+            $log->save();
 
             return response()->json(['url' => $picture_url_path['url']]);
         }

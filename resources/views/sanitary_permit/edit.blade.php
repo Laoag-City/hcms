@@ -235,7 +235,7 @@
 				    	</div>
 
 				    	<div class="four wide field
-						{!! !$errors->has('total_employees') ? '"' : ' error" data-content="' . $errors->first('total_employees') . '" data-position="top center"' !!}>
+						{!! !$errors->has('permit_classification') ? '"' : ' error" data-content="' . $errors->first('permit_classification') . '" data-position="top center"' !!}>
 				    		<label>Permit Classification:</label>
 				    		<select name="permit_classification">
 				    			<option value=""></option>

@@ -11,6 +11,7 @@ use App\SanitaryPermit;
 use App\Custom\PermitFileGenerator;
 use App\Custom\RegistrationNumberGenerator;
 use App\Custom\BrgyTrait;
+use App\Log as ActivityLog;
 
 class SanitaryPermitController extends Controller
 {
@@ -35,6 +36,13 @@ class SanitaryPermitController extends Controller
     	elseif($this->request->isMethod('post'))
     	{
             $id = $this->create_edit_logic('add');
+
+            $log = new ActivityLog;
+            $log->user_id = Auth::user()->user_id;
+            $log->loggable_id = $id;
+            $log->loggable_type = get_class(new SanitaryPermit);
+            $log->description = "Created new sanitary permit";
+            $log->save();
 
             return redirect("sanitary_permit/$id/preview");
     	}
@@ -80,6 +88,13 @@ class SanitaryPermitController extends Controller
         elseif($this->request->isMethod('put'))
         {
             $id = $this->create_edit_logic('renew', $sanitary_permit);
+
+            $log = new ActivityLog;
+            $log->user_id = Auth::user()->user_id;
+            $log->loggable_id = $sanitary_permit->sanitary_permit_id;
+            $log->loggable_type = get_class($sanitary_permit);
+            $log->description = "Renewed sanitary permit";
+            $log->save();
 
             return redirect("sanitary_permit/{$id}/preview");
         }
@@ -191,6 +206,13 @@ class SanitaryPermitController extends Controller
     	{
             $this->create_edit_logic('edit', $sanitary_permit);
 
+            $log = new ActivityLog;
+            $log->user_id = Auth::user()->user_id;
+            $log->loggable_id = $sanitary_permit->sanitary_permit_id;
+            $log->loggable_type = get_class($sanitary_permit);
+            $log->description = "Updated sanitary permit's info";
+            $log->save();
+
             return redirect("sanitary_permit/$sanitary_permit->sanitary_permit_id/preview");
     	}
 	}
@@ -208,7 +230,29 @@ class SanitaryPermitController extends Controller
 
         $validator->validate();
 
+        if($sanitary_permit->applicant)
+        {
+        	$id = $sanitary_permit->applicant_id;
+        	$type = get_class($sanitary_permit->applicant);
+        }
+
+        else
+        {
+        	$id = $sanitary_permit->business_id;
+        	$type = get_class($sanitary_permit->business);
+        }
+
+        $sp_reg_no = $sanitary_permit->sanitary_permit_number;
+
         $sanitary_permit->delete();
+
+        $log = new ActivityLog;
+        $log->user_id = Auth::user()->user_id;
+        $log->loggable_id = $id;
+        $log->loggable_type = $type;
+        $log->description = "Deleted sanitary permit with permit number $sp_reg_no";
+        $log->save();
+
         return redirect(explode('?', url()->previous())[0]);
     }
 
