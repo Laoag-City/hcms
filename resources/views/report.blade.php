@@ -88,13 +88,18 @@
 
 					<div class="ui large labels">
 						<div class="ui basic red label">
-							Sanitary Permit (Food)
+							Food
 							<div class="detail">{{ $total_food_sanitary_permits }}</div>
 						</div>
 
 						<div class="ui basic blue label">
-							Sanitary Permit (Non-food)
+							Non-food
 							<div class="detail">{{ $total_nonfood_sanitary_permits }}</div>
+						</div>
+
+						<div class="ui basic grey label">
+							Industrial
+							<div class="detail">{{ $total_industrial_sanitary_permits }}</div>
 						</div>
 					</div>
 
