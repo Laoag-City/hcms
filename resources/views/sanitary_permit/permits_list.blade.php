@@ -106,8 +106,9 @@
 								<select class="ui dropdown" name="classification" required>
 									<option value="" style="font-style: italic;">-- classification --</option>
 									<option value="All">All</option>
-									<option value="Food">Food</option>
-									<option value="Non-food">Non-food</option>
+									@foreach(App\SanitaryPermit::PERMIT_CLASSIFICATIONS as $classification)
+				    				<option value="{{ $classification }}" {{ old('permit_classification') != $classification ?: 'selected'}}>{{ $classification }}</option>
+				    			@endforeach
 								</select>
 
 								<button class="ui button">Filter</button>
@@ -119,7 +120,8 @@
 				<br>
 
 				@if($sanitary_permits != [])
-					<h3 class="ui left aligned header">Brgy. {{ request()->brgy }} Sanitary Permits{{ request()->classification ? ': ' . request()->classification : '' }}</h3>
+					<h3 style="display: inline-block; float: left">Brgy. {{ request()->brgy }} Sanitary Permits{{ request()->classification ? ': ' . request()->classification : '' }}</h3>
+					<h3 style="display: inline-block; float: right;">Total: {{ $total }}</h3>
 
 					<table class="ui attached striped selectable structured celled table">
 						<thead>

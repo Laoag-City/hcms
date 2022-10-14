@@ -103,12 +103,13 @@ class SanitaryPermitController extends Controller
     public function SanitaryPermitsList()
     {
     	$sanitary_permits = [];
+    	$total = null;
 
     	if($this->request->brgy)
     	{
     		Validator::make($this->request->all(), [
     			'brgy' => 'required|in:' . implode(',', $this->brgys),
-    			'classification' => 'required|in:All,Food,Non-food'
+    			'classification' => 'bail|required|in:All,'  . implode(',', SanitaryPermit::PERMIT_CLASSIFICATIONS),
     		])->validate();
 
     		//The $alternate_brgy_number variable is used to query for brgy info in the street column
@@ -156,12 +157,14 @@ class SanitaryPermitController extends Controller
 	    											->orWhere('street', 'like', "% $alternate_brgy_number %");
     		}
 
+    		$total = $sanitary_permits->count();
     		$sanitary_permits = $sanitary_permits->paginate(150);
     	}
 
     	return view('sanitary_permit.permits_list', [
 			'title' => "Sanitary Permits List",
-			'sanitary_permits' => $sanitary_permits
+			'sanitary_permits' => $sanitary_permits,
+			'total' => $total
 		]);
     }
 

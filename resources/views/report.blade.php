@@ -40,13 +40,13 @@
 			<div class="ui divider"></div>
 
 			<div class="row">
-				<div class="ui center aligned seven wide column">
+				<div class="ui center aligned five wide column">
 					<h2 class="ui header">
 						<i class="address card outline icon"></i>
 						Health Certificate
 					</h2>
 
-					<div class="ui large labels">
+					<div class="ui labels">
 						<div class="ui basic yellow label">
 							Yellow HC
 							<div class="detail">{{ $total_yellow_health_certificates }}</div>
@@ -80,26 +80,31 @@
 					</table>
 				</div>
 
-				<div class="ui center aligned seven wide column">
+				<div class="ui center aligned eleven wide column">
 					<h2 class="ui header">
 						<i class="file outline icon"></i>
 						Sanitary Permit
 					</h2>
 
-					<div class="ui large labels">
+					<div class="ui labels">
 						<div class="ui basic red label">
-							Food
-							<div class="detail">{{ $total_food_sanitary_permits }}</div>
+							Food / Industrial
+							<div class="detail">{{ $total_food_industrial_sanitary_permits }}</div>
 						</div>
 
 						<div class="ui basic blue label">
-							Non-food
-							<div class="detail">{{ $total_nonfood_sanitary_permits }}</div>
+							Non-food / Industrial
+							<div class="detail">{{ $total_nonfood_industrial_sanitary_permits }}</div>
 						</div>
 
-						<div class="ui basic grey label">
-							Industrial
-							<div class="detail">{{ $total_industrial_sanitary_permits }}</div>
+						<div class="ui basic orange label">
+							Food / Non-industrial
+							<div class="detail">{{ $total_food_nonindustrial_sanitary_permits }}</div>
+						</div>
+
+						<div class="ui basic teal label">
+							Non-food / Non-industrial
+							<div class="detail">{{ $total_nonfood_nonindustrial_sanitary_permits }}</div>
 						</div>
 					</div>
 
@@ -134,7 +139,7 @@
 						Pink Card
 					</h2>
 
-					<div class="ui large labels">
+					<div class="ui labels">
 						<div class="ui basic pink label">
 							Pink Card
 							<div class="detail">{{ $total_pink_card }}</div>

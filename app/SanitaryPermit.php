@@ -15,7 +15,12 @@ class SanitaryPermit extends Model
 
     protected $primaryKey = 'sanitary_permit_id';
     public const DATES_FORMAT = 'M d, Y';
-    public const PERMIT_CLASSIFICATIONS = ['Food', 'Non-food', 'Industrial'];
+    public const PERMIT_CLASSIFICATIONS = [
+                                            'Food / Industrial', 
+                                            'Non-food / Industrial',
+                                            'Food / Non-industrial',
+                                            'Non-food / Non-industrial',
+                                        ];
 
     public function applicant()
     {

@@ -14,7 +14,7 @@ class SanitaryPermitsRowAddition extends Migration
     public function up()
     {
         Schema::table('sanitary_permits', function (Blueprint $table) {
-            $table->string('permit_classification', 20)->nullable()->after('total_employees');
+            $table->string('permit_classification', 40)->nullable()->after('total_employees');
         });
     }
 

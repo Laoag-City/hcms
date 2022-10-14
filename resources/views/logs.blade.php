@@ -18,6 +18,7 @@
 							<th>Log No.</th>
 							<th>Encoder</th>
 							<th>Description</th>
+							<th class="collapsing">Date/Time</th>
 							<th class="collapsing"></th>
 						</tr>
 					</thead>
@@ -47,6 +48,7 @@
 								<td>{{ $log->log_id }}</td>
 								<td>{{ $log->user->full_name }}</td>
 								<td>{{ $log->description }}</td>
+								<td class="collapsing">{{ date('M d, Y h:i:s A', strtotime($log->created_at)) }}</td>
 								<td class="collapsing"><a href="{{ $link }}" class="ui basic mini blue button">View Record</a></td>
 							</tr>
 						@endforeach
@@ -55,7 +57,7 @@
 
 				<br>
 
-				{{ $logs->links() }}
+				<div class="text_center">{{ $logs->links() }}</div>
 			</div>
 		</div>
 	</div>
