@@ -89,8 +89,6 @@
 					<br>
 
 					<div class="fields">
-						<div class="two wide field"></div>
-
 						<div class="two wide field
 						{!! !$errors->has('age') ? '"' : ' error" data-content="' . $errors->first('age') . '" data-position="top center"' !!}>
 							<label>Age:</label>
@@ -117,6 +115,12 @@
 						{!! !$errors->has('nationality') ? '"' : ' error" data-content="' . $errors->first('nationality') . '" data-position="top center"' !!}>
 							<label>Nationality:</label>
 							<input type="text" name="nationality" value="{{ old('nationality') ? old('nationality') : 'Filipino' }}" class="dynamic_on_search" placeholder="Nationality">
+						</div>
+
+						<div class="four wide field
+						{!! !$errors->has('client_personal_code') ? '"' : ' error" data-content="' . $errors->first('client_personal_code') . '" data-position="top center"' !!}>
+							<label>Client Personal Code:</label>
+							<input type="text" name="client_personal_code" value="{{ old('client_personal_code') }}" placeholder="Client Personal Code">
 						</div>
 					</div>
 

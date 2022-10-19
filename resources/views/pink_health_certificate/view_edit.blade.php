@@ -110,7 +110,7 @@
 					<br>
 
 					<div class="fields">
-						<div class="three wide field"></div>
+						<div class="one wide field"></div>
 
 						<div class="two wide field{!! !$errors->has('age') ? '"' : ' error" data-content="' . $errors->first('age') . '" data-position="top center"' !!}>
 							<label>Age:</label>
@@ -125,6 +125,12 @@
 						<div class="four wide field{!! !$errors->has('place_of_work') ? '"' : ' error" data-content="' . $errors->first('place_of_work') . '" data-position="top center"' !!}>
 							<label>Place of Work:</label>
 							<input type="text" name="place_of_work" value="{{ old('place_of_work') ? old('place_of_work') : $pink_health_certificate->place_of_work }}" placeholder="Place of Work" class="dynamic_input">
+						</div>
+
+						<div class="four wide field
+						{!! !$errors->has('client_personal_code') ? '"' : ' error" data-content="' . $errors->first('client_personal_code') . '" data-position="top center"' !!}>
+							<label>Client Personal Code:</label>
+							<input type="text" name="client_personal_code" value="{{ old('client_personal_code') ? old('client_personal_code') : $pink_health_certificate->client_personal_code }}" placeholder="Client Personal Code">
 						</div>
 					</div>
 

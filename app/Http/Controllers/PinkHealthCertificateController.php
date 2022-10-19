@@ -472,6 +472,7 @@ class PinkHealthCertificateController extends Controller
         */
         $validator = Validator::make($this->request->all(), array_merge($create_or_edit_rules, [
             'occupation' => 'bail|required|alpha_spaces|max:40',
+            'client_personal_code' => 'bail|required|unique:pink_health_certificates,client_personal_code',
             'place_of_work' => 'bail|required|max:50',
             'date_of_expiration' => 'bail|required|date|after:date_of_issuance',
             'community_tax_no' => 'bail|required|string|max:20',
@@ -645,6 +646,7 @@ class PinkHealthCertificateController extends Controller
             $pink_health_certificate = new PinkHealthCertificate;
             $pink_health_certificate->applicant_id = $applicant->applicant_id;
             $pink_health_certificate->registration_number = (new RegistrationNumberGenerator)->getRegistrationNumber('App\PinkHealthCertificate', 'registration_number');
+            $pink_health_certificate->client_personal_code = $this->request->client_personal_code;
             $pink_health_certificate->validity_period = PinkHealthCertificate::VALIDITY_PERIOD['string'];
             $pink_health_certificate->occupation = $this->request->occupation;
             $pink_health_certificate->place_of_work = $this->request->place_of_work;
@@ -681,6 +683,7 @@ class PinkHealthCertificateController extends Controller
             $applicant->save();
 
             //update common pink card values that usually change
+            $pink_health_certificate->client_personal_code = $this->request->client_personal_code;
             $pink_health_certificate->occupation = $this->request->occupation;
             $pink_health_certificate->place_of_work = $this->request->place_of_work;
             $pink_health_certificate->issuance_date = $this->request->date_of_issuance;
