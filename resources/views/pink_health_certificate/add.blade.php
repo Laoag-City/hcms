@@ -144,7 +144,7 @@
 				    	<div class="four wide field
 				    	{!! !$errors->has('date_of_expiration') ? '"' : ' error" data-content="' . $errors->first('date_of_expiration') . '" data-position="top center"' !!}>
 				    		<label>Date of Expiration:</label>
-				    		<input type="date" name="date_of_expiration" value="{{ old('date_of_expiration') }}" readonly="">
+				    		<input type="date" name="date_of_expiration" value="{{ old('date_of_expiration') }}">
 				    	</div>
 					</div>
 

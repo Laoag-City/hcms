@@ -1,7 +1,7 @@
 $(document).ready(function(){
 	$('.field').popup();
 	$('.ui.checkbox').checkbox();
-	getExpirationDate();
+	//getExpirationDate();
 	alterFormState();
 });
 
@@ -10,7 +10,7 @@ $('.update_switches').change(function(){
 });
 
 $('input[name=date_of_issuance]').change(function(){
-	getExpirationDate();
+	//getExpirationDate();
 });
 
 function getExpirationDate()

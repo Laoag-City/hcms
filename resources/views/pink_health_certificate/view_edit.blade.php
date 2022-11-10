@@ -141,12 +141,12 @@
 
 						<div class="four wide field{!! !$errors->has('date_of_issuance') ? '"' : ' error" data-content="' . $errors->first('date_of_issuance') . '" data-position="top center"' !!}>
 				    		<label>Date of Issuance:</label>
-				    		<input type="date" name="date_of_issuance" value="{{ old('date_of_issuance') ? old('date_of_issuance') : $pink_health_certificate->dateToInput('issuance_date') }}" placeholder="Date of Issuance" class="dynamic_input">
+				    		<input type="date" name="date_of_issuance" value="{{ old('date_of_issuance') ? old('date_of_issuance') : $pink_health_certificate->dateToInput('issuance_date') }}" class="dynamic_input">
 				    	</div>
 
 				    	<div class="four wide field{!! !$errors->has('date_of_expiration') ? '"' : ' error" data-content="' . $errors->first('date_of_expiration') . '" data-position="top center"' !!}>
 				    		<label>Date of Expiration:</label>
-				    		<input type="date" name="date_of_expiration" value="{{ old('date_of_expiration') ? old('date_of_expiration') : $pink_health_certificate->dateToInput('expiration_date') }}" placeholder="Date of Issuance" readonly="">
+				    		<input type="date" name="date_of_expiration" value="{{ old('date_of_expiration') ? old('date_of_expiration') : $pink_health_certificate->dateToInput('expiration_date') }}" class="dynamic_input">
 				    	</div>
 					</div>
 

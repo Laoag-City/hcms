@@ -418,6 +418,7 @@ class PinkHealthCertificateController extends Controller
                 'gender' => 'bail|required|in:0,1',
                 'nationality'=> 'bail|required|alpha_spaces|max:20',
 
+                'client_personal_code' => 'bail|required|unique:pink_health_certificates,client_personal_code',
                 'date_of_issuance' => 'bail|required|date|before_or_equal:today',
 
                 'id' => [
@@ -461,7 +462,8 @@ class PinkHealthCertificateController extends Controller
             }
 
             $create_or_edit_rules = array_merge($specific_rules, [
-                'age' => 'bail|required|integer|min:15|max:100'
+                'age' => 'bail|required|integer|min:15|max:100',
+                'client_personal_code' => "bail|required|unique:pink_health_certificates,client_personal_code,{$pink_health_certificate->pink_health_certificate_id},pink_health_certificate_id",
             ]);
         }
         
@@ -472,7 +474,6 @@ class PinkHealthCertificateController extends Controller
         */
         $validator = Validator::make($this->request->all(), array_merge($create_or_edit_rules, [
             'occupation' => 'bail|required|alpha_spaces|max:40',
-            'client_personal_code' => 'bail|required|unique:pink_health_certificates,client_personal_code',
             'place_of_work' => 'bail|required|max:50',
             'date_of_expiration' => 'bail|required|date|after:date_of_issuance',
             'community_tax_no' => 'bail|required|string|max:20',

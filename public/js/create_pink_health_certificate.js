@@ -1,7 +1,7 @@
 $(document).ready(function(){
 	$('.field').popup();
 	$('.ui.checkbox').checkbox();
-	getExpirationDate();
+	//getExpirationDate();
 	toggleWholeName();
 });
 
@@ -49,9 +49,9 @@ $('.ui.search').search({
 });
 
 //issuance date logic
-$('input[name=date_of_issuance]').change(function(){
+/*$('input[name=date_of_issuance]').change(function(){
 	getExpirationDate();
-});
+});*/
 
 //submit logic
 $('#submit_health_certificate').click(function(event){
