@@ -62,6 +62,11 @@ class PinkHealthCertificate extends Model
         return $this->hasMany('App\CervicalSmearExamination', 'pink_health_certificate_id', 'pink_health_certificate_id');
     }
 
+    public function logs()
+    {
+        return $this->morphMany('App\Log', 'loggable');
+    }
+
     public function getIssuanceDateAttribute($value)
     {
         return date(self::DATES_FORMAT, strtotime($value));

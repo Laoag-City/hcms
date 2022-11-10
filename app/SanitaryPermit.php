@@ -15,7 +15,12 @@ class SanitaryPermit extends Model
 
     protected $primaryKey = 'sanitary_permit_id';
     public const DATES_FORMAT = 'M d, Y';
-    public const PERMIT_CLASSIFICATIONS = ['Food', 'Non-food'];
+    public const PERMIT_CLASSIFICATIONS = [
+                                            'Food / Industrial', 
+                                            'Non-food / Industrial',
+                                            'Food / Non-industrial',
+                                            'Non-food / Non-industrial',
+                                        ];
 
     public function applicant()
     {
@@ -27,9 +32,24 @@ class SanitaryPermit extends Model
         return $this->belongsTo('App\Business', 'business_id', 'business_id');
     }
 
+    public function logs()
+    {
+        return $this->morphMany('App\Log', 'loggable');
+    }
+
     public function getAddressAttribute()
     {
-        return "Brgy. {$this->brgy} {$this->street}";
+        if($this->brgy && $this->street)
+            return "BRGY. {$this->brgy} {$this->street}, LAOAG CITY";
+
+        elseif($this->brgy && !$this->street)
+            return "BRGY. {$this->brgy}, LAOAG CITY";
+
+        else if(!$this->brgy && $this->street)
+            return "{$this->street}, LAOAG CITY";
+
+        else
+            return "LAOAG CITY";
     }
 
     public function getIssuanceDateAttribute($value)

@@ -9,6 +9,7 @@ use App\Custom\CertificateFileGenerator;
 use App\Custom\PermitFileGenerator;
 use App\Custom\PinkCardFileGenerator;
 use Validator;
+use App\Log as ActivityLog;
 
 class ApplicantController extends Controller
 {
@@ -118,6 +119,13 @@ class ApplicantController extends Controller
                 if($old_applicant_permit_folder != $new_applicant_permit_folder)
                     $new_permit_file_generator->updateApplicantFolder($old_applicant_permit_folder);
             }*/
+
+            $log = new ActivityLog;
+            $log->user_id = Auth::user()->user_id;
+            $log->loggable_id = $applicant->applicant_id;
+            $log->loggable_type = get_class($applicant);
+            $log->description = "Updated applicant's info";
+            $log->save();
 
     		return back()->with('success', ['header' => 'Applicant updated successfully!', 'message' => null]);
     	}

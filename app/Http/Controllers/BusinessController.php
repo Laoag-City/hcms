@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Validator;
 use App\Business;
 use Illuminate\Http\Request;
+use App\Log as ActivityLog;
 
 class BusinessController extends Controller
 {
@@ -42,6 +43,13 @@ class BusinessController extends Controller
 
             $business->business_name = $this->request->business_name;
             $business->save();
+
+            $log = new ActivityLog;
+            $log->user_id = Auth::user()->user_id;
+            $log->loggable_id = $business->business_id;
+            $log->loggable_type = get_class($business);
+            $log->description = "Updated business's info";
+            $log->save();
 
             return back()->with('success', ['header' => 'Business updated successfully!', 'message' => null]);
         }

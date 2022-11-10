@@ -62,6 +62,7 @@
 					<a href="{{ url('reports') }}" class="item">Summary of Records</a>
 					<a href="{{ url('applicants') }}" class="item">Clients</a>
 					<a href="{{ url('businesses') }}" class="item">Businesses</a>
+					<a href="{{ url('logs') }}" class="item">Activity Logs</a>
 				</div>
 			</div>
 

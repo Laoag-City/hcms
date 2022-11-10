@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class SanitaryPermitsRowAddition extends Migration
+class PinkHealthCertificateRowAddition extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class SanitaryPermitsRowAddition extends Migration
      */
     public function up()
     {
-        Schema::table('sanitary_permits', function (Blueprint $table) {
-            $table->string('permit_classification', 40)->nullable()->after('total_employees');
+        Schema::table('pink_health_certificates', function (Blueprint $table) {
+            $table->string('client_personal_code', 30)->unique()->after('registration_number');
         });
     }
 
@@ -25,7 +25,7 @@ class SanitaryPermitsRowAddition extends Migration
      */
     public function down()
     {
-        Schema::table('sanitary_permits', function (Blueprint $table) {
+        Schema::table('pink_health_certificates', function (Blueprint $table) {
             //
         });
     }

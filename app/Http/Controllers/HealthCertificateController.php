@@ -18,6 +18,7 @@ use App\Custom\RegistrationNumberGenerator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Custom\CertificateTableRowFinder;
+use App\Log as ActivityLog;
 
 class HealthCertificateController extends Controller
 {
@@ -44,6 +45,13 @@ class HealthCertificateController extends Controller
     	elseif($this->request->isMethod('post'))
     	{
             $id = $this->create_edit_logic('add');
+
+            $log = new ActivityLog;
+            $log->user_id = Auth::user()->user_id;
+            $log->loggable_id = $id;
+            $log->loggable_type = get_class(new HealthCertificate);
+            $log->description = "Created new health certificate";
+            $log->save();
 
             return redirect("health_certificate/$id/preview");
     	}
@@ -76,6 +84,13 @@ class HealthCertificateController extends Controller
     	elseif($this->request->isMethod('put'))
     	{
     		$this->create_edit_logic('edit', $health_certificate);
+
+            $log = new ActivityLog;
+            $log->user_id = Auth::user()->user_id;
+            $log->loggable_id = $health_certificate->health_certificate_id;
+            $log->loggable_type = get_class($health_certificate);
+            $log->description = "Updated health certificate's info";
+            $log->save();
 
             return redirect("health_certificate/{$health_certificate->health_certificate_id}/preview");
 
@@ -131,6 +146,13 @@ class HealthCertificateController extends Controller
         elseif($this->request->isMethod('put'))
         {
             $id = $this->create_edit_logic('renew', $health_certificate);
+
+            $log = new ActivityLog;
+            $log->user_id = Auth::user()->user_id;
+            $log->loggable_id = $health_certificate->health_certificate_id;
+            $log->loggable_type = get_class($health_certificate);
+            $log->description = "Renewed health certificate";
+            $log->save();
 
             return redirect("health_certificate/{$id}/preview");
         }
@@ -281,6 +303,13 @@ class HealthCertificateController extends Controller
             file_put_contents($picture_url_path['path'], base64_decode($this->request->webcam));
             //(new CertificateFileGenerator($health_certificate))->updatePDF();
 
+            $log = new ActivityLog;
+            $log->user_id = Auth::user()->user_id;
+            $log->loggable_id = $health_certificate->health_certificate_id;
+            $log->loggable_type = get_class($health_certificate);
+            $log->description = "Added health certificate picture";
+            $log->save();
+
             return response()->json(['url' => $picture_url_path['url']]);
         }
 
@@ -305,7 +334,18 @@ class HealthCertificateController extends Controller
 
         $validator->validate();
 
+        $applicant = $health_certificate->applicant;
+        $hc_reg_no = $health_certificate->registration_number;
+
         $health_certificate->delete();
+
+        $log = new ActivityLog;
+        $log->user_id = Auth::user()->user_id;
+        $log->loggable_id = $applicant->applicant_id;
+        $log->loggable_type = get_class($applicant);
+        $log->description = "Deleted health certificate with registration number $hc_reg_no";
+        $log->save();
+
         return redirect(explode('?', url()->previous())[0]);
     }
 
@@ -347,80 +387,6 @@ class HealthCertificateController extends Controller
             //transfer the files from old folder to new folder and show success message
         }
     }*/
-
-    public function removeDuplicateCertificates()
-    {
-        /*
-        1. get total records
-        2. loop each record and use where statement on name, age, and gender fields
-        3. all query results' certificates and permits will be linked to the current record being checked
-        4. save the duplicates' data, delete them, then update total record value
-        */
-
-        //dd(Applicant::with('health_certificates')->get()->pluck('health_certificates')->flatten());
-
-        //get all applicant ids
-        $all_applicant_ids = DB::table('applicants')->select('applicant_id')->get();
-        $removed_ids = collect([]);
-
-        for($i = 0; $i < $all_applicant_ids->count() - 1; $i++)
-        {
-            //get current applicant being checked
-            $current_record = Applicant::find($all_applicant_ids[$i]->applicant_id);
-
-            //get all duplicates
-            $duplicates = Applicant::where([
-                ['applicant_id', '<>', $current_record->applicant_id],
-                ['first_name', '=', $current_record->first_name],
-                ['middle_name', '=', $current_record->middle_name],
-                ['last_name', '=', $current_record->last_name],
-                ['suffix_name', '=', $current_record->suffix_name],
-                //['age', '=', $current_record->age],
-                ['gender', '=', $current_record->gender]
-            ])->get();
-
-            if($duplicates->isNotEmpty())
-            {
-                //get all duplicates' related ids
-                $duplicate_ids = $duplicates->pluck('applicant_id');
-
-                //transfer all duplicates' records to the original applicant and remove all duplicates
-                HealthCertificate::whereIn('applicant_id', $duplicate_ids->toArray())->update(['applicant_id' => $current_record->applicant_id]);
-                SanitaryPermit::whereIn('applicant_id', $duplicate_ids->toArray())->update(['applicant_id' => $current_record->applicant_id]);
-                Applicant::whereIn('applicant_id', $duplicate_ids->toArray())->delete();
-
-                $removed_ids->push($duplicates);
-
-                //remove duplicates' ids in the ids array
-                $all_applicant_ids = $all_applicant_ids->whereNotIn('applicant_id', $duplicate_ids)->values();
-            }
-        }
-
-        if($removed_ids->isNotEmpty())
-        {
-            $removed_ids = $removed_ids->flatten(1);
-            $date = date('M-d-Y_h-i-s', strtotime('now'));
-            $file = fopen(storage_path("app\\removed_duplicates_$date.csv"), 'w');
-
-            foreach($removed_ids as $applicant)
-            {
-                fputcsv($file, [
-                    $applicant->applicant_id,
-                    $applicant->first_name,
-                    $applicant->middle_name,
-                    $applicant->last_name,
-                    $applicant->suffix_name,
-                    $applicant->age,
-                    $applicant->gender,
-                    $applicant->created_at,
-                    $applicant->updated_at
-                ]);
-            }
-
-            fclose($file);
-        }
-        //The algorithm works. Now integrate it to the system and not only to a test route.
-    }
 
     private function create_edit_logic($mode, HealthCertificate $health_certificate = null)
     {

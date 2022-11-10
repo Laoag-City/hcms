@@ -148,14 +148,19 @@
 								<input type="number" name="age" value="{{ old('age') != null ? old('age') : $pink_health_certificate->applicant->age }}" class="dynamic_input">
 							</div>
 
-							<div class="five wide field{!! !$errors->has('occupation') ? '"' : ' error" data-content="' . $errors->first('occupation') . '" data-position="top center"' !!}>
+							<div class="four wide field{!! !$errors->has('occupation') ? '"' : ' error" data-content="' . $errors->first('occupation') . '" data-position="top center"' !!}>
 								<label>Occupation:</label>
 								<input type="text" name="occupation" value="{{ old('occupation') != null ? old('occupation') : $pink_health_certificate->occupation }}" placeholder="Occupation" class="dynamic_input">
 							</div>
 
-							<div class="seven wide field{!! !$errors->has('place_of_work') ? '"' : ' error" data-content="' . $errors->first('place_of_work') . '" data-position="top center"' !!}>
+							<div class="four wide field{!! !$errors->has('place_of_work') ? '"' : ' error" data-content="' . $errors->first('place_of_work') . '" data-position="top center"' !!}>
 								<label>Place of Work:</label>
 								<input type="text" name="place_of_work" value="{{ old('place_of_work') != null ? old('place_of_work') : $pink_health_certificate->place_of_work }}" placeholder="Place of Work" class="dynamic_input">
+							</div>
+
+							<div class="four wide field{!! !$errors->has('client_personal_code') ? '"' : ' error" data-content="' . $errors->first('client_personal_code') . '" data-position="top center"' !!}>
+								<label>Client Personal Code:</label>
+								<input type="text" name="client_personal_code" value="{{ old('client_personal_code') ? old('client_personal_code') : $pink_health_certificate->client_personal_code }}" placeholder="Client Personal Code">
 							</div>
 						</div>
 
@@ -166,12 +171,12 @@
 
 							<div class="four wide field{!! !$errors->has('date_of_issuance') ? '"' : ' error" data-content="' . $errors->first('date_of_issuance') . '" data-position="top center"' !!}>
 					    		<label>Date of Issuance:</label>
-					    		<input type="date" name="date_of_issuance" value="{{ old('date_of_issuance') != null ? old('date_of_issuance') : $pink_health_certificate->dateToInput('issuance_date') }}" placeholder="Date of Issuance" class="dynamic_input">
+					    		<input type="date" name="date_of_issuance" value="{{ old('date_of_issuance') != null ? old('date_of_issuance') : $pink_health_certificate->dateToInput('issuance_date') }}" class="dynamic_input">
 					    	</div>
 
 					    	<div class="four wide field{!! !$errors->has('date_of_expiration') ? '"' : ' error" data-content="' . $errors->first('date_of_expiration') . '" data-position="top center"' !!}>
 					    		<label>Date of Expiration:</label>
-					    		<input type="date" name="date_of_expiration" value="{{ old('date_of_expiration') != null ? old('date_of_expiration') : $pink_health_certificate->dateToInput('expiration_date') }}" placeholder="Date of Issuance" readonly="">
+					    		<input type="date" name="date_of_expiration" value="{{ old('date_of_expiration') != null ? old('date_of_expiration') : $pink_health_certificate->dateToInput('expiration_date') }}" class="dynamic_input">
 					    	</div>
 						</div>
 

@@ -50,6 +50,11 @@ class HealthCertificate extends Model
     	return $this->hasMany('App\XRaySputum', 'health_certificate_id', 'health_certificate_id');
     }
 
+    public function logs()
+    {
+        return $this->morphMany('App\Log', 'loggable');
+    }
+
     public function getIssuanceDateAttribute($value)
     {
         return date(self::DATES_FORMAT, strtotime($value));

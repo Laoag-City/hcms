@@ -21,8 +21,10 @@ class ReportController extends Controller
         $total_yellow_health_certificates = HealthCertificate::where('duration', HealthCertificate::CERTIFICATE_TYPES['Yellow']['string'])->count();
         $total_green_health_certificates = HealthCertificate::where('duration', HealthCertificate::CERTIFICATE_TYPES['Green']['string'])->count();
 
-        $total_food_sanitary_permits = SanitaryPermit::where('permit_classification', SanitaryPermit::PERMIT_CLASSIFICATIONS[0])->count();
-        $total_nonfood_sanitary_permits = SanitaryPermit::where('permit_classification', SanitaryPermit::PERMIT_CLASSIFICATIONS[1])->count();
+        $total_food_industrial_sanitary_permits = SanitaryPermit::where('permit_classification', SanitaryPermit::PERMIT_CLASSIFICATIONS[0])->count();
+        $total_nonfood_industrial_sanitary_permits = SanitaryPermit::where('permit_classification', SanitaryPermit::PERMIT_CLASSIFICATIONS[1])->count();
+        $total_food_nonindustrial_sanitary_permits = SanitaryPermit::where('permit_classification', SanitaryPermit::PERMIT_CLASSIFICATIONS[2])->count();
+        $total_nonfood_nonindustrial_sanitary_permits = SanitaryPermit::where('permit_classification', SanitaryPermit::PERMIT_CLASSIFICATIONS[3])->count();
 
         $total_pink_card = PinkHealthCertificate::count();
 
@@ -54,8 +56,10 @@ class ReportController extends Controller
             'total_yellow_health_certificates' => $total_yellow_health_certificates,
             'total_green_health_certificates' => $total_green_health_certificates,
 
-            'total_food_sanitary_permits' => $total_food_sanitary_permits,
-            'total_nonfood_sanitary_permits' => $total_nonfood_sanitary_permits,
+            'total_food_industrial_sanitary_permits' => $total_food_industrial_sanitary_permits,
+            'total_nonfood_industrial_sanitary_permits' => $total_nonfood_industrial_sanitary_permits,
+            'total_food_nonindustrial_sanitary_permits' => $total_food_nonindustrial_sanitary_permits,
+            'total_nonfood_nonindustrial_sanitary_permits' => $total_nonfood_nonindustrial_sanitary_permits,
 
             'total_pink_card' => $total_pink_card,
 

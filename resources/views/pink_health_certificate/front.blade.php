@@ -7,9 +7,12 @@
 				<h3 class="no_margin" style="letter-spacing: 3pt;"><b>DEPARTMENT OF HEALTH</b></h3>
 				<p class="standard_font" style="margin-top: 5pt; letter-spacing: 0.5pt;"><b>Office of the City Health Officer</b></p>
 
-				<div class="text_right" style="margin-top: 20pt;">
+				<div class="text_right" style="margin-top: 10pt;">
 					<span class="label">Reg. No. </span>
 					<b class="value" style="width: 80pt;">{{ $pink_health_certificate->registration_number }}</b>
+					<br>
+					<span class="label">Client Code </span>
+					<b class="value" style="width: 110pt;">{{ $pink_health_certificate->client_personal_code }}</b>
 				</div>
 			</div>
 

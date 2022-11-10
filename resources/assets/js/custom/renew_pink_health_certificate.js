@@ -1,6 +1,6 @@
 $(document).ready(function(){
 	$('.field').popup();
-	getExpirationDate();
+	//getExpirationDate();
 });
 
 $('input[name=id]').change(function(){
@@ -8,7 +8,7 @@ $('input[name=id]').change(function(){
 });
 
 $('input[name=date_of_issuance]').change(function(){
-	getExpirationDate();
+	//getExpirationDate();
 });
 
 $('.delete.button').click(function(){
