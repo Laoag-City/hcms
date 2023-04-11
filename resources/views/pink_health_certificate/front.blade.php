@@ -68,7 +68,7 @@
 
 					<div style="margin-top: 25pt;">
 						<b class="value" style="width: 105pt;">JOSEPH D. ADAYA, M.D.</b>
-						<span class="standard_font">OIC - City Health Officer</span>
+						<span class="standard_font">City Health Officer</span>
 					</div>
 				</div>
 			</div>
