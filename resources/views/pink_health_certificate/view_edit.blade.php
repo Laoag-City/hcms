@@ -130,7 +130,7 @@
 						<div class="four wide field
 						{!! !$errors->has('client_personal_code') ? '"' : ' error" data-content="' . $errors->first('client_personal_code') . '" data-position="top center"' !!}>
 							<label>Client Personal Code:</label>
-							<input type="text" name="client_personal_code" value="{{ old('client_personal_code') ? old('client_personal_code') : $pink_health_certificate->client_personal_code }}" placeholder="Client Personal Code">
+							<input type="text" name="client_personal_code" value="{{ old('client_personal_code') ? old('client_personal_code') : $pink_health_certificate->client_personal_code }}" placeholder="Client Personal Code" class="dynamic_input">
 						</div>
 					</div>
 

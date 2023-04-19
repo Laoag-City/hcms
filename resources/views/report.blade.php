@@ -87,25 +87,12 @@
 					</h2>
 
 					<div class="ui labels">
-						<div class="ui basic red label">
-							Food / Industrial
-							<div class="detail">{{ $total_food_industrial_sanitary_permits }}</div>
-						</div>
-
-						<div class="ui basic blue label">
-							Non-food / Industrial
-							<div class="detail">{{ $total_nonfood_industrial_sanitary_permits }}</div>
-						</div>
-
-						<div class="ui basic orange label">
-							Food / Non-industrial
-							<div class="detail">{{ $total_food_nonindustrial_sanitary_permits }}</div>
-						</div>
-
-						<div class="ui basic teal label">
-							Non-food / Non-industrial
-							<div class="detail">{{ $total_nonfood_nonindustrial_sanitary_permits }}</div>
-						</div>
+						@foreach($classifications as $value)
+							<div class="ui basic {{ $value['color'] }} label">
+								{{ $value['name'] }}
+								<div class="detail">{{ $value['total'] }}</div>
+							</div>
+						@endforeach
 					</div>
 
 					<table class="ui attached striped selectable structured celled center aligned table">

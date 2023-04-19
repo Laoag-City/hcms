@@ -21,10 +21,15 @@ class ReportController extends Controller
         $total_yellow_health_certificates = HealthCertificate::where('duration', HealthCertificate::CERTIFICATE_TYPES['Yellow']['string'])->count();
         $total_green_health_certificates = HealthCertificate::where('duration', HealthCertificate::CERTIFICATE_TYPES['Green']['string'])->count();
 
-        $total_food_industrial_sanitary_permits = SanitaryPermit::where('permit_classification', SanitaryPermit::PERMIT_CLASSIFICATIONS[0])->count();
-        $total_nonfood_industrial_sanitary_permits = SanitaryPermit::where('permit_classification', SanitaryPermit::PERMIT_CLASSIFICATIONS[1])->count();
-        $total_food_nonindustrial_sanitary_permits = SanitaryPermit::where('permit_classification', SanitaryPermit::PERMIT_CLASSIFICATIONS[2])->count();
-        $total_nonfood_nonindustrial_sanitary_permits = SanitaryPermit::where('permit_classification', SanitaryPermit::PERMIT_CLASSIFICATIONS[3])->count();
+        $classifications = [];
+        $colors = ['green', 'blue', 'red']; //Could've done better here like placed this in the following object's property but meh  ¯\_(ツ)_/¯
+
+        foreach(SanitaryPermit::PERMIT_CLASSIFICATIONS as $key => $value)
+        {
+            $classifications[$key]['total'] = SanitaryPermit::where('permit_classification', $value)->count();
+            $classifications[$key]['name'] = $value;
+            $classifications[$key]['color'] = $colors[$key];
+        }
 
         $total_pink_card = PinkHealthCertificate::count();
 
@@ -56,10 +61,7 @@ class ReportController extends Controller
             'total_yellow_health_certificates' => $total_yellow_health_certificates,
             'total_green_health_certificates' => $total_green_health_certificates,
 
-            'total_food_industrial_sanitary_permits' => $total_food_industrial_sanitary_permits,
-            'total_nonfood_industrial_sanitary_permits' => $total_nonfood_industrial_sanitary_permits,
-            'total_food_nonindustrial_sanitary_permits' => $total_food_nonindustrial_sanitary_permits,
-            'total_nonfood_nonindustrial_sanitary_permits' => $total_nonfood_nonindustrial_sanitary_permits,
+            'classifications' => $classifications,
 
             'total_pink_card' => $total_pink_card,
 

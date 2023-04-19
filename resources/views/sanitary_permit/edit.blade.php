@@ -237,7 +237,7 @@
 				    	<div class="four wide field
 						{!! !$errors->has('permit_classification') ? '"' : ' error" data-content="' . $errors->first('permit_classification') . '" data-position="top center"' !!}>
 				    		<label>Permit Classification:</label>
-				    		<select name="permit_classification">
+				    		<select class="dynamic_select" name="permit_classification">
 				    			<option value=""></option>
 				    			@foreach(App\SanitaryPermit::PERMIT_CLASSIFICATIONS as $classification)
 				    				<option value="{{ $classification }}" {{ $permit_classification != $classification ?: 'selected'}}>{{ $classification }}</option>
