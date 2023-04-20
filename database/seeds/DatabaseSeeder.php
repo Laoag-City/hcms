@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\User;
 
 class DatabaseSeeder extends Seeder
 {
@@ -11,8 +12,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->insert([
-            'username' => 'administrator',
+        User::firstOrCreate(['username' => 'administrator'], [
             'full_name' => 'Administrator',
             'password' => bcrypt('city_health_admin'),
             'admin' => true

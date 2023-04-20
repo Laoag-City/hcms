@@ -15,6 +15,7 @@ class PinkHealthCertificate extends Model
 
     protected $primaryKey = 'pink_health_certificate_id';
     public const DATES_FORMAT = 'M d, Y';
+    public const CERTIFICATE_TYPE = 'Pink Card';
     public const VALIDITY_PERIOD = [
             'string' => '6 months',
             'years' => 0,
