@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Validator;
 use App\Business;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Log as ActivityLog;
 
