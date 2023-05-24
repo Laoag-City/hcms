@@ -12,10 +12,14 @@ use App\Custom\PermitFileGenerator;
 use App\Custom\RegistrationNumberGenerator;
 use App\Custom\BrgyTrait;
 use App\Log as ActivityLog;
+use App\Custom\StatisticsTrait;
+use App\DocumentCategory;
+use App\Statistic;
+use App\Year;
 
 class SanitaryPermitController extends Controller
 {
-	use BrgyTrait;
+	use BrgyTrait, StatisticsTrait;
 
     protected $request;
 
@@ -247,6 +251,9 @@ class SanitaryPermitController extends Controller
 
         $sp_reg_no = $sanitary_permit->sanitary_permit_number;
 
+        //subtract to statistics
+        $this->recordToStatistic($sanitary_permit->permit_classification, false, date('Y', strtotime($sanitary_permit->getOriginal('issuance_date'))));
+
         $sanitary_permit->delete();
 
         $log = new ActivityLog;
@@ -415,8 +422,11 @@ class SanitaryPermitController extends Controller
 			$sanitary_permit->expiration_date = $this->request->date_of_expiration;
 			$sanitary_permit->sanitary_inspector = $this->request->sanitary_inspector;
 			$sanitary_permit->is_expired = false;
-            $sanitary_permit->sanitary_permit_number = (new RegistrationNumberGenerator)->getRegistrationNumber('App\SanitaryPermit', 'sanitary_permit_number');
+            $sanitary_permit->sanitary_permit_number = (new RegistrationNumberGenerator)->getRegistrationNumber('App\SanitaryPermit', 'sanitary_permit_number', date('Y', strtotime($this->request->date_of_issuance)));
 			$sanitary_permit->save();
+
+			//add to statistics
+			$this->recordToStatistic($this->request->permit_classification, true, date('Y', strtotime($this->request->date_of_issuance)));
 		}
 
 		else
@@ -450,6 +460,10 @@ class SanitaryPermitController extends Controller
 	        	}
 			}
 
+			//for statistics
+            $old_sp_classification = $sanitary_permit->permit_classification;
+            $old_issuance_year = date('Y', strtotime($sanitary_permit->getOriginal('issuance_date')));
+
 			$sanitary_permit->establishment_type = $this->request->establishment_type;
 			$sanitary_permit->total_employees = $this->request->total_employees;
 			$sanitary_permit->permit_classification = $this->request->permit_classification;
@@ -459,11 +473,53 @@ class SanitaryPermitController extends Controller
 			$sanitary_permit->expiration_date = $this->request->date_of_expiration;
 			$sanitary_permit->sanitary_inspector = $this->request->sanitary_inspector;
 
+			$reg_num_generator = new RegistrationNumberGenerator;
+
 			//if renewing and it's already next year, update sanitary permit number
             if($mode == 'renew')
             {   
-                if((int)explode('-', $sanitary_permit->sanitary_permit_number)[0] < (int)date('Y', strtotime('now')))
-                    $sanitary_permit->sanitary_permit_number = (new RegistrationNumberGenerator)->getRegistrationNumber('App\SanitaryPermit', 'sanitary_permit_number');
+                if($reg_num_generator->getYearRegistered($sanitary_permit->sanitary_permit_number) < (int)date('Y', strtotime('now')))
+                {
+                    $sanitary_permit->sanitary_permit_number = $reg_num_generator->getRegistrationNumber('App\SanitaryPermit', 'sanitary_permit_number', date('Y', strtotime($this->request->date_of_issuance)));
+                    //add to statistics
+                    $this->recordToStatistic($this->request->permit_classification, true, date('Y', strtotime($this->request->date_of_issuance)));
+                }
+            }
+
+            elseif ($mode == 'edit')
+            {
+            	//if the year of issuance date is changed, update registration number
+                $current_reg_number_year = $reg_num_generator->getYearRegistered($sanitary_permit->sanitary_permit_number);
+                $new_issuance_date_year = (int)date('Y', strtotime($this->request->date_of_issuance));
+
+                if($current_reg_number_year != $new_issuance_date_year)
+                    $sanitary_permit->sanitary_permit_number = $reg_num_generator->getRegistrationNumber('App\SanitaryPermit', 'sanitary_permit_number', date('Y', strtotime($this->request->date_of_issuance)));
+
+
+                $has_type_or_issuance_date_edit = false;
+
+                $category = $old_sp_classification;
+                $year = $old_issuance_year;
+
+                if($old_sp_classification != $sanitary_permit->permit_classification)
+                {
+                    $category = $sanitary_permit->permit_classification;
+                    $has_type_or_issuance_date_edit = true;
+                }
+
+                if($old_issuance_year != date('Y', strtotime($this->request->date_of_issuance)))
+                {
+                    $year = date('Y', strtotime($this->request->date_of_issuance));
+                    $has_type_or_issuance_date_edit = true;
+                }
+
+                if($has_type_or_issuance_date_edit)
+                {
+                    //decrement count of old certificate category
+                    $this->recordToStatistic($old_sp_classification, false, $old_issuance_year);
+                    //then increment new certificate category
+                    $this->recordToStatistic($category, true, $year);
+                }
             }
 
 			$sanitary_permit->save();

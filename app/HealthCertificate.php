@@ -70,9 +70,14 @@ class HealthCertificate extends Model
         return $this->convertDateForInputField($this->attributes[$attribute]);
     }
 
-    public function getColor()
+    public function getColor($to_lower = true)
     {
-        return strtolower(collect(self::CERTIFICATE_TYPES)->where('string', $this->duration)->keys()->first());
+        $color = collect(self::CERTIFICATE_TYPES)->where('string', $this->duration)->keys()->first();
+
+        if($to_lower)
+            return strtolower($color);
+
+        return $color;
     }
 
     public function checkIfExpired()

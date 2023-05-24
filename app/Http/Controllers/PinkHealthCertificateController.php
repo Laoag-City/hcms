@@ -21,6 +21,10 @@ use App\Custom\RegistrationNumberGenerator;
 use App\Custom\CertificateTableRowFinder;
 use App\Custom\PinkCardFileGenerator;
 use App\Log as ActivityLog;
+use App\Custom\StatisticsTrait;
+use App\DocumentCategory;
+use App\Statistic;
+use App\Year;
 
 /*
 This controller share many similiarites with HealthCertificateController.
@@ -30,7 +34,7 @@ Most improvements and optimizations made here that are applicable for the health
 */
 class PinkHealthCertificateController extends Controller
 {
-    use CertificateTableRowFinder;
+    use CertificateTableRowFinder, StatisticsTrait;
     
     protected $request;
     protected $immunization_rows = 3;
@@ -334,6 +338,9 @@ class PinkHealthCertificateController extends Controller
 
         $applicant = $pink_health_certificate->applicant;
         $phc_reg_no = $pink_health_certificate->registration_number;
+
+        //subtract to statistics
+        $this->recordToStatistic(PinkHealthCertificate::CERTIFICATE_TYPE, false, date('Y', strtotime($pink_health_certificate->getOriginal('issuance_date'))));
 
         $pink_health_certificate->delete();
 
@@ -646,7 +653,7 @@ class PinkHealthCertificateController extends Controller
             //save to database
             $pink_health_certificate = new PinkHealthCertificate;
             $pink_health_certificate->applicant_id = $applicant->applicant_id;
-            $pink_health_certificate->registration_number = (new RegistrationNumberGenerator)->getRegistrationNumber('App\PinkHealthCertificate', 'registration_number');
+            $pink_health_certificate->registration_number = (new RegistrationNumberGenerator)->getRegistrationNumber('App\PinkHealthCertificate', 'registration_number', date('Y', strtotime($this->request->date_of_issuance)));
             $pink_health_certificate->client_personal_code = $this->request->client_personal_code;
             $pink_health_certificate->validity_period = PinkHealthCertificate::VALIDITY_PERIOD['string'];
             $pink_health_certificate->occupation = $this->request->occupation;
@@ -658,6 +665,9 @@ class PinkHealthCertificateController extends Controller
             $pink_health_certificate->community_tax_issued_on = $this->request->community_tax_issued_on;
             $pink_health_certificate->is_expired = false;
             $pink_health_certificate->save();
+ 
+            //add to statistics
+            $this->recordToStatistic(PinkHealthCertificate::CERTIFICATE_TYPE, true, date('Y', strtotime($this->request->date_of_issuance)));
 
             //prepare variables for the input fields in a table at the front-end
             $immunizations = $this->tabledFieldsLooper(true, 'App\Immunization', $this->immunization_rows);
@@ -683,6 +693,9 @@ class PinkHealthCertificateController extends Controller
             $applicant->age = $this->request->age;
             $applicant->save();
 
+            //for statistics
+            $old_issuance_year = date('Y', strtotime($pink_health_certificate->getOriginal('issuance_date')));
+
             //update common pink card values that usually change
             $pink_health_certificate->client_personal_code = $this->request->client_personal_code;
             $pink_health_certificate->occupation = $this->request->occupation;
@@ -693,10 +706,47 @@ class PinkHealthCertificateController extends Controller
             $pink_health_certificate->community_tax_issued_at = $this->request->community_tax_issued_at;
             $pink_health_certificate->community_tax_issued_on = $this->request->community_tax_issued_on;
 
+            $reg_num_generator = new RegistrationNumberGenerator;
+
             //if renewing and it's already next year, update registration number
             if($mode == 'renew')
-                if((int)explode('-', $pink_health_certificate->registration_number)[0] < (int)date('Y', strtotime('now')))
-                    $pink_health_certificate->registration_number = (new RegistrationNumberGenerator)->getRegistrationNumber('App\PinkHealthCertificate', 'registration_number');
+            {
+                if($reg_num_generator->getYearRegistered($pink_health_certificate->registration_number) < (int)date('Y', strtotime('now')))
+                {
+                    $pink_health_certificate->registration_number = $reg_num_generator->getRegistrationNumber('App\PinkHealthCertificate', 'registration_number', date('Y', strtotime($this->request->date_of_issuance)));
+                    //add to statistics
+                    $this->recordToStatistic(PinkHealthCertificate::CERTIFICATE_TYPE, true, date('Y', strtotime($this->request->date_of_issuance)));
+                }
+            }
+
+            elseif ($mode == 'edit')
+            {
+                //if the year of issuance date is changed, update registration number
+                $current_reg_number_year = $reg_num_generator->getYearRegistered($pink_health_certificate->registration_number);
+                $new_issuance_date_year = (int)date('Y', strtotime($this->request->date_of_issuance));
+
+                if($current_reg_number_year != $new_issuance_date_year)
+                    $pink_health_certificate->registration_number = $reg_num_generator->getRegistrationNumber('App\PinkHealthCertificate', 'registration_number', date('Y', strtotime($this->request->date_of_issuance)));
+
+
+                $has_issuance_date_edit = false;
+
+                $year = $old_issuance_year;
+
+                if($old_issuance_year != date('Y', strtotime($this->request->date_of_issuance)))
+                {
+                    $year = date('Y', strtotime($this->request->date_of_issuance));
+                    $has_type_or_issuance_date_edit = true;
+                }
+
+                if($has_type_or_issuance_date_edit)
+                {
+                    //decrement count of old certificate category
+                    $this->recordToStatistic(PinkHealthCertificate::CERTIFICATE_TYPE, false, $old_issuance_year);
+                    //then increment new certificate category
+                    $this->recordToStatistic(PinkHealthCertificate::CERTIFICATE_TYPE, true, $year);
+                }
+            }
 
             $pink_health_certificate->save();
 

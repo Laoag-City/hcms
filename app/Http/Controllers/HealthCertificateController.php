@@ -18,11 +18,15 @@ use App\Custom\RegistrationNumberGenerator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Custom\CertificateTableRowFinder;
+use App\Custom\StatisticsTrait;
 use App\Log as ActivityLog;
+use App\DocumentCategory;
+use App\Statistic;
+use App\Year;
 
 class HealthCertificateController extends Controller
 {
-    use CertificateTableRowFinder;
+    use CertificateTableRowFinder, StatisticsTrait;
     
 	protected $request;
     protected $bulk_print_session_ids_name = 'print_hc_ids';
@@ -337,6 +341,9 @@ class HealthCertificateController extends Controller
         $applicant = $health_certificate->applicant;
         $hc_reg_no = $health_certificate->registration_number;
 
+        //subtract to statistics
+        $this->recordToStatistic($health_certificate->getColor(false), false, date('Y', strtotime($health_certificate->getOriginal('issuance_date'))));
+
         $health_certificate->delete();
 
         $log = new ActivityLog;
@@ -556,8 +563,11 @@ class HealthCertificateController extends Controller
             $health_certificate->issuance_date = $this->request->date_of_issuance;
             $health_certificate->expiration_date = $this->request->date_of_expiration;//$this->getExpirationDate($this->request->date_of_issuance, $this->request->certificate_type);
             $health_certificate->is_expired = false;
-            $health_certificate->registration_number = (new RegistrationNumberGenerator)->getRegistrationNumber('App\HealthCertificate', 'registration_number');
+            $health_certificate->registration_number = (new RegistrationNumberGenerator)->getRegistrationNumber('App\HealthCertificate', 'registration_number', date('Y', strtotime($this->request->date_of_issuance)));
             $health_certificate->save();
+
+            //add to statistics
+            $this->recordToStatistic($health_certificate->getColor(false), true, date('Y', strtotime($this->request->date_of_issuance)));
 
             $immunization1 = new Immunization;
             $immunization2 = new Immunization;
@@ -572,6 +582,10 @@ class HealthCertificateController extends Controller
             $applicant = $health_certificate->applicant;
             $applicant->age = $this->request->age;
             $applicant->save();
+
+            //for statistics
+            $old_hc_color = $health_certificate->getColor(false);
+            $old_issuance_year = date('Y', strtotime($health_certificate->getOriginal('issuance_date')));
             
             $health_certificate->duration = $this->request->certificate_type;
             $health_certificate->issuance_date = $this->request->date_of_issuance;
@@ -579,11 +593,53 @@ class HealthCertificateController extends Controller
             $health_certificate->work_type = $this->request->type_of_work;
             $health_certificate->establishment = $this->request->name_of_establishment;
 
+            $reg_num_generator = new RegistrationNumberGenerator;
+
             //if renewing and it's already next year, update registration number
             if($mode == 'renew')
             {   
-                if((int)explode('-', $health_certificate->registration_number)[0] < (int)date('Y', strtotime('now')))
-                    $health_certificate->registration_number = (new RegistrationNumberGenerator)->getRegistrationNumber('App\HealthCertificate', 'registration_number');
+                if($reg_num_generator->getYearRegistered($health_certificate->registration_number) < (int)date('Y', strtotime('now')))
+                {
+                    $health_certificate->registration_number = $reg_num_generator->getRegistrationNumber('App\HealthCertificate', 'registration_number', date('Y', strtotime($this->request->date_of_issuance)));
+                    //add to statistics
+                    $this->recordToStatistic($health_certificate->getColor(false), true, date('Y', strtotime($this->request->date_of_issuance)));
+                }
+            }
+
+            elseif ($mode == 'edit')
+            {
+                //if the year of issuance date is changed, update registration number
+                $current_reg_number_year = $reg_num_generator->getYearRegistered($health_certificate->registration_number);
+                $new_issuance_date_year = (int)date('Y', strtotime($this->request->date_of_issuance));
+
+                if($current_reg_number_year != $new_issuance_date_year)
+                    $health_certificate->registration_number = $reg_num_generator->getRegistrationNumber('App\HealthCertificate', 'registration_number', date('Y', strtotime($this->request->date_of_issuance)));
+
+
+                $has_type_or_issuance_date_edit = false;
+
+                $category = $old_hc_color;
+                $year = $old_issuance_year;
+
+                if($old_hc_color != $health_certificate->getColor(false))
+                {
+                    $category = $health_certificate->getColor(false);
+                    $has_type_or_issuance_date_edit = true;
+                }
+
+                if($old_issuance_year != date('Y', strtotime($this->request->date_of_issuance)))
+                {
+                    $year = date('Y', strtotime($this->request->date_of_issuance));
+                    $has_type_or_issuance_date_edit = true;
+                }
+
+                if($has_type_or_issuance_date_edit)
+                {
+                    //decrement count of old certificate category
+                    $this->recordToStatistic($old_hc_color, false, $old_issuance_year);
+                    //then increment new certificate category
+                    $this->recordToStatistic($category, true, $year);
+                }
             }
 
             $health_certificate->save();

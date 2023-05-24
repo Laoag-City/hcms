@@ -17,8 +17,6 @@ class CreateStatisticsTable extends Migration
             $table->increments('statistic_id');
             $table->integer('document_category_id')->unsigned();
             $table->integer('year_id')->unsigned();
-            $table->string('record_type', 25);
-            $table->string('year', 4);
             $table->unsignedSmallInteger('counts');
             $table->timestamps();
 

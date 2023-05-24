@@ -11,31 +11,6 @@
 	<div class="ui attached segment">
 		<br>
 		<div class="ui stackable centered grid">
-			<div class="row">
-				<div class="seven wide column center aligned">
-					<div class="ui statistic">
-						<div class="value">
-							<i class="user icon"></i>
-							{{ $total_applicants }}
-						</div>
-						<div class="label">
-							Clients
-						</div>
-					</div>
-				</div>
-
-				<div class="seven wide column center aligned">
-					<div class="ui statistic">
-						<div class="value">
-							<i class="building outline icon"></i>
-							{{ $total_businesses }}
-						</div>
-						<div class="label">
-							Businesses
-						</div>
-					</div>
-				</div>
-			</div>
 
 			<div class="ui divider"></div>
 
@@ -46,34 +21,31 @@
 						Health Certificate
 					</h2>
 
-					<div class="ui labels">
-						<div class="ui basic yellow label">
-							Yellow HC
-							<div class="detail">{{ $total_yellow_health_certificates }}</div>
-						</div>
-
-						<div class="ui basic green label">
-							Green HC
-							<div class="detail">{{ $total_green_health_certificates }}</div>
-						</div>
-					</div>
-
 					<table class="ui attached striped selectable structured celled center aligned table">
 						<thead>
 							<tr>
-								<th colspan="2">Registered HC each year</th>
-							</tr>
-							<tr>
 								<th>Year</th>
-								<th>Total</th>
+								@foreach($hc_categories as $category)
+									<th>{{ $category->category }}</th>
+								@endforeach
 							</tr>
 						</thead>
 
 						<tbody>
-							@foreach($total_registered_hc_for_each_year as $year => $total)
+							@foreach($total_registered_hc_for_each_year as $year => $stats)
 								<tr>
 									<td>{{ $year }}</td>
-									<td>{{ $total }}</td>
+									@foreach($hc_categories as $category)
+										@php
+											$current_record = $stats->where('category', $category->category)->first();
+										@endphp
+
+										@if($current_record != null && $current_record->counts != 0)
+											<td>{{ $stats->where('category', $category->category)->first()->counts }}</td>
+										@else
+											<td></td>
+										@endif
+									@endforeach
 								</tr>
 							@endforeach
 						</tbody>
@@ -86,31 +58,31 @@
 						Sanitary Permit
 					</h2>
 
-					<div class="ui labels">
-						@foreach($classifications as $value)
-							<div class="ui basic {{ $value['color'] }} label">
-								{{ $value['name'] }}
-								<div class="detail">{{ $value['total'] }}</div>
-							</div>
-						@endforeach
-					</div>
-
 					<table class="ui attached striped selectable structured celled center aligned table">
 						<thead>
 							<tr>
-								<th colspan="2">Registered SP each year</th>
-							</tr>
-							<tr>
 								<th>Year</th>
-								<th>Total</th>
+								@foreach($sp_categories as $category)
+									<th>{{ $category->category }}</th>
+								@endforeach
 							</tr>
 						</thead>
 
 						<tbody>
-							@foreach($total_registered_sp_for_each_year as $year => $total)
+							@foreach($total_registered_sp_for_each_year as $year => $stats)
 								<tr>
 									<td>{{ $year }}</td>
-									<td>{{ $total }}</td>
+									@foreach($sp_categories as $category)
+										@php
+											$current_record = $stats->where('category', $category->category)->first();
+										@endphp
+
+										@if($current_record != null && $current_record->counts != 0)
+											<td>{{ $stats->where('category', $category->category)->first()->counts }}</td>
+										@else
+											<td></td>
+										@endif
+									@endforeach
 								</tr>
 							@endforeach
 						</tbody>
@@ -126,29 +98,31 @@
 						Pink Card
 					</h2>
 
-					<div class="ui labels">
-						<div class="ui basic pink label">
-							Pink Card
-							<div class="detail">{{ $total_pink_card }}</div>
-						</div>
-					</div>
-
 					<table class="ui attached striped selectable structured celled center aligned table">
 						<thead>
 							<tr>
-								<th colspan="2">Registered PC each year</th>
-							</tr>
-							<tr>
 								<th>Year</th>
-								<th>Total</th>
+								@foreach($pc_categories as $category)
+									<th>{{ $category->category }}</th>
+								@endforeach
 							</tr>
 						</thead>
 
 						<tbody>
-							@foreach($total_registered_pc_for_each_year as $year => $total)
+							@foreach($total_registered_pc_for_each_year as $year => $stats)
 								<tr>
 									<td>{{ $year }}</td>
-									<td>{{ $total }}</td>
+									@foreach($pc_categories as $category)
+										@php
+											$current_record = $stats->where('category', $category->category)->first();
+										@endphp
+
+										@if($current_record != null && $current_record->counts != 0)
+											<td>{{ $stats->where('category', $category->category)->first()->counts }}</td>
+										@else
+											<td></td>
+										@endif
+									@endforeach
 								</tr>
 							@endforeach
 						</tbody>
