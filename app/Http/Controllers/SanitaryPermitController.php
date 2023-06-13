@@ -516,7 +516,9 @@ class SanitaryPermitController extends Controller
                 if($has_type_or_issuance_date_edit)
                 {
                     //decrement count of old certificate category
-                    $this->recordToStatistic($old_sp_classification, false, $old_issuance_year);
+                    //since there are outdated classifications in the database, do a check first
+                    if(in_array($old_sp_classification, SanitaryPermit::PERMIT_CLASSIFICATIONS))
+                    	$this->recordToStatistic($old_sp_classification, false, $old_issuance_year);
                     //then increment new certificate category
                     $this->recordToStatistic($category, true, $year);
                 }
