@@ -729,7 +729,7 @@ class PinkHealthCertificateController extends Controller
                     $pink_health_certificate->registration_number = $reg_num_generator->getRegistrationNumber('App\PinkHealthCertificate', 'registration_number', date('Y', strtotime($this->request->date_of_issuance)));
 
 
-                $has_issuance_date_edit = false;
+                $has_type_or_issuance_date_edit = false;
 
                 $year = $old_issuance_year;
 
