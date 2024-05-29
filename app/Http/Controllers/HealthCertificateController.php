@@ -595,15 +595,15 @@ class HealthCertificateController extends Controller
 
             $reg_num_generator = new RegistrationNumberGenerator;
 
-            //if renewing and it's already next year, update registration number
+
             if($mode == 'renew')
             {   
-                if($reg_num_generator->getYearRegistered($health_certificate->registration_number) < (int)date('Y', strtotime('now')))
-                {
+                //if($reg_num_generator->getYearRegistered($health_certificate->registration_number) < (int)date('Y', strtotime('now')))
+                //{
                     $health_certificate->registration_number = $reg_num_generator->getRegistrationNumber('App\HealthCertificate', 'registration_number', date('Y', strtotime($this->request->date_of_issuance)));
                     //add to statistics
                     $this->recordToStatistic($health_certificate->getColor(false), true, date('Y', strtotime($this->request->date_of_issuance)));
-                }
+                //}
             }
 
             elseif ($mode == 'edit')
