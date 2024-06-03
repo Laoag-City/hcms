@@ -50,9 +50,9 @@
 						<i class="label standard_font text-center" style="display: block;">CSO/SI In-Charge</i>
 					</div>
 
-					<div class="pull_right" style="margin-top: 18pt; margin-right: 30pt;">
-						<b class="label standard_font text-center" style="display: block; width: 110pt;">JOSEPH D. ADAYA, M.D.</b>
-						<div class="label standard_font text-center" style="display: block;">City Health Officer</div>
+					<div class="pull_right" style="margin-top: 18pt; margin-right: 12pt;">
+						<b class="label standard_font text-center" style="display: block; width: 110pt;">RODRIGO L. CATCATAN JR. M.D.</b>
+						<div class="label standard_font text-center" style="display: block;">Officer-In-Charge</div>
 					</div>
 				</div>
 

@@ -25,10 +25,10 @@ class Statistic extends Model
         $statistic = $this->firstOrNew(['document_category_id' => $category, 'year_id' => $year]);
 
         if($add)
-            $statistic->counts++;
+            $statistic->counts = $statistic->counts + 1;
 
         else
-            $statistic->counts--;
+            $statistic->counts = $statistic->counts - 1;
 
         $statistic->save();
     }

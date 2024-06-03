@@ -8,7 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <script>window.Laravel = {!! json_encode(['csrfToken' => csrf_token(), ]) !!};</script>
-	<title>Health Certificate</title>
+	<title>Pink Card</title>
 
 	<link rel="stylesheet" href="{{ mix('/css/print_pink_health_certificate.css') }}">
 </head>

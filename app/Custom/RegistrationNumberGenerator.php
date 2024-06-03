@@ -8,12 +8,19 @@ class RegistrationNumberGenerator
 	{
         $total_registrations_this_year = $model::select($reg_num_field)
                                         ->where($reg_num_field, 'like', "$year%")
-                                        ->get()
-                                        ->sortByDesc($reg_num_field)
-                                        ->first()
-                                        ->$reg_num_field;
+                                        ->get();
 
-        $total_registrations_this_year = (int)explode('-', $total_registrations_this_year)[1];
+        if($total_registrations_this_year->isNotEmpty())
+        {
+            $total_registrations_this_year = $total_registrations_this_year->sortByDesc($reg_num_field)
+                                                                            ->first()
+                                                                            ->$reg_num_field;
+
+            $total_registrations_this_year = (int)explode('-', $total_registrations_this_year)[1];
+        }
+
+        else
+            $total_registrations_this_year = 0;
 
         $iteration = 1;
 

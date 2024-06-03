@@ -66,9 +66,9 @@
 						<span class="standard_font">Signature</span>
 					</div>
 
-					<div style="margin-top: 25pt;">
-						<b class="value" style="width: 105pt;">JOSEPH D. ADAYA, M.D.</b>
-						<span class="standard_font">City Health Officer</span>
+					<div style="margin-top: 20pt;">
+						<b class="value" style="width: 105pt;">RODRIGO L. CATCATAN JR. M.D.</b>
+						<span class="standard_font">Officer-In-Charge</span>
 					</div>
 				</div>
 			</div>
